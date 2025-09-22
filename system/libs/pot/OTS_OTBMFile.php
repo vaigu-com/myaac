@@ -50,6 +50,10 @@ class OTS_OTBMFile extends OTS_FileLoader implements IteratorAggregate, Countabl
  */
     const OTBM_ATTR_TILE_FLAGS = 3;
 /**
+ * Key-Value storage
+ */
+    const OTBM_ATTR_KV = 25; // Vaigu custom
+/**
  * Action ID.
  */
     const OTBM_ATTR_ACTION_ID = 4;

@@ -341,6 +341,15 @@ if(isset($config['boxes']))
 <div-- id='Menu'>
 <div id='MenuTop' style='background-image:url(<?php echo $template_path; ?>/images/general/box-top.gif);'></div>
 
+<?php if (!empty($config['github_link'])) { ?>
+    <img class="InfoBarBigLogo" style="margin-left: 8px"
+         src="<?= $template_path; ?>/images/global/header/icon-github.png">
+    <span class="InfoBarNumbers">
+        <a class="InfoBarLinks" href="<?= $config['github_link']; ?>" target="new"><span
+            class="InfoBarSmallElement">GitHub</span></a>
+    </span>
+<?php } ?>
+
 <?php
 $menus = get_template_menus();
 

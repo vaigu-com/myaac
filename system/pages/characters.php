@@ -179,27 +179,30 @@ if($player->isLoaded() && !$player->isDeleted())
 
 	$quests_enabled = $config['characters']['quests'] && !empty($config['quests']);
 	if($quests_enabled) {
-		$quests = $config['quests'];
-		$sql_query_in = '';
-		$i = 0;
-		foreach($quests as $quest_name => $quest_storage)
-		{
-			if($i != 0)
-				$sql_query_in .= ', ';
+		 $quests = $config['quests'];
+        $sql_query_in = '';
+        $i = 0;
+        $player_id = $player->getId();
 
-			$sql_query_in .= $quest_storage;
-			$i++;
-		}
+        $sql_query_in = [];
+        foreach ($quests as $quest_name => $quest_storage) {
+            $fullKeyName = "player.$player_id.$quest_storage";
+            $sql_query_in[] = $db->quote($fullKeyName);
+        }
 
-		$storage_sql = $db->query('SELECT `key`, `value` FROM `player_storage` WHERE `player_id` = '.$player->getId().' AND `key` IN (' . $sql_query_in . ')');
-		$player_storage = array();
-		foreach($storage_sql as $storage)
-			$player_storage[$storage['key']] = $storage['value'];
+        $in_clause = implode(', ', $sql_query_in);
+        $storage_sql = $db->query("SELECT `key_name`, `value` FROM `kv_store` WHERE `key_name` IN ($in_clause)");
+        //$storage_sql = $db->query('SELECT `key_name`, `value` FROM `kv_store` WHERE `key_name` IN (' . $sql_query_in . ')');
 
-		foreach($quests as &$storage) {
-			$storage = isset($player_storage[$storage]) && $player_storage[$storage] > 0;
-		}
-		unset($storage);
+        $kv_store = array();
+        foreach ($storage_sql as $storage)
+            $kv_store[$storage['key_name']] = $storage['value'];
+
+        foreach ($quests as &$storage) {
+            $fullKeyName = "player.$player_id.$storage";
+            $storage = $kv_store[$fullKeyName];
+        }
+        unset($storage);
 	}
 
 	if($db->hasTable('player_items') && $db->hasColumn('player_items', 'pid') && $db->hasColumn('player_items', 'sid') && $db->hasColumn('player_items', 'itemtype')) {

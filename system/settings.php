@@ -17,7 +17,7 @@ use MyAAC\Settings;
 $templates = Cache::remember('templates', 5 * 60, function () {
 	return get_templates();
 });
-$defaultTemplate = in_array('kathrine', $templates) ? 'kathrine' : $templates[0];
+$defaultTemplate = in_array('tibiacom', $templates) ? 'tibiacom' : $templates[0];
 
 global $db;
 
@@ -1268,21 +1268,6 @@ Sent by MyAAC,<br/>
 				'characters_quests', '=', 'true'
 			],
 			'callbacks' => [
-				'get' => function ($value) {
-					$ret = [];
-					$quests = array_map('trim', preg_split('/\r\n|\r|\n/', trim($value)));
-
-					foreach ($quests as $quest) {
-						if (empty($quest)) {
-							continue;
-						}
-
-						$explode = explode('=', $quest);
-						$ret[$explode[0]] = $explode[1];
-					}
-
-					return $ret;
-				},
 			],
 		],
 		'characters_skills' => [

@@ -341,15 +341,6 @@ if(isset($config['boxes']))
 <div-- id='Menu'>
 <div id='MenuTop' style='background-image:url(<?php echo $template_path; ?>/images/general/box-top.gif);'></div>
 
-<?php if (!empty($config['github_link'])) { ?>
-    <img class="InfoBarBigLogo" style="margin-left: 8px"
-         src="<?= $template_path; ?>/images/global/header/icon-github.png">
-    <span class="InfoBarNumbers">
-        <a class="InfoBarLinks" href="<?= $config['github_link']; ?>" target="new"><span
-            class="InfoBarSmallElement">GitHub</span></a>
-    </span>
-<?php } ?>
-
 <?php
 $menus = get_template_menus();
 
@@ -640,14 +631,7 @@ foreach($config['menu_categories'] as $id => $cat) {
         <div id="ThemeboxesColumn">
           <div id="RightArtwork">
             <img id="Monster" src="images/monsters/<?php echo logo_monster() ?>.gif" onClick="window.location = '?subtopic=creatures&creature=<?php echo $config['logo_monster'] ?>';" alt="Monster of the Week" />
-            <img id="PedestalAndOnline" src="<?php echo $template_path; ?>/images/header/pedestal-and-online.gif" alt="Monster Pedestal and Players Online Box"/>
-          <div id="PlayersOnline" onClick="window.location = '<?php echo getLink('online'); ?>'">
-		  <?php
-			if($status['online'])
-				echo '<div id="players" style="display: inline;">' . $status['players'] . '</div><br>Players Online';
-			else
-				echo '<span style="color: red"><b>Server<br />OFFLINE</b></span>';
-			?></div>
+            <img id="PedestalAndOnline" src="<?php echo $template_path; ?>/images/header/pedestal.gif" alt="Monster Pedestal and Players Online Box"/>
         </div>
 
         <div id="Themeboxes">

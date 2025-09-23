@@ -2,7 +2,7 @@
     .map{
         width: 180px;
         height: 180px;
-        margin-top: 15px;
+        margin-top: 105px;
     }
     .map_header{
         height: 45px;
@@ -14,7 +14,7 @@
         line-height: 65px;
     }
     .map_bottom{
-        height: 30px;a
+        height: 30px;
         width: 180px;
         margin-top: -20px;
         background-image: url('templates/tibiacom/images/themeboxes/box_bottom.png');

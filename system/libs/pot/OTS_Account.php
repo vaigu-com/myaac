@@ -38,11 +38,11 @@ class OTS_Account extends OTS_Row_DAO implements IteratorAggregate, Countable
  * @var array
  * @version 0.1.5
  */
-    private $data = array('email' => '', 'rlname' => '','location' => '', 'country' => '','web_flags' => 0, 'lastday' => 0, 'premdays' => 0, 'created' => 0);
+	const GRATIS_PREMIUM_DAYS = 65535;
+    
+    private $data = array('email' => '', 'rlname' => '','location' => '', 'country' => '','web_flags' => 0, 'lastday' => 0, 'premdays' => self::GRATIS_PREMIUM_DAYS, 'created' => 0);
 
 	public static $cache = array();
-
-	const GRATIS_PREMIUM_DAYS = 65535;
 /**
  * Creates new account.
  *

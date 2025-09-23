@@ -629,10 +629,65 @@ foreach($config['menu_categories'] as $id => $cat) {
           <div id="Footer"><?php echo template_footer(); ?><br/>Layout by CipSoft GmbH.</div>
         </div>
         <div id="ThemeboxesColumn">
-          <div id="RightArtwork">
-            <img id="Monster" src="images/monsters/<?php echo logo_monster() ?>.gif" onClick="window.location = '?subtopic=creatures&creature=<?php echo $config['logo_monster'] ?>';" alt="Monster of the Week" />
-            <img id="PedestalAndOnline" src="<?php echo $template_path; ?>/images/header/pedestal.gif" alt="Monster Pedestal and Players Online Box"/>
-        </div>
+    <?php
+       $creaturequery = $db->query("SELECT `boostname`, `looktype`, `lookfeet` , `looklegs` , `lookhead` , `lookbody` , `lookaddons` , `lookmount`   FROM `boosted_creature` order by `date` desc limit 6");
+       $creatures = $creaturequery->fetchAll();
+    ?>
+    <?php
+        $bossquery = $db->query("SELECT `boostname`, `looktypeEx`, `looktype`, `lookfeet` , `looklegs` , `lookhead` , `lookbody` , `lookaddons` , `lookmount`   FROM `boosted_boss` order by `date` desc limit 1")->fetch();
+        $bossname = $bossquery["boostname"];
+        $bosstypeEx = $bossquery["looktypeEx"];
+        $bosstype = $bossquery["looktype"];
+        $bossfeet = $bossquery["lookfeet"];
+        $bosslegs = $bossquery["looklegs"];
+        $bosshead = $bossquery["lookhead"];
+        $bossbody = $bossquery["lookbody"];
+        $bossaddons = $bossquery["lookaddons"];
+        $bossmount = $bossquery["lookmount"];
+    ?>
+    <div id="RightArtwork">
+        <img id="PedestalAndOnline" src="<?= $template_path; ?>/images/header/pedestal.gif" alt="Monster Pedestal and Players Online Box"/>
+        
+        <?php 
+        // Create 2x3 grid of creatures
+        for ($i = 0; $i < count($creatures) && $i < 6; $i++) {
+            $creature = $creatures[$i];
+            $creaturename = $creature["boostname"];
+            $creaturetype = $creature["looktype"];
+            $creaturefeet = $creature["lookfeet"];
+            $creaturelegs = $creature["looklegs"];
+            $creaturehead = $creature["lookhead"];
+            $creaturebody = $creature["lookbody"];
+            $creatureaddons = $creature["lookaddons"];
+            $creaturemount = $creature["lookmount"];
+            
+            $col = $i % 2;
+            $row = floor($i / 2);
+            
+            $leftOffset = -10 + ($col * 58); 
+            $topOffset = 46 + ($row * 58);
+            
+            $elementId = ($i == 0) ? "Creature" : "Creature" . ($i + 1);
+        ?>
+            <img id="<?= $elementId ?>"
+                 class="creature-grid"
+                 style="top: <?= $topOffset ?>px; left: <?= $leftOffset ?>px;"
+                 src="<?= $config['outfit_images_url'] ?>?id=<?= $creaturetype; ?>&addons=<?= $creatureaddons; ?>&head=<?= $creaturehead; ?>&body=<?= $creaturebody; ?>&legs=<?= $creaturelegs; ?>&feet=<?= $creaturefeet; ?>&mount=<?= $creaturemount; ?>"
+                 alt="Creature <?= $i + 1 ?>"
+                 title="Boosted creature: <?= ucwords(strtolower(trim($creaturename))); ?>">
+        <?php } ?>
+        
+        <?php if ($bosstypeEx != 0): ?>
+            <img id="Boss" src="<?= $config['item_images_url'] ?><?= $bosstypeEx; ?>.gif"
+                 alt="Boss of the Day"
+                 title="Today's boosted boss: <?= ucwords(strtolower(trim($bossname))); ?>">
+        <?php else: ?>
+            <img id="Boss"
+                 src="<?= $config['outfit_images_url'] ?>?id=<?= $bosstype; ?>&addons=<?= $bossaddons; ?>&head=<?= $bosshead; ?>&body=<?= $bossbody; ?>&legs=<?= $bosslegs; ?>&feet=<?= $bossfeet; ?>&mount=<?= $bossmount; ?>"
+                 alt="Boss of the Day"
+                 title="Today's boosted boss: <?= ucwords(strtolower(trim($bossname))); ?>">
+        <?php endif; ?>
+    </div>
 
         <div id="Themeboxes">
 			<?php

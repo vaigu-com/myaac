@@ -1494,7 +1494,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Item Images URL',
 			'type' => 'text',
 			'desc' => 'Set to <strong>images/items</strong> if you host your own items in images folder',
-			'default' => 'https://item-images.ots.me/1092/',
+			'default' => 'https://item-images.ots.me/1285_otservbr/',
 		],
 		'item_images_extension' => [
 			'name' => 'Item Images File Extension',

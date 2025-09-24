@@ -2,7 +2,7 @@
     .map{
         width: 180px;
         height: 180px;
-        margin-top: 105px;
+        margin-top: -14px;
     }
     .map_header{
         height: 45px;

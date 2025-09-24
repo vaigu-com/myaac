@@ -22,6 +22,7 @@ if(isset($config['boxes']))
 	<link href="<?php echo $template_path; ?>/css/facebook.css" rel="stylesheet" type="text/css">
 	<?php endif; ?>
 
+	</div>
 	<script type="text/javascript">
 		var menus = '';
 		var loginStatus="<?php echo ($logged ? 'true' : 'false'); ?>";
@@ -336,7 +337,7 @@ if(isset($config['boxes']))
     <div id="LoginBottom" class="Loginstatus" style="background-image:url(<?php echo $template_path; ?>/images/general/box-bottom.gif)" ></div>
   </div>
 
-<div-- id='Menu'>
+<div id='Menu'>
 <div id='MenuTop' style='background-image:url(<?php echo $template_path; ?>/images/general/box-top.gif);'></div>
 
 <?php
@@ -408,7 +409,6 @@ foreach($config['menu_categories'] as $id => $cat) {
         <div id="ContentColumn">
           <div class="Content">
             <div id="ContentHelper">
-			<?php echo tickers(); ?>
         <?php if ($config['status_bar']) { ?>
                             <div class="Box">
                                 <div class="Corner-tl"
@@ -487,104 +487,10 @@ foreach($config['menu_categories'] as $id => $cat) {
                                                     </a>
                                                 </span>
                                             </span>
-                                            <?php if ($config['collapse_status']) { ?>
-                                                <a data-bs-toggle="collapse" href="#statusbar" role="button" aria-expanded="false" aria-controls="statusbar">
-                                                    <img src="<?= $template_path; ?>/images/global/content/top-to-back.gif" class="InfoBarBigLogo">
-                                                </a>
-                                            <?php } ?>
+                                 
                                         </span>
                                     </div>
                                 </div>
-                                <!-- COLLAPSE STATUS BAR -->
-                                <?php if ($config['collapse_status']) { ?>
-                                    <div class="collapse" id="statusbar" style="background-color: #d4c0a1;">
-                                        <table class="Table3" cellpadding="0" cellspacing="0" style="width: 100%;">
-                                            <tbody>
-                                                <tr>
-                                                    <td>
-                                                        <div class="InnerTableContainer"
-                                                            style="display: flex; flex-wrap: wrap; font-family: Verdana;">
-                                                            <?php if ($config['carousel_status']) { ?>
-                                                                <table style="width:100%;">
-                                                                    <tbody>
-                                                                        <tr>
-                                                                            <td>
-                                                                                <div class="TableContentContainer">
-                                                                                    <table class="TableContent" width="100%"
-                                                                                        style="border:1px solid #faf0d7; font-size: 12px;">
-                                                                                        <tbody>
-                                                                                            <tr bgcolor="#F1E0C6">
-                                                                                                <td>
-                                                                                                    <div class="container">
-                                                                                                        <div
-                                                                                                            id="carouselExampleCaptions"
-                                                                                                            class="carousel slide"
-                                                                                                            data-bs-ride="carousel">
-                                                                                                            <div class="carousel-inner">
-                                                                                                                <?php
-                                                                                                                $count = 1;
-                                                                                                                foreach ($config['carousel'] as $carousel) {
-                                                                                                                    if ($count == 1) {
-                                                                                                                ?>
-                                                                                                                        <div
-                                                                                                                            class="carousel-item active">
-                                                                                                                            <img
-                                                                                                                                src="<?= $template_path ?>/images/carousel/<?= $carousel ?>"
-                                                                                                                                style="width: 100%;">
-                                                                                                                        </div>
-                                                                                                                    <?php
-                                                                                                                    } elseif ($count > 1) {
-                                                                                                                    ?>
-                                                                                                                        <div
-                                                                                                                            class="carousel-item">
-                                                                                                                            <img
-                                                                                                                                src="<?= $template_path ?>/images/carousel/<?= $carousel ?>"
-                                                                                                                                style="width: 100%;">
-                                                                                                                        </div>
-                                                                                                                <?php
-                                                                                                                    }
-                                                                                                                    $count++;
-                                                                                                                }
-                                                                                                                ?>
-                                                                                                            </div>
-                                                                                                            <button
-                                                                                                                class="carousel-control-prev"
-                                                                                                                type="button"
-                                                                                                                data-bs-target="#carouselExampleCaptions"
-                                                                                                                data-bs-slide="prev">
-                                                                                                                <span
-                                                                                                                    class="carousel-control-prev-icon"
-                                                                                                                    aria-hidden="true"></span>
-                                                                                                            </button>
-                                                                                                            <button
-                                                                                                                class="carousel-control-next"
-                                                                                                                type="button"
-                                                                                                                data-bs-target="#carouselExampleCaptions"
-                                                                                                                data-bs-slide="next">
-                                                                                                                <span
-                                                                                                                    class="carousel-control-next-icon"
-                                                                                                                    aria-hidden="true"></span>
-                                                                                                            </button>
-                                                                                                        </div>
-                                                                                                    </div>
-                                                                                                </td>
-                                                                                            </tr>
-                                                                                        </tbody>
-                                                                                    </table>
-                                                                                </div>
-                                                                            </td>
-                                                                        </tr>
-                                                                    </tbody>
-                                                                </table>
-                                                            <?php } ?>
-                                                        </div>
-                                                    </td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                <?php } ?>
-                                <!-- COLLAPSE STATUS BAR -->
                                 <div class="Border_1"
                                     style="background-image:url(<?= $template_path; ?>/images/global/content/border-1.gif);"></div>
                                 <div class="CornerWrapper-b">
@@ -597,6 +503,7 @@ foreach($config['menu_categories'] as $id => $cat) {
                                 </div>
                             </div>
                         <?php } ?>
+			<?php echo tickers(); ?>
 
   <div id="News" class="Box">
     <div class="Corner-tl" style="background-image:url(<?php echo $template_path; ?>/images/content/corner-tl.gif);"></div>
@@ -628,7 +535,7 @@ foreach($config['menu_categories'] as $id => $cat) {
         </div>
         <div id="ThemeboxesColumn">
     <?php
-       $creaturequery = $db->query("SELECT `boostname`, `looktype`, `lookfeet` , `looklegs` , `lookhead` , `lookbody` , `lookaddons` , `lookmount`   FROM `boosted_creature` order by `date` desc limit 6");
+       $creaturequery = $db->query("SELECT `boostname`, `looktype`, `lookfeet` , `looklegs` , `lookhead` , `lookbody` , `lookaddons` , `lookmount`   FROM `boosted_creature` order by `date` desc limit 5");
        $creatures = $creaturequery->fetchAll();
     ?>
     <?php
@@ -647,8 +554,8 @@ foreach($config['menu_categories'] as $id => $cat) {
         <img id="PedestalAndOnline" src="<?= $template_path; ?>/images/header/pedestal.gif" alt="Monster Pedestal and Players Online Box"/>
         
         <?php 
-        // Create 2x3 grid of creatures
-        for ($i = 0; $i < count($creatures) && $i < 6; $i++) {
+        // Create 3x2 grid of creatures
+        for ($i = 0; $i < count($creatures) && $i < 5; $i++) {
             $creature = $creatures[$i];
             $creaturename = $creature["boostname"];
             $creaturetype = $creature["looktype"];
@@ -659,11 +566,11 @@ foreach($config['menu_categories'] as $id => $cat) {
             $creatureaddons = $creature["lookaddons"];
             $creaturemount = $creature["lookmount"];
             
-            $col = $i % 2;
-            $row = floor($i / 2);
+            $col = ($i+1) % 3;
+            $row = floor(($i+1) / 3);
             
-            $leftOffset = -10 + ($col * 58); 
-            $topOffset = 46 + ($row * 58);
+            $leftOffset = -24 + ($col * 57); 
+            $topOffset = -12 + ($row * 58);
             
             $elementId = ($i == 0) ? "Creature" : "Creature" . ($i + 1);
         ?>

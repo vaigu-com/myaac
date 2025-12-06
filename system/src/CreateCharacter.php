@@ -1,4 +1,4 @@
-<?php
+	<?php
 
 namespace MyAAC;
 
@@ -134,8 +134,13 @@ class CreateCharacter
 
 		global $db;
 
-		if($sex == "0")
-			$playerSample->setLookType(136);
+
+  		if ($sex == "0"){
+            $playerSample->setLookType($playerSample->getLookType() + 8);
+		}
+        if ($sex != "0"){
+            $playerSample->setLookType($playerSample->getLookType() + 0);
+		}
 
 		$player = new \OTS_Player();
 		$player->setName($name);

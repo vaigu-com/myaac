@@ -513,7 +513,7 @@ if (isset($config['boxes']))
 						}
 
 						if ($config['template_allow_change'])
-							echo '<span style="color: white">Template:</span><br/>' . template_form();
+							#echo '<span style="color: white">Template:</span><br/>' . template_form();
 						?>
 					</div>
 				</div>

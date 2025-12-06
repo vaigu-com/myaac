@@ -1929,4 +1929,6 @@ foreach ($allSettings['settings']['quests']['default'] as $key => $value) {
     $allSettings['settings']['quests']['default'][$key] = 'Storage-Finished-' . $value;
 }
 
+ksort($allSettings['settings']['quests']['default']);
+
 return $allSettings;

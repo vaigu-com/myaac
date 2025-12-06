@@ -1643,7 +1643,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Enable gifts system',
 			'desc' => 'Plugin needs to be installed',
 			'type' => 'boolean',
-			'default' => false,
+			'default' => true,
 		],
 		'donate_column' => [
 			'name' => 'Donate Column',

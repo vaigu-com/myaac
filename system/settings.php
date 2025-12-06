@@ -37,7 +37,7 @@ if (defined('HAS_ACCOUNT_COINS_TRANSFERABLE') && (HAS_ACCOUNT_COINS_TRANSFERABLE
 	$donateColumnOptions[ACCOUNT_COINS_TRANSFERABLE_COLUMN] = 'Coins Transferable';
 }
 
-return [
+$allSettings =  [
 	'name' => 'MyAAC',
 	'settings' => [
 		[
@@ -60,10 +60,10 @@ return [
 			'type' => 'options',
 			'options' => ['prod' => 'Production', 'dev' => 'Development'],
 			'desc' => 'if you use this script on your live server - set production<br/>' .
-						'* if you want to test and debug the script locally, or develop plugins, set to development<br/>' .
-						'* WARNING: on "development" cache is disabled, so site will be significantly slower !!!<br/>' .
-						'* WARNING2: on "development" all PHP errors/warnings are displayed<br/>' .
-						'* Recommended: "production" cause of speed (page load time is better)',
+				'* if you want to test and debug the script locally, or develop plugins, set to development<br/>' .
+				'* WARNING: on "development" cache is disabled, so site will be significantly slower !!!<br/>' .
+				'* WARNING2: on "development" all PHP errors/warnings are displayed<br/>' .
+				'* Recommended: "production" cause of speed (page load time is better)',
 			'default' => 'prod',
 			'is_config' => true,
 		],
@@ -203,7 +203,9 @@ return [
 			'desc' => 'Time To Live for Visitors Counter. In other words - how long user will be marked as online. In Minutes',
 			'default' => 10,
 			'show_if' => [
-				'visitors_counter', '=', 'true'
+				'visitors_counter',
+				'=',
+				'true'
 			]
 		],
 		'views_counter' => [
@@ -241,8 +243,8 @@ return [
 			'name' => 'Gesior Backward Support',
 			'type' => 'boolean',
 			'desc' => 'gesior backward support (templates & pages)<br/>' .
-						'allows using gesior templates and pages with myaac<br/>' .
-						'might bring some performance when disabled',
+				'allows using gesior templates and pages with myaac<br/>' .
+				'might bring some performance when disabled',
 			'default' => true,
 		],
 		'anonymous_usage_statistics' => [
@@ -349,7 +351,9 @@ return [
 			'type' => 'text',
 			'default' => '127.0.0.1',
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -358,7 +362,9 @@ return [
 			'type' => 'number',
 			'default' => 3306,
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -367,7 +373,9 @@ return [
 			'type' => 'text',
 			'default' => '',
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -376,7 +384,9 @@ return [
 			'type' => 'password',
 			'default' => '',
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -385,7 +395,9 @@ return [
 			'type' => 'text',
 			'default' => '',
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -395,7 +407,9 @@ return [
 			'type' => 'text',
 			'default' => '',
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -405,7 +419,9 @@ return [
 			'type' => 'text',
 			'default' => 'sha1',
 			'show_if' => [
-				'database_overwrite', '=', 'true'
+				'database_overwrite',
+				'=',
+				'true'
 			],
 			'is_config' => true,
 		],
@@ -474,7 +490,9 @@ SCRIPT,*/
 			'desc' => 'Server e-mail address (from:)',
 			'default' => 'no-reply@your-server.org',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			],
 		],
 		/*'mail_admin' => [
@@ -491,7 +509,9 @@ SCRIPT,*/
 Sent by MyAAC,
 https://my-aac.org',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'mail_signature_html' => [
@@ -502,14 +522,18 @@ https://my-aac.org',
 Sent by MyAAC,<br/>
 <a href="https://my-aac.org">my-aac.org</a>'),
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'section_smtp' => [
 			'type' => 'section',
 			'title' => 'SMTP (Mail Server)',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'mail_option' => [
@@ -519,7 +543,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Mail sender. Set to SMTP if using Gmail or Microsoft Outlook, or any other provider',
 			'default' => 0,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_host' => [
@@ -528,7 +554,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'SMTP mail host. smtp.gmail.com for GMail / smtp-mail.outlook.com for Microsoft Outlook',
 			'default' => '',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_port' => [
@@ -537,7 +565,9 @@ Sent by MyAAC,<br/>
 			'desc' => '25 (default) / 587 (tls - GMail, Microsoft Outlook)',
 			'default' => 25,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_auth' => [
@@ -546,7 +576,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Need authorization for Server? In normal situation, almost always Yes.',
 			'default' => true,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_user' => [
@@ -555,7 +587,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Here your email username to authenticate with SMTP',
 			'default' => 'admin@example.org',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_pass' => [
@@ -565,7 +599,9 @@ Sent by MyAAC,<br/>
 				. 'For GMail use generated App password - https://myaccount.google.com/apppasswords.',
 			'default' => '',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_security' => [
@@ -576,7 +612,9 @@ Sent by MyAAC,<br/>
 				. '(Gmail, Outlook - tls).',
 			'default' => 0,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'smtp_debug' => [
@@ -585,14 +623,18 @@ Sent by MyAAC,<br/>
 			'desc' => 'Activate to see more logs about mailing errors in error.log',
 			'default' => false,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			]
 		],
 		'mail_other' => [
 			'type' => 'section',
 			'title' => 'Account E-Mails',
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			],
 		],
 		'account_welcome_mail' => [
@@ -601,7 +643,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Send welcome e-mail when user registers',
 			'default' => true,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			],
 		],
 		'account_mail_verify' => [
@@ -610,7 +654,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Force users to confirm their e-mail addresses when registering account',
 			'default' => false,
 			'show_if' => [
-				'mail_enabled', '=', 'true'
+				'mail_enabled',
+				'=',
+				'true'
 			],
 		],
 		'mail_send_when_change_password' => [
@@ -619,7 +665,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Send e-mail with new password when change password to account',
 			'default' => true,
 			'show_if' => [
-				'mail_enabled', '=', 'true',
+				'mail_enabled',
+				'=',
+				'true',
 			],
 		],
 		'mail_send_when_generate_reckey' => [
@@ -628,7 +676,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Send e-mail with recovery key (key is displayed on page anyway when generate)',
 			'default' => true,
 			'show_if' => [
-				'mail_enabled', '=', 'true',
+				'mail_enabled',
+				'=',
+				'true',
 			],
 		],
 		'mail_lost_account_interval' => [
@@ -637,7 +687,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Time in seconds between e-mails to one account from lost account interface, block spam',
 			'default' => 60,
 			'show_if' => [
-				'mail_enabled', '=', 'true',
+				'mail_enabled',
+				'=',
+				'true',
 			],
 		],
 		[
@@ -666,7 +718,9 @@ Sent by MyAAC,<br/>
 			'desc' => "allow also additionally login by Account Name/Number (for users that might forget their email). Works only if Account Login By E-Mail is also enabled",
 			'default' => false,
 			'show_if' => [
-				'account_login_by_email', '=', 'true'
+				'account_login_by_email',
+				'=',
+				'true'
 			],
 		],
 		'account_create_auto_login' => [
@@ -751,8 +805,8 @@ Sent by MyAAC,<br/>
 			'name' => 'Character Samples',
 			'type' => 'textarea',
 			'desc' => "Character Samples used when creating character.<br/>" .
-						"Format: <strong>ID_of_vocation =Name of Character to copy</strong><br/>" .
-			"For Rook use - <strong>0=Rook Sample</strong>",
+				"Format: <strong>ID_of_vocation =Name of Character to copy</strong><br/>" .
+				"For Rook use - <strong>0=Rook Sample</strong>",
 			'default' => "1=Sorcerer Sample\n2=Druid Sample\n3=Paladin Sample\n4=Knight Sample",
 			'callbacks' => [
 				'get' => function ($value) {
@@ -856,7 +910,9 @@ Sent by MyAAC,<br/>
 			'type' => 'section',
 			'title' => 'Reward Users for confirming their E-Mails. Works only with Account Mail Verify enabled',
 			'show_if' => [
-				'account_mail_verify', '=', 'true'
+				'account_mail_verify',
+				'=',
+				'true'
 			],
 		],
 		'account_mail_confirmed_reward_premium_days' => [
@@ -865,7 +921,9 @@ Sent by MyAAC,<br/>
 			'desc' => '0 to disable',
 			'default' => 0,
 			'show_if' => [
-				'account_mail_verify', '=', 'true'
+				'account_mail_verify',
+				'=',
+				'true'
 			],
 		],
 		'account_mail_confirmed_reward_premium_points' => [
@@ -874,7 +932,9 @@ Sent by MyAAC,<br/>
 			'desc' => '0 to disable',
 			'default' => 0,
 			'show_if' => [
-				'account_mail_verify', '=', 'true'
+				'account_mail_verify',
+				'=',
+				'true'
 			],
 		],
 		'account_mail_confirmed_reward_coins' => [
@@ -883,7 +943,9 @@ Sent by MyAAC,<br/>
 			'desc' => '0 to disable. Works only with servers that supports coins',
 			'default' => 0,
 			'show_if' => [
-				'account_mail_verify', '=', 'true'
+				'account_mail_verify',
+				'=',
+				'true'
 			],
 		],
 		[
@@ -906,7 +968,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Min. level to form a guild',
 			'default' => 1,
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		'guild_need_premium' => [
@@ -915,7 +979,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Require premium account to form a guild?',
 			'default' => true,
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		'guild_image_size_kb' => [
@@ -924,7 +990,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Maximum size of the guild logo image in KB (kilobytes)',
 			'default' => 80,
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		'guild_description_default' => [
@@ -933,7 +1001,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Default description set on new guild',
 			'default' => 'New guild. Leader must edit this text :)',
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		'guild_description_chars_limit' => [
@@ -942,7 +1012,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'How many characters can be in guild description',
 			'default' => 1000,
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		'guild_description_lines_limit' => [
@@ -951,7 +1023,9 @@ Sent by MyAAC,<br/>
 			'desc' => "Limit of lines, if description has more lines it will be showed as long text, without 'enters'",
 			'default' => 6,
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		'guild_motd_chars_limit' => [
@@ -960,7 +1034,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Limit of MOTD (message of the day) that is shown later in the game on the guild channel',
 			'default' => 150,
 			'show_if' => [
-				'guild_management', '=', 'true',
+				'guild_management',
+				'=',
+				'true',
 			],
 		],
 		[
@@ -1015,7 +1091,9 @@ Sent by MyAAC,<br/>
 			'max' => 99999999999,
 			'default' => 0,
 			'show_if' => [
-				'forum', '=', 'site',
+				'forum',
+				'=',
+				'site',
 			],
 		],
 		'forum_post_interval' => [
@@ -1026,7 +1104,9 @@ Sent by MyAAC,<br/>
 			'max' => 99999999999,
 			'default' => 30,
 			'show_if' => [
-				'forum', '=', 'site',
+				'forum',
+				'=',
+				'site',
 			],
 		],
 		'forum_posts_per_page' => [
@@ -1037,7 +1117,9 @@ Sent by MyAAC,<br/>
 			'max' => 99999999999,
 			'default' => 20,
 			'show_if' => [
-				'forum', '=', 'site',
+				'forum',
+				'=',
+				'site',
 			],
 		],
 		'forum_threads_per_page' => [
@@ -1048,7 +1130,9 @@ Sent by MyAAC,<br/>
 			'max' => 99999999999,
 			'default' => 20,
 			'show_if' => [
-				'forum', '=', 'site',
+				'forum',
+				'=',
+				'site',
 			],
 		],
 		'forum_table_prefix' => [
@@ -1057,7 +1141,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'What forum mysql table to use, z_ (for gesior old forum) or myaac_ (for myaac)',
 			'default' => 'myaac_',
 			'show_if' => [
-				'forum', '=', 'site',
+				'forum',
+				'=',
+				'site',
 			],
 		],
 		[
@@ -1200,7 +1286,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Display Quests',
 			'type' => 'boolean',
 			'desc' => 'Show characters quests. Can be configured below',
-			'default' => false,
+			'default' => true,
 		],
 		'quests' => [
 			'name' => 'Quests List',
@@ -1208,11 +1294,11 @@ Sent by MyAAC,<br/>
 			'desc' => 'Character Quests List. Format: NameOfQuest=StorageValue',
 			'default' => array(
 				'Annihilator' => 'Annihilator',
-				'Pits Of Inferno' => 'PitsOfInferno',
+				#'Pits Of Inferno' => 'PitsOfInferno',
 				'Orc Fortress' => 'OrcFortress',
 				'Dwarven Legs' => 'DwarvenLegs',
 				'The Inquisition' => 'TheInquisition',
-				'Heart Of Destruction' => 'HeartOfDestruction',
+				'Heart of Destruction' => 'HeartOfDestruction',
 				'The Ape City' => 'TheApeCity',
 				'Liquid Black' => 'LiquidBlack',
 				'Demon Oak' => 'DemonOak',
@@ -1223,7 +1309,7 @@ Sent by MyAAC,<br/>
 				'Third Arena' => 'ThirdArena',
 				'Ariels Friend' => 'ArielsFriend',
 				'Firestarter' => 'Firestarter',
-				'Silence Of The Lambs' => 'SilenceOfTheLambs',
+				'Silence of the Lambs' => 'SilenceOfTheLambs',
 				'Ferumbras Ascendant' => 'FerumbrasAscendant',
 				'Top Chef' => 'TopChef',
 				'Im Resting Here' => 'ImRestingHere',
@@ -1235,7 +1321,7 @@ Sent by MyAAC,<br/>
 				'Cave Explorer On Shield' => 'CaveExplorerOnShield',
 				'Desert Quest One' => 'DesertQuestOne',
 				'Desert Quest Two' => 'DesertQuestTwo',
-				'Enter The Drunk Tank' => 'EnterTheDrunkTank',
+				'Enter the Drunk Tank' => 'EnterTheDrunkTank',
 				'Discernment' => 'Discernment',
 				'Wood Delivery' => 'WoodDelivery',
 				'Potion Conveyor Journeyman' => 'PotionConveyorJourneyman',
@@ -1252,12 +1338,12 @@ Sent by MyAAC,<br/>
 				'Half Turn Kick' => 'HalfTurnKick',
 				'Balanced Diet' => 'BalancedDiet',
 				'Kitz Dominando' => 'KitzDominando',
-				'Theater Of Cheap Thrills' => 'TheaterOfCheapThrills',
+				'Theater of Cheap Thrills' => 'TheaterOfCheapThrills',
 				'Safety And Occupational Hygiene' => 'SafetyAndOccupationalHygiene',
 				'Three Sramatians And The Dragon' => 'ThreeSramatiansAndTheDragon',
 				'Four Act Tragedy' => 'FourActTragedy',
 				'Per Iustitia Ad Astra' => 'PerIustitiaAdAstra',
-				'Way Of The Druid' => 'WayOfTheDruid',
+				'The Way of a Druid' => 'TheWayOfADruid',
 				'Deer Season' => 'DeerSeason',
 				'Taken Benek' => 'TakenBenek',
 				'Rude Eviction' => 'RudeEviction',
@@ -1265,10 +1351,11 @@ Sent by MyAAC,<br/>
 				'Singing Crystal' => 'SingingCrystal',
 			),
 			'show_if' => [
-				'characters_quests', '=', 'true'
+				'characters_quests',
+				'=',
+				'true'
 			],
-			'callbacks' => [
-			],
+			'callbacks' => [],
 		],
 		'characters_skills' => [
 			'name' => 'Display Skills',
@@ -1463,7 +1550,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Signature engine to use',
 			'default' => 'tibian',
 			'show_if' => [
-				'signature_enabled', '=', 'true'
+				'signature_enabled',
+				'=',
+				'true'
 			],
 		],
 		'signature_cache_time' => [
@@ -1473,7 +1562,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'How long to store cached file (in minutes)',
 			'default' => 5,
 			'show_if' => [
-				'signature_enabled', '=', 'true',
+				'signature_enabled',
+				'=',
+				'true',
 			],
 		],
 		'signature_browser_cache' => [
@@ -1483,7 +1574,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'How long to cache by browser (in minutes)',
 			'default' => 60,
 			'show_if' => [
-				'signature_enabled', '=', 'true',
+				'signature_enabled',
+				'=',
+				'true',
 			],
 		],
 		[
@@ -1565,7 +1658,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Leave empty to get automatically from config',
 			'default' => '127.0.0.1',
 			'show_if' => [
-				'status_enabled', '=', 'true',
+				'status_enabled',
+				'=',
+				'true',
 			]
 		],
 		'status_port' => [
@@ -1575,7 +1670,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Leave empty to get automatically from config',
 			'default' => 7171,
 			'show_if' => [
-				'status_enabled', '=', 'true',
+				'status_enabled',
+				'=',
+				'true',
 			]
 		],
 		'status_timeout' => [
@@ -1587,7 +1684,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'How long to wait for the initial response from the server',
 			'default' => 1.0,
 			'show_if' => [
-				'status_enabled', '=', 'true',
+				'status_enabled',
+				'=',
+				'true',
 			]
 		],
 		'status_interval' => [
@@ -1597,7 +1696,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'How often to connect to server and update status.<br/>If your status timeout in config.lua is bigger, that it will be used instead. When server is offline, it will be checked every time web refreshes, ignoring this variable',
 			'default' => 60,
 			'show_if' => [
-				'status_enabled', '=', 'true',
+				'status_enabled',
+				'=',
+				'true',
 			]
 		],
 		[
@@ -1652,7 +1753,7 @@ Sent by MyAAC,<br/>
 			'options' => $donateColumnOptions,
 			'default' => 'premium_points',
 			'callbacks' => [
-				'beforeSave' => function($key, $value, &$errorMessage) {
+				'beforeSave' => function ($key, $value, &$errorMessage) {
 					global $db;
 
 					if (!$db->hasColumn('accounts', $value)) {
@@ -1676,7 +1777,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Price for new recovery key',
 			'default' => 20,
 			'show_if' => [
-				'account_generate_new_reckey', '=', 'true',
+				'account_generate_new_reckey',
+				'=',
+				'true',
 			],
 		],
 		'account_change_character_name' => [
@@ -1692,7 +1795,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Cost of name change',
 			'default' => 30,
 			'show_if' => [
-				'account_change_character_name', '=', 'true',
+				'account_change_character_name',
+				'=',
+				'true',
 			],
 		],
 		'account_change_character_sex' => [
@@ -1708,7 +1813,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Cost of change sex',
 			'default' => 30,
 			'show_if' => [
-				'account_change_character_sex', '=', 'true',
+				'account_change_character_sex',
+				'=',
+				'true',
 			],
 		],
 		[
@@ -1732,7 +1839,9 @@ Sent by MyAAC,<br/>
 			'desc' => 'Number of incorrect login attempts before banning the IP',
 			'default' => 5,
 			'show_if' => [
-				'account_login_ipban_protection', '=', 'true'
+				'account_login_ipban_protection',
+				'=',
+				'true'
 			]
 		],
 
@@ -1742,12 +1851,14 @@ Sent by MyAAC,<br/>
 			'desc' => 'Time in minutes the IP will be banned after exceeding login attempts',
 			'default' => 30,
 			'show_if' => [
-				'account_login_ipban_protection', '=', 'true'
+				'account_login_ipban_protection',
+				'=',
+				'true'
 			]
 		],
 	],
 	'callbacks' => [
-		'beforeSave' => function(&$settings, &$values) {
+		'beforeSave' => function (&$settings, &$values) {
 			global $config;
 
 			$configOriginal = $config;
@@ -1764,8 +1875,7 @@ Sent by MyAAC,<br/>
 				if (isset($value['is_config']) && getBoolean($value['is_config'])) {
 					if ($value['type'] === 'boolean') {
 						$values[$key] = ($values[$key] === 'true');
-					}
-					elseif ($value['type'] === 'number') {
+					} elseif ($value['type'] === 'number') {
 						$values[$key] = (int)$values[$key];
 					}
 					//elseif ($value['type'] === 'options') {
@@ -1776,8 +1886,7 @@ Sent by MyAAC,<br/>
 
 					if ($key == 'server_path') {
 						$server_path = $values[$key];
-					}
-					elseif (str_contains($key, 'database_')) {
+					} elseif (str_contains($key, 'database_')) {
 						$database[$key] = $values[$key];
 					}
 
@@ -1786,7 +1895,7 @@ Sent by MyAAC,<br/>
 				}
 			}
 
-			if($server_path[strlen($server_path) - 1] != '/')
+			if ($server_path[strlen($server_path) - 1] != '/')
 				$server_path .= '/';
 
 			// test config.lua existence
@@ -1816,7 +1925,8 @@ Sent by MyAAC,<br/>
 	]
 ];
 
+foreach ($allSettings['settings']['quests']['default'] as $key => $value) {
+    $allSettings['settings']['quests']['default'][$key] = 'Storage-Finished-' . $value;
+}
 
-$config['quests'] = array_map(function ($quest) {
-	return 'Storage-Finished-' . $quest;
-}, $config['quests']);
+return $allSettings;

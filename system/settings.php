@@ -1293,6 +1293,8 @@ Sent by MyAAC,<br/>
 			'type' => 'textarea',
 			'desc' => 'Character Quests List. Format: NameOfQuest=StorageValue',
 			'default' => array(
+				'Avast Ye' => 'AvastYe',
+				'Retro Rulez' => 'RetroRulez',
 				'Annihilator' => 'Annihilator',
 				#'Pits Of Inferno' => 'PitsOfInferno',
 				'Orc Fortress' => 'OrcFortress',
@@ -1926,7 +1928,7 @@ Sent by MyAAC,<br/>
 ];
 
 foreach ($allSettings['settings']['quests']['default'] as $key => $value) {
-    $allSettings['settings']['quests']['default'][$key] = 'Storage-Finished-' . $value;
+	$allSettings['settings']['quests']['default'][$key] = 'Storage-Finished-' . $value;
 }
 
 ksort($allSettings['settings']['quests']['default']);

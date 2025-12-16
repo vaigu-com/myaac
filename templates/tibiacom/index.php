@@ -329,6 +329,33 @@ if (isset($config['boxes']))
 						<div id="LoginBottom" class="Loginstatus" style="background-image:url(<?php echo $template_path; ?>/images/general/box-bottom.gif)"></div>
 					</div>
 
+					<div class="SmallMenuBox" id="DownloadBox">
+						<div class="SmallBoxTop"
+							style="background-image:url(<?= $template_path; ?>/images/global/general/box-top.gif)"></div>
+						<div class="SmallBoxBorder"
+							style="background-image:url(<?= $template_path; ?>/images/global/general/chain.gif);"></div>
+						<div class="SmallBoxButtonContainer"
+							style="background-image:url(<?= $template_path; ?>/images/global/loginbox/loginbox-textfield-background.gif)">
+							<a href="?subtopic=downloadclient">
+								<div id="PlayNowContainer">
+									<div class="MediumButtonBackground"
+										style="background-image:url(<?= $template_path; ?>/images/global/buttons/mediumbutton.gif)"
+										onmouseover="MouseOverBigButton('DownloadButtonOver');"
+										onmouseout="MouseOutBigButton('DownloadButtonOver');">
+										<div id="DownloadButtonOver" class="MediumButtonOver"
+											style="background-image: url(<?= $template_path; ?>/images/global/buttons/mediumbutton-over.gif); visibility: hidden;"></div>
+										<input class="MediumButtonText" type="image" name="Download" alt="Download"
+											src="<?= $template_path; ?>/images/global/buttons/mediumbutton_download.png">
+									</div>
+								</div>
+							</a>
+						</div>
+						<div class="SmallBoxBorder BorderRight"
+							style="background-image:url(<?= $template_path; ?>/images/global/general/chain.gif);"></div>
+						<div class="Loginstatus SmallBoxBottom"
+							style="background-image:url(<?= $template_path; ?>/images/global/general/box-bottom.gif);"></div>
+					</div>
+
 					<div id='Menu'>
 						<div id='MenuTop' style='background-image:url(<?php echo $template_path; ?>/images/general/box-top.gif);'></div>
 

@@ -1658,7 +1658,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Status IP',
 			'type' => 'text',
 			'desc' => 'Leave empty to get automatically from config',
-			'default' => '127.0.0.1',
+			'default' => '',
 			'show_if' => [
 				'status_enabled',
 				'=',

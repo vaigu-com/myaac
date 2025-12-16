@@ -50,7 +50,7 @@ if(isset($settingIP[0]))
 }
 elseif(!isset($status_ip[0])) // try localhost if no ip specified
 {
-	$status_ip = '127.0.0.1';
+	#$status_ip = '127.0.0.1';
 }
 
 // port check

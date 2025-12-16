@@ -30,7 +30,7 @@ return [
 	MENU_CATEGORY_LIBRARY => [
 		'Monsters' => 'monsters',
 		'Spells' => 'spells',
-		'Commands' => 'commands',
+		#'Commands' => 'commands',
 		'Exp Stages' => 'exp-stages',
 		'Gallery' => 'gallery',
 		'Server Info' => 'ots-info',
@@ -39,7 +39,5 @@ return [
 	],
 	MENU_CATEGORY_SHOP => [
 		'Buy Points' => 'points',
-		'Shop Offer' => 'gifts',
-		'Shop History' => 'gifts/history',
 	],
 ];

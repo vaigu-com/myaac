@@ -745,7 +745,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Default Account Premium Days',
 			'type' => 'number',
 			'desc' => 'Default premium days on new account',
-			'default' => 0,
+			'default' => 65535,
 		],
 		'account_premium_points' => [
 			'name' => 'Default Account Premium Points',

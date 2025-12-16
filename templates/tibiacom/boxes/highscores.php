@@ -12,5 +12,6 @@ foreach($topPlayers as &$player) {
 }
 
 $twig->display('highscores.html.twig', array(
-	'topPlayers' => $topPlayers
+	'topPlayers' => $topPlayers,
+	'online' => $status['online']
 ));

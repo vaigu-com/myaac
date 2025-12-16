@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Visitors viewer
  *
@@ -18,15 +19,16 @@ $title = 'Visitors';
 $use_datatable = true;
 
 if (!setting('core.visitors_counter')): ?>
-	Visitors counter is disabled.<br/>
-	You can enable it in Settings -> General -> Visitors Counter.<br/>
-	<?php
+	Visitors counter is disabled.<br />
+	You can enable it in Settings -> General -> Visitors Counter.<br />
+<?php
 	return;
 endif;
 
 $visitors = new Visitors(setting('core.visitors_counter_ttl'));
 
-function compare($a, $b): int {
+function compare($a, $b): int
+{
 	return $a['lastvisit'] > $b['lastvisit'] ? -1 : 1;
 }
 
@@ -37,8 +39,7 @@ foreach ($tmp as &$visitor) {
 	$userAgent = $visitor['user_agent'] ?? '';
 	if (!strlen($userAgent) || $userAgent == 'unknown') {
 		$browser = 'Unknown';
-	}
-	else {
+	} else {
 		$dd = new DeviceDetector($userAgent);
 		$dd->parse();
 
@@ -46,8 +47,7 @@ foreach ($tmp as &$visitor) {
 			$bot = $dd->getBot();
 			$message = '(Bot) %s, <a href="%s" target="_blank">%s</a>';
 			$browser = sprintf($message, $bot['category'] ?? 'Unknown', $bot['url'] ?? '', $bot['name'] ?? 'Unknown name');
-		}
-		else {
+		} else {
 			$osFamily = OperatingSystem::getOsFamily($dd->getOs('name'));
 			$browserFamily = Browser::getBrowserFamily($dd->getClient('name'));
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Change rank
  *
@@ -12,26 +13,23 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 require __DIR__ . '/base.php';
 
-if(!$logged) {
+if (!$logged) {
 	$errors[] = "You are not logged in. You can't change rank.";
-}
-else {
+} else {
 	$guild_name = isset($_REQUEST['guild']) ? urldecode($_REQUEST['guild']) : null;
-	if(!Validator::guildName($guild_name)) {
+	if (!Validator::guildName($guild_name)) {
 		$errors[] = Validator::getLastError();
 	}
 }
 
-if(empty($errors))
-{
+if (empty($errors)) {
 	$guild = new OTS_Guild();
 	$guild->find($guild_name);
-	if(!$guild->isLoaded())
+	if (!$guild->isLoaded())
 		$errors[] = 'Guild with name <b>' . $guild_name . '</b> doesn\'t exist.';
 }
 
-if(!empty($errors))
-{
+if (!empty($errors)) {
 	$twig->display('error_box.html.twig', array('errors' => $errors));
 	$twig->display('guilds.back_button.html.twig');
 
@@ -44,20 +42,17 @@ $rank_list->orderBy('level', POT::ORDER_DESC);
 $guild_leader = false;
 $guild_vice = false;
 $account_players = $account_logged->getPlayersList();
-foreach($account_players as $player)
-{
+foreach ($account_players as $player) {
 	$player_rank = $player->getRank();
-	if($player_rank->isLoaded()) {
-		foreach($rank_list as $rank_in_guild)
-		{
-			if($rank_in_guild->getId() == $player_rank->getId())
-			{
+	if ($player_rank->isLoaded()) {
+		foreach ($rank_list as $rank_in_guild) {
+			if ($rank_in_guild->getId() == $player_rank->getId()) {
 				$players_from_account_in_guild[] = $player->getName();
-				if($player_rank->getLevel() > 1) {
+				if ($player_rank->getLevel() > 1) {
 					$guild_vice = true;
 					$level_in_guild = $player_rank->getLevel();
 				}
-				if($guild->getOwner()->getId() == $player->getId()) {
+				if ($guild->getOwner()->getId() == $player->getId()) {
 					$guild_vice = true;
 					$guild_leader = true;
 				}
@@ -66,59 +61,56 @@ foreach($account_players as $player)
 	}
 }
 
-if($guild_vice) {
-	if(isset($_POST['todo']) && $_POST['todo'] === 'save') {
+if ($guild_vice) {
+	if (isset($_POST['todo']) && $_POST['todo'] === 'save') {
 		$player_name = stripslashes($_REQUEST['name']);
 		$new_rank = (int) $_POST['rankid'];
 
-		if(!Validator::characterName($player_name)) {
+		if (!Validator::characterName($player_name)) {
 			$errors[] = 'Invalid player name format.';
 		}
 
 		$rank = new OTS_GuildRank();
 		$rank->load($new_rank);
-		if(!$rank->isLoaded())
+		if (!$rank->isLoaded())
 			$errors[] = "Rank with this ID doesn't exist.";
-		if($level_in_guild <= $rank->getLevel() && !$guild_leader)
+		if ($level_in_guild <= $rank->getLevel() && !$guild_leader)
 			$errors[] = "You can't set ranks with equal or higher level than your.";
 
-		if(empty($errors)) {
+		if (empty($errors)) {
 			$player_to_change = new OTS_Player();
 			$player_to_change->find($player_name);
-			if(!$player_to_change->isLoaded())
+			if (!$player_to_change->isLoaded())
 				$errors[] = "Player with name ' . $player_name . '</b> doesn't exist.";
-			else
-			{
+			else {
 				$player_in_guild = false;
-				if($guild->getName() === $player_to_change->getRank()->getGuild()->getName())
-				{
+				if ($guild->getName() === $player_to_change->getRank()->getGuild()->getName()) {
 					$player_in_guild = true;
 					$player_has_lower_rank = false;
-					if($guild_leader || $player_to_change->getRank()->getLevel() < $level_in_guild)
+					if ($guild_leader || $player_to_change->getRank()->getLevel() < $level_in_guild)
 						$player_has_lower_rank = true;
 				}
 			}
 			$rank_in_guild = false;
-			foreach($rank_list as $rank_from_guild)
-				if($rank_from_guild->getId() === $rank->getId())
+			foreach ($rank_list as $rank_from_guild)
+				if ($rank_from_guild->getId() === $rank->getId())
 					$rank_in_guild = true;
-			if(!$player_in_guild)
+			if (!$player_in_guild)
 				$errors[] = 'This player isn\'t in your guild.';
-			if(!$rank_in_guild)
+			if (!$rank_in_guild)
 				$errors[] = 'This rank isn\'t in your guild.';
-			if(!$player_has_lower_rank)
+			if (!$player_has_lower_rank)
 				$errors[] = 'This player has higher rank in guild than you. You can\'t change his/her rank.';
 		}
 
-		if(empty($errors)) {
+		if (empty($errors)) {
 			$player_to_change->setRank($rank);
 			$twig->display('success.html.twig', array(
 				'title' => 'Rank Changed',
-				'description' => 'Rank of player <b>'.$player_to_change->getName().'</b> has been changed to <b>'.$rank->getName().'</b>.',
+				'description' => 'Rank of player <b>' . $player_to_change->getName() . '</b> has been changed to <b>' . $rank->getName() . '</b>.',
 				'custom_buttons' => ''
 			));
-		}
-		else {
+		} else {
 			$twig->display('error_box.html.twig', array('errors' => $errors));
 		}
 	}
@@ -130,8 +122,7 @@ if($guild_vice) {
 		'guild_name' => $guild->getName(),
 		'ranks' => $result['ranks']
 	));
-}
-else {
+} else {
 	echo 'Error. You are not a leader or vice leader in guild ' . $guild->getName();
 	$twig->display('guilds.back_button.html.twig', array(
 		'new_line' => true,
@@ -155,36 +146,30 @@ function getPlayersWithLowerRank($rank_list, $guild_leader, $db, $level_in_guild
 	/**
 	 * @var OTS_GuildRank $rank
 	 */
-	foreach($rank_list as $rank)
-	{
-		if($guild_leader || $rank->getLevel() < $level_in_guild)
-		{
+	foreach ($rank_list as $rank) {
+		if ($guild_leader || $rank->getLevel() < $level_in_guild) {
 			$ranks[$rid]['0'] = $rank->getId();
 			$ranks[$rid]['1'] = $rank->getName();
 			$rid++;
 
-			if($db->hasTable(GUILD_MEMBERS_TABLE)) {
+			if ($db->hasTable(GUILD_MEMBERS_TABLE)) {
 				$players_with_rank = $db->query('SELECT `players`.`id` as `id`, `' . GUILD_MEMBERS_TABLE . '`.`rank_id` as `rank_id` FROM `players`, `' . GUILD_MEMBERS_TABLE . '` WHERE `' . GUILD_MEMBERS_TABLE . '`.`rank_id` = ' . $rank->getId() . ' AND `players`.`id` = `' . GUILD_MEMBERS_TABLE . '`.`player_id` ORDER BY `name`;');
-			}
-			else {
+			} else {
 				$players_with_rank = $db->query('SELECT `id`, `rank_id` FROM `players` WHERE `rank_id` = ' . $rank->getId() . ' AND `deleted` = 0;');
 			}
 
 			$players_with_rank_number = $players_with_rank->rowCount();
-			if($players_with_rank_number > 0)
-			{
+			if ($players_with_rank_number > 0) {
 
-				foreach($players_with_rank as $result)
-				{
+				foreach ($players_with_rank as $result) {
 					$player = new OTS_Player();
 					$player->load($result['id']);
-					if(!$player->isLoaded())
+					if (!$player->isLoaded())
 						continue;
 
-					if($guild_leader || $guild->getOwner()->getId() !== $player->getId())
-					{
+					if ($guild_leader || $guild->getOwner()->getId() !== $player->getId()) {
 						$players_with_lower_rank[$sid][0] = $player->getName();
-						$players_with_lower_rank[$sid][1] = $player->getName().' ('.$rank->getName().')';
+						$players_with_lower_rank[$sid][1] = $player->getName() . ' (' . $rank->getName() . ')';
 						$sid++;
 					}
 				}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Account Number Generator
  * Returns json with result
@@ -31,7 +32,7 @@ do {
 	}
 
 	$query = $db->query('SELECT `id` FROM `accounts` WHERE `' . ($hasNumberColumn ? 'number' : 'id') . '` = ' . $db->quote($number));
-} while($query->rowCount() >= 1);
+} while ($query->rowCount() >= 1);
 
 success_($number);
 
@@ -40,13 +41,15 @@ success_($number);
  *
  * @param string $desc Description
  */
-function success_($desc) {
+function success_($desc)
+{
 	echo json_encode([
 		'success' => $desc
 	]);
 	exit();
 }
-function error_($desc) {
+function error_($desc)
+{
 	echo json_encode([
 		'error' => $desc
 	]);

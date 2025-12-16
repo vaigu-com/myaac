@@ -26,22 +26,22 @@ class PluginInstallCommand extends Command
 		$pathToFile = $input->getArgument('pathToPluginZip');
 
 		$ext = strtolower(pathinfo($pathToFile, PATHINFO_EXTENSION));
-		if($ext !== 'zip') {// check if it is zipped/compressed file
+		if ($ext !== 'zip') { // check if it is zipped/compressed file
 			$io->error('Please install only .zip files');
 			return 2;
 		}
 
-		if(!file_exists($pathToFile)) {
+		if (!file_exists($pathToFile)) {
 			$io->error('File ' . $pathToFile . ' does not exist');
 			return 3;
 		}
 
-		if(!Plugins::install($pathToFile)){
+		if (!Plugins::install($pathToFile)) {
 			$io->error(Plugins::getError());
 			return 4;
 		}
 
-		foreach(Plugins::getWarnings() as $warning) {
+		foreach (Plugins::getWarnings() as $warning) {
 			$io->warning($warning);
 		}
 

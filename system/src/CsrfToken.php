@@ -1,4 +1,5 @@
 <?php
+
 /**
  * CsrfToken
  *
@@ -28,7 +29,8 @@ class CsrfToken
 	 * @param bool $return
 	 * @return string
 	 */
-	public static function create(bool $return = false): string {
+	public static function create(bool $return = false): string
+	{
 		$input = '<input type="hidden" name="csrf_token" value="' . self::get() . '" />';
 		if ($return) {
 			return $input;
@@ -80,7 +82,8 @@ class CsrfToken
 	 * @static true
 	 * @return void
 	 **/
-	protected static function reset(): void {
+	protected static function reset(): void
+	{
 		unsetSession('csrf_token');
 	}
 

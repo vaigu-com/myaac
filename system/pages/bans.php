@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Bans
  *
@@ -14,7 +15,7 @@ $title = 'Bans list';
 $configBansPerPage = setting('core.bans_per_page');
 $_page = $_GET['page'] ?? 1;
 
-if(!is_numeric($_page) || $_page < 1 || $_page > PHP_INT_MAX) {
+if (!is_numeric($_page) || $_page < 1 || $_page > PHP_INT_MAX) {
 	$_page = 1;
 }
 
@@ -30,20 +31,19 @@ $configBans['hasReason'] = false;
 $limit = 'LIMIT ' . ($configBansPerPage + 1) . ' OFFSET ' . $offset;
 if ($db->hasTable('account_bans')) {
 	$bansQuery = $db->query('SELECT * FROM `account_bans` ORDER BY `banned_at` DESC ' . $limit);
-}
-else if ($db->hasTable('bans') && $db->hasColumn('bans', 'active')
-	&& $db->hasColumn('bans', 'type') && $db->hasColumn('bans', 'reason')) {
+} else if (
+	$db->hasTable('bans') && $db->hasColumn('bans', 'active')
+	&& $db->hasColumn('bans', 'type') && $db->hasColumn('bans', 'reason')
+) {
 	$bansQuery = $db->query('SELECT * FROM `bans` WHERE `active` = 1 ORDER BY `added` DESC ' . $limit);
 	$configBans['hasType'] = true;
 	$configBans['hasReason'] = true;
-}
-else {
+} else {
 	echo 'Bans list is not supported in your distribution.';
 	return;
 }
 
-if(!$bansQuery->rowCount())
-{
+if (!$bansQuery->rowCount()) {
 	echo 'There are no banishments yet.';
 	return;
 }
@@ -52,10 +52,8 @@ $nextPage = false;
 $i = 0;
 $bans = $bansQuery->fetchAll(PDO::FETCH_ASSOC);
 
-foreach ($bans as $id => &$ban)
-{
-	if(++$i > $configBansPerPage)
-	{
+foreach ($bans as $id => &$ban) {
+	if (++$i > $configBansPerPage) {
 		unset($bans[$id]);
 		$nextPage = true;
 		break;
@@ -64,8 +62,7 @@ foreach ($bans as $id => &$ban)
 	$ban['i'] = $i;
 	if ($db->hasColumn('bans', 'value')) {
 		$accountId = $ban['value'];
-	}
-	else {
+	} else {
 		// TFS 1.x
 		$accountId = $ban['account_id'];
 	}
@@ -76,12 +73,10 @@ foreach ($bans as $id => &$ban)
 
 		if ($ban['type'] == 2) { // namelock
 			$playerName = getPlayerNameById($accountId);
-		}
-		else {
+		} else {
 			$playerName = getPlayerNameByAccount($accountId);
 		}
-	}
-	else {
+	} else {
 		$playerName = getPlayerNameByAccount($accountId);
 	}
 
@@ -94,15 +89,13 @@ foreach ($bans as $id => &$ban)
 
 	if ((int)$ban[$expiresColumn] === -1) {
 		$ban['expires'] = 'Never';
-	}
-	else {
+	} else {
 		$ban['expires'] = date('H:i:s', $ban[$expiresColumn]) . '<br/>' . date('d.M.Y', $ban[$expiresColumn]);
 	}
 
 	if ($configBans['hasReason']) {
 		$ban['reason'] = getBanReason($ban['reason']);
-	}
-	else {
+	} else {
 		$ban['comment'] = $ban['reason'];
 	}
 
@@ -110,19 +103,16 @@ foreach ($bans as $id => &$ban)
 	if ($db->hasColumn('bans', 'admin_id')) {
 		if ((int)$ban['admin_id'] === 0) {
 			$addedBy = 'Autoban';
-		}
-		else {
+		} else {
 			$addedBy = getPlayerLink(getPlayerNameByAccount($ban['admin_id']));
 		}
-	}
-	else {
+	} else {
 		$addedBy = getPlayerLink(getPlayerNameById($ban['banned_by']));
 	}
 
 	if ($db->hasColumn('bans', 'added')) {
 		$addedTime = $ban['added'];
-	}
-	else {
+	} else {
 		$addedTime = $ban['banned_at'];
 	}
 

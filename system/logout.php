@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Logout from account
  *
@@ -12,8 +13,8 @@ use MyAAC\CsrfToken;
 
 defined('MYAAC') or die('Direct access not allowed!');
 
-if(isset($account_logged) && $account_logged->isLoaded()) {
-	if($hooks->trigger(HOOK_LOGOUT, ['account_id' => $account_logged->getId()])) {
+if (isset($account_logged) && $account_logged->isLoaded()) {
+	if ($hooks->trigger(HOOK_LOGOUT, ['account_id' => $account_logged->getId()])) {
 		unsetSession('account');
 		unsetSession('password');
 		unsetSession('remember_me');

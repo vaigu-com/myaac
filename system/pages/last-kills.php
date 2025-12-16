@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Last kills
  *
@@ -15,16 +16,15 @@ $last_kills = array();
 $players_deaths_count = 0;
 
 $tmp = null;
-if($cache->enabled() && $cache->fetch('last_kills', $tmp)) {
+if ($cache->enabled() && $cache->fetch('last_kills', $tmp)) {
 	$last_kills = unserialize($tmp);
-}
-else {
-	if($db->hasTable('player_killers')) // tfs 0.3
+} else {
+	if ($db->hasTable('player_killers')) // tfs 0.3
 	{
 		$players_deaths = $db->query('SELECT `player_deaths`.`id`, `player_deaths`.`date`, `player_deaths`.`level`, `players`.`name`' . ($db->hasColumn('players', 'world_id') ? ', `players`.`world_id`' : '') . ' FROM `player_deaths` LEFT JOIN `players` ON `player_deaths`.`player_id` = `players`.`id` ORDER BY `date` DESC LIMIT 0, ' . setting('core.last_kills_limit'));
 
-		if(!empty($players_deaths)) {
-			foreach($players_deaths as $death) {
+		if (!empty($players_deaths)) {
+			foreach ($players_deaths as $death) {
 				$players_deaths_count++;
 				$killers_string = getPlayerLink($death['name']) . ' ';
 				$killer_name = '';
@@ -33,36 +33,36 @@ else {
 
 				$i = 0;
 				$count = count($killers);
-				foreach($killers as $killer) {
+				foreach ($killers as $killer) {
 					$i++;
-					if($killer['player_name'] != "") {
-						if($i == 1) {
-							if($count <= 4)
+					if ($killer['player_name'] != "") {
+						if ($i == 1) {
+							if ($count <= 4)
 								$killers_string .= 'killed';
-							else if($count < 10)
+							else if ($count < 10)
 								$killers_string .= 'slain';
-							else if($count < 15)
+							else if ($count < 15)
 								$killers_string .= 'crushed';
-							else if($count < 20)
+							else if ($count < 20)
 								$killers_string .= 'eliminated';
 							else
 								$killers_string .= 'annihilated';
 							$killers_string .= ' at level <b>' . $death['level'] . '</b> ';
-						} else if($i == $count)
+						} else if ($i == $count)
 							$killers_string .= ' and';
 						else
 							$killers_string .= ',';
 
 						$killers_string .= ' by ';
-						if($killer['monster_name'] != '')
+						if ($killer['monster_name'] != '')
 							$killers_string .= $killer['monster_name'] . ' summoned by ';
 
-						if($killer['player_exists'] == 0)
+						if ($killer['player_exists'] == 0)
 							$killers_string .= getPlayerLink($killer['player_name']);
 					} else {
-						if($i == 1)
+						if ($i == 1)
 							$killers_string .= 'died at level <b>' . $death['level'] . '</b>';
-						else if($i == $count)
+						else if ($i == $count)
 							$killers_string .= ' and';
 						else
 							$killers_string .= ',';
@@ -85,13 +85,13 @@ else {
 		//$players_deaths = $db->query("SELECT `p`.`name` AS `victim`, `player_deaths`.`killed_by` as `killed_by`, `player_deaths`.`time` as `time`, `player_deaths`.`is_player` as `is_player`, `player_deaths`.`level` as `level` FROM `player_deaths`, `players` as `d` INNER JOIN `players` as `p` ON player_deaths.player_id = p.id WHERE player_deaths.`is_player`='1' ORDER BY `time` DESC LIMIT " . setting('core.last_kills_limit') . ";");
 
 		$players_deaths = $db->query("SELECT `p`.`name` AS `victim`, `d`.`killed_by` as `killed_by`, `d`.`time` as `time`, `d`.`level`, `d`.`is_player` FROM `player_deaths` as `d` INNER JOIN `players` as `p` ON d.player_id = p.id ORDER BY `time` DESC LIMIT " . setting('core.last_kills_limit') . ";");
-		if(!empty($players_deaths)) {
-			foreach($players_deaths as $death) {
+		if (!empty($players_deaths)) {
+			foreach ($players_deaths as $death) {
 				$players_deaths_count++;
 				$killers_string = '';
 
 				$killers_string .= getPlayerLink($death['victim']) . ' died at level <strong>' . $death['level'] . '</strong> by ';
-				if($death['is_player'] == '1')
+				if ($death['is_player'] == '1')
 					$killers_string .= getPlayerLink($death['killed_by']);
 				else
 					$killers_string .= $death['killed_by'];
@@ -107,7 +107,7 @@ else {
 		}
 	}
 
-	if($cache->enabled()) {
+	if ($cache->enabled()) {
 		$cache->set('last_kills', serialize($last_kills), 120);
 	}
 }

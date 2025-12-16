@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Gallery
  *
@@ -15,8 +16,8 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Gallery';
 
 $canEdit = hasFlag(FLAG_CONTENT_GALLERY) || superAdmin();
-if($canEdit) {
-	if(function_exists('imagecreatefrompng')) {
+if ($canEdit) {
+	if (function_exists('imagecreatefrompng')) {
 		if (!empty($action)) {
 			if ($action == 'delete' || $action == 'edit' || $action == 'hide' || $action == 'moveup' || $action == 'movedown')
 				$id = $_REQUEST['id'];
@@ -59,7 +60,7 @@ if($canEdit) {
 				$twig->display('error_box.html.twig', array('errors' => $errors));
 		}
 
-		if(!isset($_GET['image'])) {
+		if (!isset($_GET['image'])) {
 			$twig->display('gallery.form.html.twig', array(
 				'link' => getLink('gallery/' . ($action == 'edit' ? 'edit' : 'add')),
 				'action' => $action,
@@ -69,30 +70,27 @@ if($canEdit) {
 				'author' => isset($author) ? $author : null
 			));
 		}
-	}
-	else
+	} else
 		echo 'You cannot edit/add gallery items as it seems your PHP installation doesnt have GD support enabled. Visit <a href="http://be2.php.net/manual/en/image.installation.php">PHP Manual</a> for more info.';
 }
 
-if(isset($_GET['image']))
-{
+if (isset($_GET['image'])) {
 	$image = $db->query('SELECT * FROM `' . TABLE_PREFIX . 'gallery`  WHERE `id` = ' . $db->quote($_GET['image']) . ' ORDER by `ordering` LIMIT 1;');
-	if($image->rowCount() == 1)
+	if ($image->rowCount() == 1)
 		$image = $image->fetch();
-	else
-	{
+	else {
 		echo 'Image with this id does not exists.';
 		return;
 	}
 
 	$previous_image = $db->query('SELECT `id` FROM `' . TABLE_PREFIX . 'gallery` WHERE `id` = ' . $db->quote($image['id'] - 1) . ' ORDER by `ordering`;');
-	if($previous_image->rowCount() == 1)
+	if ($previous_image->rowCount() == 1)
 		$previous_image = $previous_image->fetch();
 	else
 		$previous_image = NULL;
 
 	$next_image = $db->query('SELECT `id` FROM `' . TABLE_PREFIX . 'gallery` WHERE `id` = ' . $db->quote($image['id'] + 1) . ' ORDER by `ordering`;');
-	if($next_image->rowCount() == 1)
+	if ($next_image->rowCount() == 1)
 		$next_image = $next_image->fetch();
 	else
 		$next_image = NULL;
@@ -114,8 +112,7 @@ $images = Cache::remember('gallery_' . ($canEdit ? '1' : '0'), 60, function () u
 });
 
 $last = count($images);
-if(!$last)
-{
+if (!$last) {
 ?>
 	There are no images added to gallery yet.
 <?php
@@ -133,17 +130,16 @@ class Gallery
 	static public function add($comment, $image, $author, &$errors)
 	{
 		global $db;
-		if(isset($comment[0]) && isset($image[0]) && isset($author[0]))
-		{
+		if (isset($comment[0]) && isset($image[0]) && isset($author[0])) {
 			$query =
 				$db->query(
 					'SELECT `ordering`' .
-					' FROM `' . TABLE_PREFIX . 'gallery`' .
-					' ORDER BY `ordering`' . ' DESC LIMIT 1'
+						' FROM `' . TABLE_PREFIX . 'gallery`' .
+						' ORDER BY `ordering`' . ' DESC LIMIT 1'
 				);
 
 			$ordering = 0;
-			if($query->rowCount() > 0) {
+			if ($query->rowCount() > 0) {
 				$query = $query->fetch();
 				$ordering = $query['ordering'] + 1;
 			}
@@ -152,53 +148,53 @@ class Gallery
 			$extension = strtolower($pathinfo['extension']);
 			$thumb_filename = GALLERY_DIR . $pathinfo['filename'] . '_thumb.' . $extension;
 			$filename = GALLERY_DIR . $pathinfo['filename'] . '.' . $extension;
-			if($db->insert(TABLE_PREFIX . 'gallery', array(
+			if ($db->insert(TABLE_PREFIX . 'gallery', array(
 				'comment' => $comment,
-				'image' => $filename, 'author' => $author,
+				'image' => $filename,
+				'author' => $author,
 				'thumb' => $thumb_filename,
-				'ordering' => $ordering))) {
-				if(self::generateThumb($db->lastInsertId(), $image, $errors))
+				'ordering' => $ordering
+			))) {
+				if (self::generateThumb($db->lastInsertId(), $image, $errors))
 					self::resize($image, 650, 500, $filename, $errors);
 			}
-		}
-		else
+		} else
 			$errors[] = 'Please fill all inputs.';
 
 		return !count($errors);
 	}
 
-	static public function get($id) {
+	static public function get($id)
+	{
 		return ModelsGallery::find($id)->toArray();
 	}
 
-	static public function update($id, $comment, $image, $author) {
+	static public function update($id, $comment, $image, $author)
+	{
 		$pathinfo = pathinfo($image);
 		$extension = strtolower($pathinfo['extension']);
 		$filename = GALLERY_DIR . $pathinfo['filename'] . '.' . $extension;
 
-		if(ModelsGallery::where('id', $id)->update([
+		if (ModelsGallery::where('id', $id)->update([
 			'comment' => $comment,
 			'image' => $filename,
 			'author' => $author
 		])) {
-			if(self::generateThumb($id, $image, $errors))
+			if (self::generateThumb($id, $image, $errors))
 				self::resize($image, 650, 500, $filename, $errors);
 		}
 	}
 
 	static public function delete($id, &$errors)
 	{
-		if(isset($id))
-		{
+		if (isset($id)) {
 			$row = ModelsGallery::find($id);
-			if($row)
+			if ($row)
 				if (!$row->delete()) {
 					$errors[] = 'Fail during delete Gallery';
-				}
-			else
-				$errors[] = 'Image with id ' . $id . ' does not exists.';
-		}
-		else
+				} else
+					$errors[] = 'Image with id ' . $id . ' does not exists.';
+		} else
 			$errors[] = 'id not set';
 
 		return !count($errors);
@@ -206,18 +202,16 @@ class Gallery
 
 	static public function toggleHide($id, &$errors)
 	{
-		if(isset($id))
-		{
+		if (isset($id)) {
 			$row = ModelsGallery::find($id);
-			if($row) {
+			if ($row) {
 				$row->hide = $row->hide == 1 ? 0 : 1;
 				if (!$row->save()) {
 					$errors[] = 'Fail during toggle hide Gallery';
 				}
 			} else
 				$errors[] = 'Image with id ' . $id . ' does not exists.';
-		}
-		else
+		} else
 			$errors[] = 'id not set';
 
 		return !count($errors);
@@ -227,11 +221,10 @@ class Gallery
 	{
 		global $db;
 		$query = self::get($id);
-		if($query !== false)
-		{
+		if ($query !== false) {
 			$ordering = $query['ordering'] + $i;
 			$old_record = $db->select(TABLE_PREFIX . 'gallery', array('ordering' => $ordering));
-			if($old_record !== false) {
+			if ($old_record !== false) {
 				ModelsGallery::where('ordering', $ordering)->update([
 					'ordering' => $query['ordering'],
 				]);
@@ -240,8 +233,7 @@ class Gallery
 			ModelsGallery::where('id', $id)->update([
 				'ordering' => $ordering,
 			]);
-		}
-		else
+		} else
 			$errors[] = 'Image with id ' . $id . ' does not exists.';
 
 		return !count($errors);
@@ -252,8 +244,7 @@ class Gallery
 		$pathinfo = pathinfo($file);
 		$extension = strtolower($pathinfo['extension']);
 
-		switch ($extension)
-		{
+		switch ($extension) {
 			case 'gif': // GIF
 				$image = imagecreatefromgif($file);
 				break;
@@ -279,8 +270,7 @@ class Gallery
 		imagecopyresized($tmp_img, $image, 0, 0, 0, 0, $new_width, $new_height, $width, $height);
 
 		// save thumbnail into a file
-		switch($extension)
-		{
+		switch ($extension) {
 			case 'gif':
 				imagegif($tmp_img, $new_file);
 				break;
@@ -304,19 +294,17 @@ class Gallery
 		$extension = strtolower($pathinfo['extension']);
 		$thumb_filename = GALLERY_DIR . $pathinfo['filename'] . '_thumb.' . $extension;
 
-		if(!self::resize($file, 170, 110, $thumb_filename, $errors))
+		if (!self::resize($file, 170, 110, $thumb_filename, $errors))
 			return false;
 
-		if(isset($id))
-		{
+		if (isset($id)) {
 			$row = ModelsGallery::find($id);
-			if($row) {
+			if ($row) {
 				$row->thumb = $thumb_filename;
 				$row->save();
 			} else
 				$errors[] = 'Image with id ' . $id . ' does not exists.';
-		}
-		else
+		} else
 			$errors[] = 'id not set';
 
 		return !count($errors);

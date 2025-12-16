@@ -123,15 +123,15 @@ function is_sub_dir($path = NULL, $parent_folder = BASE): bool|string
 	$folder = preg_replace('/[^a-z0-9\.\-_]/i', '', $folder);
 
 	//If this is a bad path or a bad end folder name
-	if( !$dir OR !$folder OR $folder === '.') {
+	if (!$dir or !$folder or $folder === '.') {
 		return false;
 	}
 
 	//Rebuild path
-	$path = $dir. '/' . $folder;
+	$path = $dir . '/' . $folder;
 
 	//If this path is higher than the parent folder
-	if( strcasecmp($path, $parent_folder) > 0 ) {
+	if (strcasecmp($path, $parent_folder) > 0) {
 		return $path;
 	}
 

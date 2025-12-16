@@ -26,136 +26,120 @@ $twig = new Twig_Environment($twig_loader, array(
 $step = $_REQUEST['step'] ?? 'welcome';
 
 $install_status = array();
-if(file_exists(CACHE . 'install.txt')) {
+if (file_exists(CACHE . 'install.txt')) {
 	$install_status = unserialize(file_get_contents(CACHE . 'install.txt'));
 
-	if(!isset($_REQUEST['step'])) {
+	if (!isset($_REQUEST['step'])) {
 		$step = isset($install_status['step']) ? $install_status['step'] : '';
 	}
 }
 
-if(isset($_POST['vars']))
-{
-	foreach($_POST['vars'] as $key => $value) {
+if (isset($_POST['vars'])) {
+	foreach ($_POST['vars'] as $key => $value) {
 		$_SESSION['var_' . $key] = $value;
 		$install_status[$key] = $value;
 	}
-}
-else {
-	foreach($install_status as $key => $value) {
+} else {
+	foreach ($install_status as $key => $value) {
 		$_SESSION['var_' . $key] = $value;
 	}
 }
 
-if($step == 'finish' && (!isset($config['installed']) || !$config['installed'])) {
+if ($step == 'finish' && (!isset($config['installed']) || !$config['installed'])) {
 	$step = 'welcome';
 }
 
 // step verify
 $steps = array(1 => 'welcome', 2 => 'license', 3 => 'requirements', 4 => 'config', 5 => 'database', 6 => 'admin', 7 => 'finish');
-if(!in_array($step, $steps)) // check if step is valid
+if (!in_array($step, $steps)) // check if step is valid
 	throw new RuntimeException('ERROR: Unknown step.');
 
 $install_status['step'] = $step;
 $errors = array();
 
-if($step == 'database') {
-	foreach($_SESSION as $key => $value) {
-		if(strpos($key, 'var_') === false) {
+if ($step == 'database') {
+	foreach ($_SESSION as $key => $value) {
+		if (strpos($key, 'var_') === false) {
 			continue;
 		}
 
 		$key = str_replace('var_', '', $key);
 
-		if(in_array($key, array('account', 'account_id', 'password', 'password_confirm', 'email', 'player_name'))) {
+		if (in_array($key, array('account', 'account_id', 'password', 'password_confirm', 'email', 'player_name'))) {
 			continue;
 		}
 
-		if($key != 'usage' && empty($value)) {
+		if ($key != 'usage' && empty($value)) {
 			$errors[] = $locale['please_fill_all'];
 			break;
-		}
-		else if($key == 'server_path') {
+		} else if ($key == 'server_path') {
 			$config['server_path'] = $value;
 
 			// take care of trailing slash at the end
-			if($config['server_path'][strlen($config['server_path']) - 1] != '/') {
+			if ($config['server_path'][strlen($config['server_path']) - 1] != '/') {
 				$config['server_path'] .= '/';
 			}
 
-			if(!file_exists($config['server_path'] . 'config.lua')) {
+			if (!file_exists($config['server_path'] . 'config.lua')) {
 				$errors[] = $locale['step_database_error_config'];
 				break;
 			}
-		}
-		else if($key == 'timezone' && !in_array($value, DateTimeZone::listIdentifiers())) {
+		} else if ($key == 'timezone' && !in_array($value, DateTimeZone::listIdentifiers())) {
 			$errors[] = $locale['step_config_timezone_error'];
 			break;
-		}
-		else if($key == 'client' && !in_array($value, $config['clients'])) {
+		} else if ($key == 'client' && !in_array($value, $config['clients'])) {
 			$errors[] = $locale['step_config_client_error'];
 			break;
 		}
 	}
 
-	if(!empty($errors)) {
+	if (!empty($errors)) {
 		$step = 'config';
 	}
-}
-else if($step == 'admin') {
-	if(!file_exists(BASE . 'config.local.php') || !isset($config['installed']) || !$config['installed']) {
+} else if ($step == 'admin') {
+	if (!file_exists(BASE . 'config.local.php') || !isset($config['installed']) || !$config['installed']) {
 		$step = 'database';
-	}
-	else {
+	} else {
 		$_SESSION['saved'] = true;
 	}
-}
-else if($step == 'finish') {
+} else if ($step == 'finish') {
 	$email = $_SESSION['var_email'];
 	$password = $_SESSION['var_password'];
 	$password_confirm = $_SESSION['var_password_confirm'];
 	$player_name = $_SESSION['var_player_name'] ?? null;
 
 	// email check
-	if(empty($email)) {
+	if (empty($email)) {
 		$errors[] = $locale['step_admin_email_error_empty'];
-	}
-	else if(!Validator::email($email)) {
+	} else if (!Validator::email($email)) {
 		$errors[] = $locale['step_admin_email_error_format'];
 	}
 
 	// account check
-	if(isset($_SESSION['var_account_id'])) {
-		if(empty($_SESSION['var_account_id'])) {
+	if (isset($_SESSION['var_account_id'])) {
+		if (empty($_SESSION['var_account_id'])) {
 			$errors[] = $locale['step_admin_account_id_error_empty'];
-		}
-		else if(!Validator::accountId($_SESSION['var_account_id'])) {
+		} else if (!Validator::accountId($_SESSION['var_account_id'])) {
 			$errors[] = $locale['step_admin_account_id_error_format'];
-		}
-		else if($_SESSION['var_account_id'] == $password) {
+		} else if ($_SESSION['var_account_id'] == $password) {
 			$errors[] = $locale['step_admin_account_id_error_same'];
 		}
-	}
-	else if(isset($_SESSION['var_account'])) {
-		if(empty($_SESSION['var_account'])) {
+	} else if (isset($_SESSION['var_account'])) {
+		if (empty($_SESSION['var_account'])) {
 			$errors[] = $locale['step_admin_account_error_empty'];
-		}
-		else if(!Validator::accountName($_SESSION['var_account'])) {
+		} else if (!Validator::accountName($_SESSION['var_account'])) {
 			$errors[] = $locale['step_admin_account_error_format'];
-		}
-		else if(strtoupper($_SESSION['var_account']) == strtoupper($password)) {
+		} else if (strtoupper($_SESSION['var_account']) == strtoupper($password)) {
 			$errors[] = $locale['step_admin_account_error_same'];
 		}
 	}
 
 	// password check
-	if(empty($password)) {
+	if (empty($password)) {
 		$errors[] = $locale['step_admin_password_error_empty'];
-	}
-	else if(!Validator::password($password)) {
+	} else if (!Validator::password($password)) {
 		$errors[] = $locale['step_admin_password_error_format'];
-	}
-	else if($password != $password_confirm) {
+	} else if ($password != $password_confirm) {
 		$errors[] = $locale['step_admin_password_confirm_error_not_same'];
 	}
 
@@ -168,40 +152,37 @@ else if($step == 'finish') {
 		}
 	}
 
-	if(!empty($errors)) {
+	if (!empty($errors)) {
 		$step = 'admin';
 	}
 }
 
-if(empty($errors)) {
+if (empty($errors)) {
 	file_put_contents(CACHE . 'install.txt', serialize($install_status));
 }
 
 $error = false;
 
 clearstatcache();
-if(is_writable(CACHE) && (MYAAC_OS != 'WINDOWS' || win_is_writable(CACHE))) {
-	if(!file_exists(BASE . 'install/ip.txt')) {
+if (is_writable(CACHE) && (MYAAC_OS != 'WINDOWS' || win_is_writable(CACHE))) {
+	if (!file_exists(BASE . 'install/ip.txt')) {
 		$content = warning('AAC installation is disabled. To enable it make file <b>ip.txt</b> in install/ directory and put there your IP.<br/>
 		Your IP is:<br /><b>' . get_browser_real_ip() . '</b>', true);
-	}
-	else {
+	} else {
 		$file_content = trim(file_get_contents(BASE . 'install/ip.txt'));
 		$allow = false;
 		$listIP = preg_split('/\s+/', $file_content);
-		foreach($listIP as $ip) {
-			if(get_browser_real_ip() == $ip) {
+		foreach ($listIP as $ip) {
+			if (get_browser_real_ip() == $ip) {
 				$allow = true;
 			}
 		}
 
-		if(!$allow)
-		{
+		if (!$allow) {
 			$content = warning('In file <b>install/ip.txt</b> must be your IP!<br/>
 			In file is:<br /><b>' . nl2br($file_content) . '</b><br/>
 			Your IP is:<br /><b>' . get_browser_real_ip() . '</b>', true);
-		}
-		else {
+		} else {
 			ob_start();
 
 			$step_id = array_search($step, $steps);
@@ -210,8 +191,7 @@ if(is_writable(CACHE) && (MYAAC_OS != 'WINDOWS' || win_is_writable(CACHE))) {
 			ob_end_clean();
 		}
 	}
-}
-else {
+} else {
 	$content = error(file_get_contents(BASE . 'install/includes/twig_error.html'), true);
 }
 

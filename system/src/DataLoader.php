@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Project: MyAAC
  *     Automatic Account Creator for Open Tibia Servers
@@ -40,42 +41,38 @@ class DataLoader
 	{
 		self::$startTime = microtime(true);
 
-		if(Items::loadFromXML()) {
+		if (Items::loadFromXML()) {
 			success(self::$locale['step_database_loaded_items'] . self::getLoadedTime());
-		}
-		else {
+		} else {
 			error(Items::getError());
 		}
 
 		self::$startTime = microtime(true);
 
-		if(Monsters::loadFromXML()) {
+		if (Monsters::loadFromXML()) {
 			success(self::$locale['step_database_loaded_monsters'] . self::getLoadedTime());
 
-			if(Monsters::getMonstersList()->hasErrors()) {
+			if (Monsters::getMonstersList()->hasErrors()) {
 				self::$locale['step_database_error_monsters'] = str_replace('$LOG$', 'system/logs/error.log', self::$locale['step_database_error_monsters']);
 				warning(self::$locale['step_database_error_monsters']);
 			}
-		}
-		else {
+		} else {
 			error(Monsters::getLastError());
 		}
 
 		self::$startTime = microtime(true);
 
-		if(NPCs::loadFromXML()) {
+		if (NPCs::loadFromXML()) {
 			success(self::$locale['step_database_loaded_npcs'] . self::getLoadedTime());
-		}
-		else {
+		} else {
 			error(self::$locale['step_database_error_npcs']);
 		}
 
 		self::$startTime = microtime(true);
 
-		if(Spells::loadFromXML()) {
+		if (Spells::loadFromXML()) {
 			success(self::$locale['step_database_loaded_spells'] . self::getLoadedTime());
-		}
-		else {
+		} else {
 			error(Spells::getLastError());
 		}
 
@@ -89,22 +86,21 @@ class DataLoader
 		global $db;
 		if ($db->hasTable('towns') && Town::count() > 0) {
 			success(self::$locale['step_database_loaded_towns'] . self::getLoadedTime());
-		}
-		else {
+		} else {
 			warning(self::$locale['step_database_error_towns']);
 		}
 
 		self::$startTime = microtime(true);
 
-		if(Weapons::loadFromXML()) {
+		if (Weapons::loadFromXML()) {
 			success(self::$locale['step_database_loaded_weapons'] . self::getLoadedTime());
-		}
-		else {
+		} else {
 			error(Weapons::getError());
 		}
 	}
 
-	public static function setLocale($locale) {
+	public static function setLocale($locale)
+	{
 		self::$locale = $locale;
 	}
 

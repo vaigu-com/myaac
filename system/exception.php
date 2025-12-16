@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Exception handler
  *
@@ -26,17 +27,17 @@ if (class_exists(Run::class)) {
 /**
  * @param Exception $exception
  */
-function exception_handler($exception) {
+function exception_handler($exception)
+{
 	$message = $exception->getMessage();
-	if($exception instanceof SensitiveException) {
+	if ($exception instanceof SensitiveException) {
 		$message = 'This error is sensitive and has been logged into ' . LOGS . 'error.log.<br/>View this file for more information.';
 
 		// log error to file
 		$f = fopen(LOGS . 'error.log', 'ab');
-		if(!$f) {
+		if (!$f) {
 			$message = 'We wanted to save detailed informations about this error, but file: ' . LOGS . "error.log couldn't be opened for writing.. so the detailed information couldn't be saved.. are you sure directory system/logs is writable by web server? Correct this, and then refresh this site.";
-		}
-		else {
+		} else {
 			fwrite($f, '[' . date(DateTime::RFC1123) . '] ' . $exception->getMessage() . PHP_EOL);
 			fclose($f);
 		}
@@ -49,7 +50,7 @@ function exception_handler($exception) {
 	// display basic error message without template
 	// template is missing, why? probably someone deleted templates dir, or it wasn't downloaded right
 	$template_file = SYSTEM . 'templates/exception.html.twig';
-	if(!file_exists($template_file)) {
+	if (!file_exists($template_file)) {
 		echo 'Something went terribly wrong..<br/><br/>';
 		echo "$message<br/><br/>";
 		echo 'Backtrace:<br>';

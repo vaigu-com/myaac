@@ -98,8 +98,7 @@ class Settings implements \ArrayAccess
 	{
 		if (ModelsSettings::where(['name' => $pluginName, 'key' => $key])->exists()) {
 			ModelsSettings::where(['name' => $pluginName, 'key' => $key])->update(['value' => $value]);
-		}
-		else {
+		} else {
 			// insert new
 			ModelsSettings::create(['name' => $pluginName, 'key' => $key, 'value' => $value]);
 		}
@@ -111,8 +110,7 @@ class Settings implements \ArrayAccess
 	{
 		if (!isset($key)) {
 			ModelsSettings::where('name', $pluginName)->delete();
-		}
-		else {
+		} else {
 			ModelsSettings::where('name', $pluginName)->where('key', $key)->delete();
 		}
 
@@ -128,32 +126,30 @@ class Settings implements \ArrayAccess
 		foreach ($config as $key => $value) {
 			if (is_bool($value)) {
 				$settingsDb[$key] = $value ? 'true' : 'false';
-			}
-			elseif (is_array($value)) {
+			} elseif (is_array($value)) {
 				$settingsDb[$key] = $value;
-			}
-			else {
+			} else {
 				$settingsDb[$key] = (string)$value;
 			}
 		}
 
 		$javascript = '';
 		ob_start();
-		?>
+?>
 		<ul class="nav nav-tabs" id="myTab">
 			<?php
 			$i = 0;
-			foreach($settings as $setting) {
+			foreach ($settings as $setting) {
 				if (isset($setting['script'])) {
 					$javascript .= $setting['script'] . PHP_EOL;
 				}
 
 				if ($setting['type'] === 'category') {
-					?>
+			?>
 					<li class="nav-item">
 						<a class="nav-link<?= ($i === 0 ? ' active' : ''); ?>" id="home-tab-<?= $i++; ?>" data-toggle="tab" href="#tab-<?= str_replace(' ', '', $setting['title']); ?>" type="button"><?= $setting['title']; ?></a>
 					</li>
-					<?php
+			<?php
 				}
 			}
 			?>
@@ -167,13 +163,13 @@ class Settings implements \ArrayAccess
 
 			$i = 0;
 			$j = 0;
-			foreach($settings as $key => $setting) {
+			foreach ($settings as $key => $setting) {
 				if ($setting['type'] === 'category') {
 					if ($j++ !== 0) { // close previous category
 						echo '</tbody></table></div>';
 					}
-				?>
-				<div class="tab-pane fade show<?= ($j === 1 ? ' active' : ''); ?>" id="tab-<?= str_replace(' ', '', $setting['title']); ?>">
+			?>
+					<div class="tab-pane fade show<?= ($j === 1 ? ' active' : ''); ?>" id="tab-<?= str_replace(' ', '', $setting['title']); ?>">
 					<?php
 					continue;
 				}
@@ -183,186 +179,166 @@ class Settings implements \ArrayAccess
 						echo '</tbody></table>';
 					}
 					?>
-					<h3 id="row_<?= $key ?>" style="text-align: center"><strong><?= $setting['title']; ?></strong></h3>
-					<table class="table table-bordered table-striped">
-						<thead>
-							<tr>
-								<th style="width: 13%">Name</th>
-								<th style="width: 30%">Value</th>
-								<th>Description</th>
-							</tr>
-						</thead>
-						<tbody>
-						<?php
-					continue;
-				}
-
-				if (!isset($setting['hidden']) || !$setting['hidden']) {
-				?>
-					<tr id="row_<?= $key ?>">
-						<td><label for="<?= $key ?>" class="control-label"><?= $setting['name'] ?></label></td>
-						<td>
+						<h3 id="row_<?= $key ?>" style="text-align: center"><strong><?= $setting['title']; ?></strong></h3>
+						<table class="table table-bordered table-striped">
+							<thead>
+								<tr>
+									<th style="width: 13%">Name</th>
+									<th style="width: 30%">Value</th>
+									<th>Description</th>
+								</tr>
+							</thead>
+							<tbody>
 							<?php
-				}
-				if (isset($setting['hidden']) && $setting['hidden']) {
-					$value = '';
-					if ($setting['type'] === 'boolean') {
-						$value = (getBoolean($setting['default']) ? 'true' : 'false');
-					}
-					else if (in_array($setting['type'], ['text', 'number', 'float', 'double', 'email', 'password', 'textarea'])) {
-						$value = $setting['default'];
-					}
-					else if ($setting['type'] === 'options') {
-						$value = $setting['options'][$setting['default']];
-					}
-
-					echo '<input type="hidden" name="settings[' . $key . ']" value="' . $value . '" id="' . $key . '"';
-				}
-				else if ($setting['type'] === 'boolean') {
-					if(isset($settingsDb[$key])) {
-						$value = getBoolean($settingsDb[$key]);
-					}
-					else {
-						$value = ($setting['default'] ?? false);
-					}
-
-					$checkbox($key, true, $value);
-					$checkbox($key, false, $value);
-				}
-
-				else if (in_array($setting['type'], ['text', 'number', 'float', 'double', 'email', 'password'])) {
-					if (in_array($setting['type'], ['float', 'double'])) {
-						$setting['type'] = 'number';
-					}
-
-					if ($setting['type'] === 'number') {
-						$min = (isset($setting['min']) ? ' min="' . $setting['min'] . '"' : '');
-						$max = (isset($setting['max']) ? ' max="' . $setting['max'] . '"' : '');
-						$step = (isset($setting['step']) ? ' step="' . $setting['step'] . '"' : '');
-					}
-					else {
-						$min = $max = $step = '';
-					}
-
-					if ($setting['type'] === 'password') {
-						echo '<div class="input-group" id="show-hide-' . $key . '">';
-					}
-
-					echo '<input class="form-control" type="' . $setting['type'] . '" name="settings[' . $key . ']" value="' . ($settingsDb[$key] ?? ($setting['default'] ?? '')) . '" id="' . $key . '"' . $min . $max . $step . '/>';
-
-					if ($setting['type'] === 'password') {
-						echo '<div class="input-group-append input-group-text"><a href=""><i class="fas fa-eye-slash" ></i></a></div></div>';
-					}
-				}
-
-				else if($setting['type'] === 'textarea') {
-					if (isset($settingsDb[$key]) && is_array($settingsDb[$key])) {
-						$settingsDb[$key] = implode(',', $settingsDb[$key]);
-					}
-
-					$value = ($settingsDb[$key] ?? ($setting['default'] ?? ''));
-					$valueWithSpaces = array_map('trim', preg_split('/\r\n|\r|\n/', trim($value)));
-					$rows = count($valueWithSpaces);
-					if ($rows < 2) {
-						$rows = 2; // always min 2 rows for textarea
-					}
-					echo '<textarea class="form-control" rows="' . $rows . '" name="settings[' . $key . ']" id="' . $key . '">' . $value . '</textarea>';
-				}
-
-				else if ($setting['type'] === 'options') {
-					if ($setting['options'] === '$templates') {
-						$templates = [];
-						foreach (get_templates() as $value) {
-							$templates[$value] = $value;
+							continue;
 						}
 
-						$setting['options'] = $templates;
-					}
-
-					else if($setting['options'] === '$clients') {
-						$clients = [];
-						foreach((array)config('clients') as $client) {
-
-							$client_version = (string)($client / 100);
-							if(strpos($client_version, '.') === false)
-								$client_version .= '.0';
-
-							$clients[$client] = $client_version;
-						}
-
-						$setting['options'] = $clients;
-					}
-					else if ($setting['options'] == '$timezones') {
-						$timezones = [];
-						foreach (\DateTimeZone::listIdentifiers() as $value) {
-							$timezones[$value] = $value;
-						}
-
-						$setting['options'] = $timezones;
-					}
-
-					else {
-						if (is_string($setting['options'])) {
-							$setting['options'] = explode(',', $setting['options']);
-							foreach ($setting['options'] as &$option) {
-								$option = trim($option);
-							}
-						}
-					}
-
-					echo '<select class="form-control" name="settings[' . $key . ']" id="' . $key . '">';
-					foreach ($setting['options'] as $value => $option) {
-						$compareTo = ($settingsDb[$key] ?? ($setting['default'] ?? ''));
-						if($value === 'true') {
-							$selected = $compareTo === true;
-						}
-						else if($value === 'false') {
-							$selected = $compareTo === false;
-						}
-						else {
-							$selected = $compareTo == $value;
-						}
-
-						echo '<option value="' . $value . '" ' . ($selected ? 'selected' : '') . '>' . $option . '</option>';
-					}
-					echo '</select>';
-				}
-
-				if (!isset($setting['hidden']) || !$setting['hidden']) {
-				?>
-						</td>
-						<td>
-							<div class="well setting-default"><?php
-								echo (isset($setting['desc']) ? makeLinksClickable($setting['desc']) : '');
-								echo '<br/>';
-								echo '<strong>Default:</strong> ';
-
-								if ($setting['type'] === 'boolean') {
-									echo ($setting['default'] ? 'Yes' : 'No');
+						if (!isset($setting['hidden']) || !$setting['hidden']) {
+							?>
+								<tr id="row_<?= $key ?>">
+									<td><label for="<?= $key ?>" class="control-label"><?= $setting['name'] ?></label></td>
+									<td>
+									<?php
 								}
-								else if (in_array($setting['type'], ['text', 'number', 'float', 'double', 'email', 'password', 'textarea'])) {
-									echo $setting['default'];
-								}
-								else if ($setting['type'] === 'options') {
-									if (is_int($setting['default']) || !empty($setting['default'])) {
-										echo $setting['options'][$setting['default']];
+								if (isset($setting['hidden']) && $setting['hidden']) {
+									$value = '';
+									if ($setting['type'] === 'boolean') {
+										$value = (getBoolean($setting['default']) ? 'true' : 'false');
+									} else if (in_array($setting['type'], ['text', 'number', 'float', 'double', 'email', 'password', 'textarea'])) {
+										$value = $setting['default'];
+									} else if ($setting['type'] === 'options') {
+										$value = $setting['options'][$setting['default']];
 									}
+
+									echo '<input type="hidden" name="settings[' . $key . ']" value="' . $value . '" id="' . $key . '"';
+								} else if ($setting['type'] === 'boolean') {
+									if (isset($settingsDb[$key])) {
+										$value = getBoolean($settingsDb[$key]);
+									} else {
+										$value = ($setting['default'] ?? false);
+									}
+
+									$checkbox($key, true, $value);
+									$checkbox($key, false, $value);
+								} else if (in_array($setting['type'], ['text', 'number', 'float', 'double', 'email', 'password'])) {
+									if (in_array($setting['type'], ['float', 'double'])) {
+										$setting['type'] = 'number';
+									}
+
+									if ($setting['type'] === 'number') {
+										$min = (isset($setting['min']) ? ' min="' . $setting['min'] . '"' : '');
+										$max = (isset($setting['max']) ? ' max="' . $setting['max'] . '"' : '');
+										$step = (isset($setting['step']) ? ' step="' . $setting['step'] . '"' : '');
+									} else {
+										$min = $max = $step = '';
+									}
+
+									if ($setting['type'] === 'password') {
+										echo '<div class="input-group" id="show-hide-' . $key . '">';
+									}
+
+									echo '<input class="form-control" type="' . $setting['type'] . '" name="settings[' . $key . ']" value="' . ($settingsDb[$key] ?? ($setting['default'] ?? '')) . '" id="' . $key . '"' . $min . $max . $step . '/>';
+
+									if ($setting['type'] === 'password') {
+										echo '<div class="input-group-append input-group-text"><a href=""><i class="fas fa-eye-slash" ></i></a></div></div>';
+									}
+								} else if ($setting['type'] === 'textarea') {
+									if (isset($settingsDb[$key]) && is_array($settingsDb[$key])) {
+										$settingsDb[$key] = implode(',', $settingsDb[$key]);
+									}
+
+									$value = ($settingsDb[$key] ?? ($setting['default'] ?? ''));
+									$valueWithSpaces = array_map('trim', preg_split('/\r\n|\r|\n/', trim($value)));
+									$rows = count($valueWithSpaces);
+									if ($rows < 2) {
+										$rows = 2; // always min 2 rows for textarea
+									}
+									echo '<textarea class="form-control" rows="' . $rows . '" name="settings[' . $key . ']" id="' . $key . '">' . $value . '</textarea>';
+								} else if ($setting['type'] === 'options') {
+									if ($setting['options'] === '$templates') {
+										$templates = [];
+										foreach (get_templates() as $value) {
+											$templates[$value] = $value;
+										}
+
+										$setting['options'] = $templates;
+									} else if ($setting['options'] === '$clients') {
+										$clients = [];
+										foreach ((array)config('clients') as $client) {
+
+											$client_version = (string)($client / 100);
+											if (strpos($client_version, '.') === false)
+												$client_version .= '.0';
+
+											$clients[$client] = $client_version;
+										}
+
+										$setting['options'] = $clients;
+									} else if ($setting['options'] == '$timezones') {
+										$timezones = [];
+										foreach (\DateTimeZone::listIdentifiers() as $value) {
+											$timezones[$value] = $value;
+										}
+
+										$setting['options'] = $timezones;
+									} else {
+										if (is_string($setting['options'])) {
+											$setting['options'] = explode(',', $setting['options']);
+											foreach ($setting['options'] as &$option) {
+												$option = trim($option);
+											}
+										}
+									}
+
+									echo '<select class="form-control" name="settings[' . $key . ']" id="' . $key . '">';
+									foreach ($setting['options'] as $value => $option) {
+										$compareTo = ($settingsDb[$key] ?? ($setting['default'] ?? ''));
+										if ($value === 'true') {
+											$selected = $compareTo === true;
+										} else if ($value === 'false') {
+											$selected = $compareTo === false;
+										} else {
+											$selected = $compareTo == $value;
+										}
+
+										echo '<option value="' . $value . '" ' . ($selected ? 'selected' : '') . '>' . $option . '</option>';
+									}
+									echo '</select>';
 								}
-								?></div>
-						</td>
-					</tr>
-					<?php
-				}
-			}
-					?>
-					</tbody>
-				</table>
-			</div>
+
+								if (!isset($setting['hidden']) || !$setting['hidden']) {
+									?>
+									</td>
+									<td>
+										<div class="well setting-default"><?php
+																			echo (isset($setting['desc']) ? makeLinksClickable($setting['desc']) : '');
+																			echo '<br/>';
+																			echo '<strong>Default:</strong> ';
+
+																			if ($setting['type'] === 'boolean') {
+																				echo ($setting['default'] ? 'Yes' : 'No');
+																			} else if (in_array($setting['type'], ['text', 'number', 'float', 'double', 'email', 'password', 'textarea'])) {
+																				echo $setting['default'];
+																			} else if ($setting['type'] === 'options') {
+																				if (is_int($setting['default']) || !empty($setting['default'])) {
+																					echo $setting['options'][$setting['default']];
+																				}
+																			}
+																			?></div>
+									</td>
+								</tr>
+						<?php
+								}
+							}
+						?>
+							</tbody>
+						</table>
+					</div>
 		</div>
 		<div class="box-footer">
 			<button name="save" type="submit" class="btn btn-primary">Save</button>
 		</div>
-		<?php
+<?php
 
 		return ['content' => ob_get_clean(), 'script' => $javascript];
 	}
@@ -400,7 +376,7 @@ class Settings implements \ArrayAccess
 		$key = $this->valuesAsked['key'];
 
 		// remove specified plugin settings (all)
-		if(is_null($key)) {
+		if (is_null($key)) {
 			return isset($this->settingsDatabase[$offset]);
 		}
 
@@ -420,7 +396,7 @@ class Settings implements \ArrayAccess
 		}
 
 		// remove specified plugin settings (all)
-		if(!isset($key)) {
+		if (!isset($key)) {
 			unset($this->settingsFile[$pluginKeyName]);
 			unset($this->settingsDatabase[$pluginKeyName]);
 			$this->deleteFromDatabase($pluginKeyName);
@@ -443,7 +419,7 @@ class Settings implements \ArrayAccess
 	public function offsetGet($offset): mixed
 	{
 		// try cache hit
-		if(isset($this->cache[$offset])) {
+		if (isset($this->cache[$offset])) {
 			return $this->cache[$offset];
 		}
 
@@ -453,7 +429,7 @@ class Settings implements \ArrayAccess
 		$key = $this->valuesAsked['key'];
 
 		// return specified plugin settings (all)
-		if(!isset($key)) {
+		if (!isset($key)) {
 			if (!isset($this->settingsFile[$pluginKeyName]['settings'])) {
 				throw new \RuntimeException('Unknown plugin settings: ' . $pluginKeyName);
 			}
@@ -467,19 +443,18 @@ class Settings implements \ArrayAccess
 
 		$ret = $this->settingsFile[$pluginKeyName]['settings'][$key];
 
-		if(isset($this->settingsDatabase[$pluginKeyName][$key])) {
+		if (isset($this->settingsDatabase[$pluginKeyName][$key])) {
 			$value = $this->settingsDatabase[$pluginKeyName][$key];
 
 			$ret['value'] = $value;
-		}
-		else {
+		} else {
 			$ret['value'] = $this->settingsFile[$pluginKeyName]['settings'][$key]['default'];
 		}
 
 		$ret['key'] = $key;
 
-		if(isset($ret['type'])) {
-			switch($ret['type']) {
+		if (isset($ret['type'])) {
+			switch ($ret['type']) {
 				case 'boolean':
 					$ret['value'] = getBoolean($ret['value']);
 					break;
@@ -490,7 +465,7 @@ class Settings implements \ArrayAccess
 
 				case 'double':
 				case 'float':
-					$ret['value'] = (double)($ret['value']);
+					$ret['value'] = (float)($ret['value']);
 					break;
 
 				default:
@@ -516,8 +491,7 @@ class Settings implements \ArrayAccess
 			$key = $explode[1];
 
 			$this->valuesAsked = ['pluginKeyName' => $pluginKeyName, 'key' => $key];
-		}
-		else {
+		} else {
 			$this->valuesAsked = ['pluginKeyName' => $pluginKeyName, 'key' => null];
 		}
 	}
@@ -581,31 +555,30 @@ class Settings implements \ArrayAccess
 		$password = null;
 		$dns = [];
 
-		if( isset($config['database_name']) ) {
+		if (isset($config['database_name'])) {
 			$dns[] = 'dbname=' . $config['database_name'];
 		}
 
-		if( isset($config['database_user']) ) {
+		if (isset($config['database_user'])) {
 			$user = $config['database_user'];
 		}
 
-		if( isset($config['database_password']) ) {
+		if (isset($config['database_password'])) {
 			$password = $config['database_password'];
 		}
 
-		if( isset($config['database_host']) ) {
+		if (isset($config['database_host'])) {
 			$dns[] = 'host=' . $config['database_host'];
 		}
 
-		if( isset($config['database_port']) ) {
+		if (isset($config['database_port'])) {
 			$dns[] = 'port=' . $config['database_port'];
 		}
 
 		try {
 			$connectionTest = new \PDO('mysql:' . implode(';', $dns), $user, $password);
 			$connectionTest->setAttribute(\PDO::ATTR_ERRMODE, \PDO::ERRMODE_EXCEPTION);
-		}
-		catch(\PDOException $error) {
+		} catch (\PDOException $error) {
 			error('MySQL connection failed. Settings has been reverted.');
 			error($error->getMessage());
 			return false;
@@ -614,7 +587,8 @@ class Settings implements \ArrayAccess
 		return true;
 	}
 
-	public function getErrors(): array {
+	public function getErrors(): array
+	{
 		return $this->errors;
 	}
 

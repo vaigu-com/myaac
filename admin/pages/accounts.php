@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Account editor
  *
@@ -43,7 +44,7 @@ $web_acc = ACCOUNT_WEB_FLAGS;
 $acc_type = setting('core.account_types');
 ?>
 
-<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>tools/css/jquery.datetimepicker.css"/ >
+<link rel="stylesheet" type="text/css" href="<?php echo BASE_URL; ?>tools/css/jquery.datetimepicker.css" />
 <script src="<?php echo BASE_URL; ?>tools/js/jquery.datetimepicker.js"></script>
 
 <?php
@@ -61,8 +62,7 @@ else if (isset($_REQUEST['search_email'])) {
 	} else if (count($accountModel) > 10) {
 		echo_error('Specified e-mail resulted with too many accounts.');
 	}
-}
-else if (isset($_REQUEST['search'])) {
+} else if (isset($_REQUEST['search'])) {
 	$search_account = $_REQUEST['search'];
 	$min_size = 3;
 	if (in_array($nameOrNumberColumn, ['id', 'number'])) {
@@ -162,7 +162,7 @@ else if (isset($_REQUEST['search'])) {
 			$rl_loca = $_POST['rl_loca'];
 
 			//country
-			if(setting('core.account_country')) {
+			if (setting('core.account_country')) {
 				$rl_country = $_POST['rl_country'];
 			}
 
@@ -204,7 +204,7 @@ else if (isset($_REQUEST['search'])) {
 				}
 
 				$lastDay = 0;
-				if($p_days != 0 && $p_days != OTS_Account::GRATIS_PREMIUM_DAYS) {
+				if ($p_days != 0 && $p_days != OTS_Account::GRATIS_PREMIUM_DAYS) {
 					$lastDay = time();
 				} else if ($lastDay != 0) {
 					$lastDay = 0;
@@ -218,7 +218,7 @@ else if (isset($_REQUEST['search'])) {
 				$account->setRLName($rl_name);
 				$account->setLocation($rl_loca);
 
-				if(setting('core.account_country')) {
+				if (setting('core.account_country')) {
 					$account->setCountry($rl_country);
 				}
 
@@ -243,7 +243,7 @@ else if (isset($_REQUEST['search'])) {
 		}
 	} else if ($id == 0) {
 		$accounts_db = $db->query('SELECT `id`, `' . $nameOrNumberColumn . '`' . ($hasTypeColumn ? ',type' : ($hasGroupColumn ? ',group_id' : '')) . ', email FROM `accounts` ORDER BY `id` ASC');
-		?>
+	?>
 		<div class="col-12 col-sm-12 col-lg-10">
 			<div class="card card-info card-outline">
 				<div class="card-header">
@@ -252,38 +252,38 @@ else if (isset($_REQUEST['search'])) {
 				<div class="card-body">
 					<table class="acc_datatable table table-striped table-bordered table-responsive d-md-table">
 						<thead>
-						<tr>
-							<th>ID</th>
-							<th><?= ($nameOrNumberColumn == 'name' ? 'Name' : 'Number'); ?></th>
-							<?php if($hasTypeColumn || $hasGroupColumn): ?>
-							<th>E-Mail</th>
-							<th>Position</th>
-							<?php endif; ?>
-							<th style="width: 40px">Edit</th>
-						</tr>
+							<tr>
+								<th>ID</th>
+								<th><?= ($nameOrNumberColumn == 'name' ? 'Name' : 'Number'); ?></th>
+								<?php if ($hasTypeColumn || $hasGroupColumn): ?>
+									<th>E-Mail</th>
+									<th>Position</th>
+								<?php endif; ?>
+								<th style="width: 40px">Edit</th>
+							</tr>
 						</thead>
 						<tbody>
-						<?php foreach ($accounts_db as $account_lst): ?>
-							<tr>
-								<th><?php echo $account_lst['id']; ?></th>
-								<td><?php echo $account_lst[$nameOrNumberColumn]; ?></a></td>
-								<td><?php echo $account_lst['email']; ?></td>
-								<?php if($hasTypeColumn || $hasGroupColumn): ?>
-								<td>
-									<?php if ($hasTypeColumn) {
-										echo $acc_type[$account_lst['type']];
-									} elseif ($hasGroupColumn) {
-										$group = $groups->getGroups();
-										echo $group[$account_lst['group_id']];
-									} ?>
-								</td>
-								<?php endif; ?>
-								<td><a href="?p=accounts&id=<?php echo $account_lst['id']; ?>" class="btn btn-success btn-sm" title="Edit">
-										<i class="fas fa-pencil-alt"></i>
-									</a>
-								</td>
-							</tr>
-						<?php endforeach; ?>
+							<?php foreach ($accounts_db as $account_lst): ?>
+								<tr>
+									<th><?php echo $account_lst['id']; ?></th>
+									<td><?php echo $account_lst[$nameOrNumberColumn]; ?></a></td>
+									<td><?php echo $account_lst['email']; ?></td>
+									<?php if ($hasTypeColumn || $hasGroupColumn): ?>
+										<td>
+											<?php if ($hasTypeColumn) {
+												echo $acc_type[$account_lst['type']];
+											} elseif ($hasGroupColumn) {
+												$group = $groups->getGroups();
+												echo $group[$account_lst['group_id']];
+											} ?>
+										</td>
+									<?php endif; ?>
+									<td><a href="?p=accounts&id=<?php echo $account_lst['id']; ?>" class="btn btn-success btn-sm" title="Edit">
+											<i class="fas fa-pencil-alt"></i>
+										</a>
+									</td>
+								</tr>
+							<?php endforeach; ?>
 						</tbody>
 					</table>
 				</div>
@@ -327,53 +327,53 @@ else if (isset($_REQUEST['search'])) {
 									<?php if (USE_ACCOUNT_NAME): ?>
 										<div class="col-12 col-sm-12 col-lg-4">
 											<label for="name">Account Name:</label>
-											<input type="text" class="form-control" id="name" name="name" autocomplete="off" value="<?php echo $account->getName(); ?>"/>
+											<input type="text" class="form-control" id="name" name="name" autocomplete="off" value="<?php echo $account->getName(); ?>" />
 										</div>
 									<?php elseif (USE_ACCOUNT_NUMBER): ?>
 										<div class="col-12 col-sm-12 col-lg-4">
 											<label for="name">Account Number:</label>
-											<input type="text" class="form-control" id="name" name="name" autocomplete="off" value="<?php echo $account->getNumber(); ?>"/>
+											<input type="text" class="form-control" id="name" name="name" autocomplete="off" value="<?php echo $account->getNumber(); ?>" />
 										</div>
 									<?php endif; ?>
 									<div class="col-12 col-sm-12 col-lg-5">
 										<div class="form-check">
 											<input type="checkbox"
-												   name="c_pass"
-												   id="c_pass"
-												   value="false"
-												   class="form-check-input"/>
+												name="c_pass"
+												id="c_pass"
+												value="false"
+												class="form-check-input" />
 											<label for="c_pass">Password: (check to change)</label>
 										</div>
 										<div class="input-group">
-											<input type="text" class="form-control" id="pass" name="pass" autocomplete="off" maxlength="20" value=""/>
+											<input type="text" class="form-control" id="pass" name="pass" autocomplete="off" maxlength="20" value="" />
 										</div>
 									</div>
 									<div class="col-12 col-sm-12 col-lg-3">
 										<label for="account_id" class="control-label">Account ID:</label>
-										<input type="text" class="form-control" id="account_id" name="account_id" autocomplete="off" size="8" maxlength="11" disabled value="<?php echo $account->getId(); ?>"/>
+										<input type="text" class="form-control" id="account_id" name="account_id" autocomplete="off" size="8" maxlength="11" disabled value="<?php echo $account->getId(); ?>" />
 									</div>
 								</div>
 								<div class="form-group row">
 									<?php
 									$acc_group = $account->getAccGroupId();
 									if ($hasTypeColumn) {
-										?>
+									?>
 										<div class="col-12 col-sm-12 col-lg-6">
 											<label for="group">Account Type:</label>
 											<select name="group" id="group" class="form-control">
 												<?php foreach ($acc_type as $_id => $a_type): ?>
-													<option value="<?php echo($_id); ?>" <?php echo($acc_group == ($_id) ? 'selected' : ''); ?>><?php echo $a_type; ?></option>
+													<option value="<?php echo ($_id); ?>" <?php echo ($acc_group == ($_id) ? 'selected' : ''); ?>><?php echo $a_type; ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
-										<?php
+									<?php
 									} elseif ($hasGroupColumn) {
-										?>
+									?>
 										<div class="col-12 col-sm-12 col-lg-6">
 											<label for="group">Account Type:</label>
 											<select name="group" id="group" class="form-control">
 												<?php foreach ($groups->getGroups() as $_id => $group): ?>
-													<option value="<?php echo $_id; ?>" <?php echo($acc_group == $_id ? 'selected' : ''); ?>><?php echo $group->getName(); ?></option>
+													<option value="<?php echo $_id; ?>" <?php echo ($acc_group == $_id ? 'selected' : ''); ?>><?php echo $group->getName(); ?></option>
 												<?php endforeach; ?>
 											</select>
 										</div>
@@ -382,7 +382,7 @@ else if (isset($_REQUEST['search'])) {
 										<label for="web_flags">Website Access:</label>
 										<select name="web_flags" id="web_flags" class="form-control">
 											<?php foreach ($web_acc as $_id => $a_type): ?>
-												<option value="<?php echo($_id); ?>" <?php echo($account->getWebFlags() == ($_id) ? 'selected' : ''); ?>><?php echo $a_type; ?></option>
+												<option value="<?php echo ($_id); ?>" <?php echo ($account->getWebFlags() == ($_id) ? 'selected' : ''); ?>><?php echo $a_type; ?></option>
 											<?php endforeach; ?>
 										</select>
 									</div>
@@ -391,39 +391,39 @@ else if (isset($_REQUEST['search'])) {
 									<?php if ($hasSecretColumn): ?>
 										<div class="col-12 col-sm-12 col-lg-6">
 											<label for="secret">Secret:</label>
-											<input type="text" class="form-control" id="secret" name="secret" autocomplete="off" value="<?php echo $account->getCustomField('secret'); ?>"/>
+											<input type="text" class="form-control" id="secret" name="secret" autocomplete="off" value="<?php echo $account->getCustomField('secret'); ?>" />
 										</div>
 									<?php endif; ?>
 									<div class="col-12 col-sm-12 col-lg-6">
 										<label for="key">Recovery Key:</label>
-										<input type="text" class="form-control" id="key" name="key" autocomplete="off" value="<?php echo $account->getCustomField('key'); ?>"/>
+										<input type="text" class="form-control" id="key" name="key" autocomplete="off" value="<?php echo $account->getCustomField('key'); ?>" />
 									</div>
 								</div>
 								<div class="form-group row">
 									<div class="col-12 col-sm-12 col-lg-6">
 										<label for="email">Email:</label><?php echo (setting('core.mail_enabled') ? ' (<a href="' . ADMIN_URL . '?p=mailer&mail_to=' . $account->getEMail() . '">Send Mail</a>)' : ''); ?>
-										<input type="text" class="form-control" id="email" name="email" autocomplete="off" value="<?php echo $account->getEMail(); ?>"/>
+										<input type="text" class="form-control" id="email" name="email" autocomplete="off" value="<?php echo $account->getEMail(); ?>" />
 									</div>
 									<?php if (HAS_ACCOUNT_COINS): ?>
 										<div class="col-12 col-sm-12 col-lg-6">
 											<label for="t_coins">Tibia Coins:</label>
-											<input type="text" class="form-control" id="t_coins" name="t_coins" autocomplete="off" maxlength="11" value="<?php echo $account->getCustomField('coins') ?>"/>
+											<input type="text" class="form-control" id="t_coins" name="t_coins" autocomplete="off" maxlength="11" value="<?php echo $account->getCustomField('coins') ?>" />
 										</div>
 									<?php endif; ?>
 									<?php if (HAS_ACCOUNT_COINS_TRANSFERABLE || HAS_ACCOUNT_TRANSFERABLE_COINS): ?>
 										<div class="col-12 col-sm-12 col-lg-6">
 											<label for="t_coins_transferable">Transferable Tibia Coins:</label>
-											<input type="text" class="form-control" id="t_coins_transferable" name="t_coins_transferable" autocomplete="off" maxlength="11" value="<?php echo $account->getCustomField(ACCOUNT_COINS_TRANSFERABLE_COLUMN) ?>"/>
+											<input type="text" class="form-control" id="t_coins_transferable" name="t_coins_transferable" autocomplete="off" maxlength="11" value="<?php echo $account->getCustomField(ACCOUNT_COINS_TRANSFERABLE_COLUMN) ?>" />
 										</div>
 									<?php endif; ?>
 									<div class="col-12 col-sm-12 col-lg-6">
 										<label for="p_days">Premium Days:</label>
-										<input type="text" class="form-control" id="p_days" name="p_days" autocomplete="off" maxlength="11" value="<?php echo $account->getPremDays(); ?>"/>
+										<input type="text" class="form-control" id="p_days" name="p_days" autocomplete="off" maxlength="11" value="<?php echo $account->getPremDays(); ?>" />
 									</div>
 									<?php if ($hasPointsColumn): ?>
 										<div class="col-12 col-sm-12 col-lg-6">
 											<label for="p_points" class="control-label">Premium Points:</label>
-											<input type="text" class="form-control" id="p_points" name="p_points" autocomplete="off" maxlength="8" value="<?php echo $account->getCustomField('premium_points') ?>"/>
+											<input type="text" class="form-control" id="p_points" name="p_points" autocomplete="off" maxlength="8" value="<?php echo $account->getCustomField('premium_points') ?>" />
 										</div>
 									<?php endif; ?>
 								</div>
@@ -431,38 +431,38 @@ else if (isset($_REQUEST['search'])) {
 									<div class="col-12 col-sm-12 col-lg-4">
 										<label for="rl_name">RL Name:</label>
 										<input type="text" class="form-control" id="rl_name" name="rl_name"
-											   autocomplete="off" maxlength="20"
-											   value="<?php echo $account->getRLName(); ?>"/>
+											autocomplete="off" maxlength="20"
+											value="<?php echo $account->getRLName(); ?>" />
 									</div>
 									<div class="col-12 col-sm-12 col-lg-4">
 										<label for="rl_loca">Location:</label>
 										<input type="text" class="form-control" id="rl_loca" name="rl_loca"
-											   autocomplete="off" maxlength="20"
-											   value="<?php echo $account->getLocation(); ?>"/>
+											autocomplete="off" maxlength="20"
+											value="<?php echo $account->getLocation(); ?>" />
 									</div>
-									<?php if(setting('core.account_country')): ?>
-									<div class="col-12 col-sm-12 col-lg-4">
-										<label for="rl_country">Country:</label>
-										<select name="rl_country" id="rl_country" class="form-control">
-											<?php foreach ($countries as $_id => $a_type): ?>
-												<option value="<?php echo($_id); ?>" <?php echo($account->getCountry() == ($_id) ? 'selected' : ''); ?>><?php echo $a_type; ?></option>
-											<?php endforeach; ?>
-										</select>
-									</div>
+									<?php if (setting('core.account_country')): ?>
+										<div class="col-12 col-sm-12 col-lg-4">
+											<label for="rl_country">Country:</label>
+											<select name="rl_country" id="rl_country" class="form-control">
+												<?php foreach ($countries as $_id => $a_type): ?>
+													<option value="<?php echo ($_id); ?>" <?php echo ($account->getCountry() == ($_id) ? 'selected' : ''); ?>><?php echo $a_type; ?></option>
+												<?php endforeach; ?>
+											</select>
+										</div>
 									<?php endif; ?>
 								</div>
 								<div class="form-group row">
 									<div class="col-12 col-sm-12 col-lg-6">
 										<label for="created" class="control-label">Created:</label>
-										<input type="text" class="form-control" id="created" name="created" autocomplete="off" maxlength="20" value="<?php echo date("M d Y, H:i:s", $account->getCustomField('created')); ?>"/>
+										<input type="text" class="form-control" id="created" name="created" autocomplete="off" maxlength="20" value="<?php echo date("M d Y, H:i:s", $account->getCustomField('created')); ?>" />
 									</div>
 									<div class="col-12 col-sm-12 col-lg-6">
 										<label for="web_lastlogin" class="control-label">Web Last Login:</label>
-										<input type="text" class="form-control" id="web_lastlogin" name="web_lastlogin" autocomplete="off" maxlength="20" value="<?php echo date("M d Y, H:i:s", $account->getCustomField('web_lastlogin')); ?>"/>
+										<input type="text" class="form-control" id="web_lastlogin" name="web_lastlogin" autocomplete="off" maxlength="20" value="<?php echo date("M d Y, H:i:s", $account->getCustomField('web_lastlogin')); ?>" />
 									</div>
 								</div>
 
-								<input type="hidden" name="save" value="yes"/>
+								<input type="hidden" name="save" value="yes" />
 
 								<button type="submit" class="btn btn-info"><i class="fas fa-update"></i> Update</button>
 								<a href="<?php echo ADMIN_URL; ?>?p=accounts" class="btn btn-danger float-right"><i class="fas fa-cancel"></i> Cancel</a>
@@ -481,17 +481,17 @@ else if (isset($_REQUEST['search'])) {
 									</thead>
 									<tbody>
 										<?php
-											$accountActions = \MyAAC\Models\AccountAction::where('account_id', $account->getId())->orderByDesc('date')->get();
-											foreach ($accountActions as $i => $log):
-												$log->ip = ($log->ip != 0 ? long2ip($log->ip) : inet_ntop($log->ipv6));
-												?>
+										$accountActions = \MyAAC\Models\AccountAction::where('account_id', $account->getId())->orderByDesc('date')->get();
+										foreach ($accountActions as $i => $log):
+											$log->ip = ($log->ip != 0 ? long2ip($log->ip) : inet_ntop($log->ipv6));
+										?>
 											<tr>
 												<td><?php echo $i + 1; ?></td>
 												<td><?= date("M d Y, H:i:s", $log->date); ?></td>
 												<td><?= $log->action; ?></td>
 												<td><?= $log->ip; ?></td>
 											</tr>
-											<?php endforeach; ?>
+										<?php endforeach; ?>
 									</tbody>
 								</table>
 							</div>
@@ -504,27 +504,27 @@ else if (isset($_REQUEST['search'])) {
 									if (isset($account_players)) { ?>
 										<table class="table table-striped table-condensed table-responsive d-md-table">
 											<thead>
-											<tr>
-												<th>#</th>
-												<th>Name</th>
-												<th>Level</th>
-												<th>Vocation</th>
-												<th style="width: 40px">Edit</th>
-											</tr>
+												<tr>
+													<th>#</th>
+													<th>Name</th>
+													<th>Level</th>
+													<th>Vocation</th>
+													<th style="width: 40px">Edit</th>
+												</tr>
 											</thead>
 											<tbody>
-											<?php foreach ($account_players as $i => $player): ?>
-												<tr>
-													<th><?php echo $i + 1; ?></th>
-													<td><?php echo $player->name; ?></td>
-													<td><?php echo $player->level; ?></td>
-													<td><?php echo $player->vocation_name; ?></td>
-													<td><a href="?p=players&id=<?php echo $player->getKey() ?>" class=" btn btn-success btn-sm" title="Edit"><i class="fas fa-pencil-alt"></i></a></td>
-												</tr>
-											<?php endforeach ?>
+												<?php foreach ($account_players as $i => $player): ?>
+													<tr>
+														<th><?php echo $i + 1; ?></th>
+														<td><?php echo $player->name; ?></td>
+														<td><?php echo $player->level; ?></td>
+														<td><?php echo $player->vocation_name; ?></td>
+														<td><a href="?p=players&id=<?php echo $player->getKey() ?>" class=" btn btn-success btn-sm" title="Edit"><i class="fas fa-pencil-alt"></i></a></td>
+													</tr>
+												<?php endforeach ?>
 											</tbody>
 										</table>
-										<?php
+								<?php
 									}
 								} ?>
 							</div>
@@ -534,53 +534,53 @@ else if (isset($_REQUEST['search'])) {
 								<?php
 								$bans = $db->query('SELECT * FROM ' . $db->tableName('bans') . ' WHERE ' . $db->fieldName('active') . ' = 1 AND ' . $db->fieldName('id') . ' = ' . $account->getId() . ' ORDER BY ' . $db->fieldName('added') . ' DESC LIMIT 10');
 								if ($bans->rowCount()) {
-									?>
+								?>
 									<table class="table table-striped table-condensed table-responsive d-md-table">
 										<thead>
-										<tr>
-											<th>Nick</th>
-											<th>Type</th>
-											<th>Expires</th>
-											<th>Reason</th>
-											<th>Comment</th>
-											<th>Added by:</th>
-										</tr>
+											<tr>
+												<th>Nick</th>
+												<th>Type</th>
+												<th>Expires</th>
+												<th>Reason</th>
+												<th>Comment</th>
+												<th>Added by:</th>
+											</tr>
 										</thead>
 										<tbody>
-										<?php
-										foreach ($bans as $ban) {
+											<?php
+											foreach ($bans as $ban) {
 											?>
-											<tr>
-												<td><?php
-													$pName = getPlayerNameByAccount($ban['value']);
-													echo '<a href="?p=players&search=' . $pName . '">' . $pName . '</a>'; ?>
-												</td>
-												<td><?php echo getBanType($ban['type']); ?></td>
-												<td>
-													<?php
-													if ($ban['expires'] == "-1")
-														echo 'Never';
-													else
-														echo date("H:i:s", $ban['expires']) . '<br/>' . date("d M Y", $ban['expires']);
-													?>
-												</td>
-												<td><?php echo getBanReason($ban['reason']); ?></td>
-												<td><?php echo $ban['comment']; ?></td>
-												<td>
-													<?php
-													if ($ban['admin_id'] == "0")
-														echo 'Autoban';
-													else
-														$aName = getPlayerNameByAccount($ban['admin_id']);
-													echo '<a href="?p=players&search=' . $aName . '">' . $aName . '</a>';
-													echo '<br/>' . date("d.m.Y", $ban['added']);
-													?>
-												</td>
-											</tr>
-										<?php } ?>
+												<tr>
+													<td><?php
+														$pName = getPlayerNameByAccount($ban['value']);
+														echo '<a href="?p=players&search=' . $pName . '">' . $pName . '</a>'; ?>
+													</td>
+													<td><?php echo getBanType($ban['type']); ?></td>
+													<td>
+														<?php
+														if ($ban['expires'] == "-1")
+															echo 'Never';
+														else
+															echo date("H:i:s", $ban['expires']) . '<br/>' . date("d M Y", $ban['expires']);
+														?>
+													</td>
+													<td><?php echo getBanReason($ban['reason']); ?></td>
+													<td><?php echo $ban['comment']; ?></td>
+													<td>
+														<?php
+														if ($ban['admin_id'] == "0")
+															echo 'Autoban';
+														else
+															$aName = getPlayerNameByAccount($ban['admin_id']);
+														echo '<a href="?p=players&search=' . $aName . '">' . $aName . '</a>';
+														echo '<br/>' . date("d.m.Y", $ban['added']);
+														?>
+													</td>
+												</tr>
+											<?php } ?>
 										</tbody>
 									</table>
-									<?php
+								<?php
 								} else {
 									echo 'No Account bans.';
 								} ?>
@@ -591,20 +591,20 @@ else if (isset($_REQUEST['search'])) {
 								<?php $store_history = $db->query('SELECT * FROM `store_history` WHERE `account_id` = "' . $account->getId() . '" ORDER BY `time` DESC')->fetchAll(); ?>
 								<table class="table table-striped table-condensed table-responsive d-md-table">
 									<thead>
-									<tr>
-										<th>Description</th>
-										<th>Coins</th>
-										<th>Date</th>
-									</tr>
+										<tr>
+											<th>Description</th>
+											<th>Coins</th>
+											<th>Date</th>
+										</tr>
 									</thead>
 									<tbody>
-									<?php foreach ($store_history as $p): ?>
-										<tr>
-											<td><?php echo $p['description']; ?></td>
-											<td><?php echo $p['coin_amount']; ?></td>
-											<td><?php echo date('d M y H:i:s', $p['time']); ?></td>
-										</tr>
-									<?php endforeach; ?>
+										<?php foreach ($store_history as $p): ?>
+											<tr>
+												<td><?php echo $p['description']; ?></td>
+												<td><?php echo $p['coin_amount']; ?></td>
+												<td><?php echo date('d M y H:i:s', $p['time']); ?></td>
+											</tr>
+										<?php endforeach; ?>
 									</tbody>
 								</table>
 							</div>
@@ -657,18 +657,24 @@ else if (isset($_REQUEST['search'])) {
 	</div>
 </div>
 <script>
-	$(document).ready(function () {
-		$('#created').datetimepicker({format: "M d Y, H:i:s",});
-		$('#web_lastlogin').datetimepicker({format: 'M d Y, H:i:s'});
+	$(document).ready(function() {
+		$('#created').datetimepicker({
+			format: "M d Y, H:i:s",
+		});
+		$('#web_lastlogin').datetimepicker({
+			format: 'M d Y, H:i:s'
+		});
 
-		$('#c_pass').change(function () {
+		$('#c_pass').change(function() {
 			const ipass = $('input[name=pass]');
 			ipass[0].disabled = !this.checked;
 			ipass[0].value = '';
 		}).change();
 
 		$('.acc_datatable').DataTable({
-			"order": [[0, "asc"]]
+			"order": [
+				[0, "asc"]
+			]
 		});
 	});
 </script>

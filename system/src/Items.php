@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Items class
  *
@@ -48,25 +49,28 @@ class Items
 		return true;
 	}
 
-	public static function parseNode($id, $node, $show = false) {
+	public static function parseNode($id, $node, $show = false)
+	{
 		$name = $node->getAttribute('name');
 		$article = $node->getAttribute('article');
 		$plural = $node->getAttribute('plural');
 
 		$attributes = array();
-		foreach($node->getElementsByTagName('attribute') as $attr) {
+		foreach ($node->getElementsByTagName('attribute') as $attr) {
 			$attributes[strtolower($attr->getAttribute('key'))] = $attr->getAttribute('value');
 		}
 
 		return array('id' => $id, 'content' => array('article' => $article, 'name' => $name, 'plural' => $plural, 'attributes' => $attributes));
 	}
 
-	public static function getError() {
+	public static function getError()
+	{
 		return self::$error;
 	}
 
-	public static function load() {
-		if(self::$items) {
+	public static function load()
+	{
+		if (self::$items) {
 			return;
 		}
 
@@ -74,65 +78,61 @@ class Items
 		self::$items = $cache_php->get('items');
 	}
 
-	public static function get($id) {
+	public static function get($id)
+	{
 		self::load();
 		return isset(self::$items[$id]) ? self::$items[$id] : [];
 	}
 
-	public static function getDescription($id, $count = 1) {
+	public static function getDescription($id, $count = 1)
+	{
 		$item = self::get($id);
 
 		$attr = $item['attributes'];
 		$s = '';
-		if(!empty($item['name'])) {
-			if($count > 1) {
-				if($attr['showcount']) {
+		if (!empty($item['name'])) {
+			if ($count > 1) {
+				if ($attr['showcount']) {
 					$s .= $count . ' ';
 				}
 
-				if(!empty($item['plural'])) {
+				if (!empty($item['plural'])) {
 					$s .= $item['plural'];
-				}
-				else if((int)$attr['showcount'] == 0) {
+				} else if ((int)$attr['showcount'] == 0) {
 					$s .= $item['name'];
-				}
-				else {
+				} else {
 					$s .= $item['name'] . 's';
 				}
-			}
-			else {
-				if(!empty($item['aticle'])) {
+			} else {
+				if (!empty($item['aticle'])) {
 					$s .= $item['article'] . ' ';
 				}
 
 				$s .= $item['name'];
 			}
-		}
-		else
+		} else
 			$s .= 'an item of type ' . $item['id'];
 
-		if(isset($attr['type']) && strtolower($attr['type']) == 'rune') {
+		if (isset($attr['type']) && strtolower($attr['type']) == 'rune') {
 			$item = Spell::where('item_id', $id)->first();
-			if($item) {
-				if($item->level > 0 && $item->maglevel > 0) {
+			if ($item) {
+				if ($item->level > 0 && $item->maglevel > 0) {
 					$s .= '. ' . ($count > 1 ? "They" : "It") . ' can only be used by ';
 				}
 
 				$configVocations = config('vocations');
-				if(!empty(trim($item->vocations))) {
+				if (!empty(trim($item->vocations))) {
 					$vocations = json_decode($item->vocations);
-					if(count($vocations) > 0) {
-						foreach($vocations as $voc => $show) {
+					if (count($vocations) > 0) {
+						foreach ($vocations as $voc => $show) {
 							$vocations[$configVocations[$voc]] = $show;
 						}
 					}
-				}
-				else {
+				} else {
 					$s .= 'players';
 				}
 
 				$s .= ' with';
-
 			}
 		}
 		return $s;

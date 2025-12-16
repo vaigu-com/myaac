@@ -8,8 +8,7 @@ require '../common.php';
 const ADMIN_PANEL = true;
 const MYAAC_ADMIN = true;
 
-if(file_exists(BASE . 'install') && (!isset($config['installed']) || !$config['installed']))
-{
+if (file_exists(BASE . 'install') && (!isset($config['installed']) || !$config['installed'])) {
 	header('Location: ' . BASE_URL . 'install/');
 	throw new RuntimeException('Setup detected that <b>install/</b> directory exists. Please visit <a href="' . BASE_URL . 'install">this</a> url to start MyAAC Installation.<br/>Delete <b>install/</b> directory if you already installed MyAAC.<br/>Remember to REFRESH this page when you\'re done!');
 }
@@ -18,7 +17,7 @@ $content = '';
 
 // validate page
 $page = $_GET['p'] ?? '';
-if(empty($page) || preg_match("/[^a-zA-Z0-9_\-\/.]/", $page))
+if (empty($page) || preg_match("/[^a-zA-Z0-9_\-\/.]/", $page))
 	$page = 'dashboard';
 
 $page = strtolower($page);
@@ -40,22 +39,20 @@ if (ACTION == 'logout') {
 }
 
 // if we're not logged in - show login box
-if(!$logged || !admin()) {
+if (!$logged || !admin()) {
 	$page = 'login';
 }
 
 $pluginsAdminPages = Plugins::getAdminPages();
-if(isset($pluginsAdminPages[$page]) && file_exists(BASE . $pluginsAdminPages[$page])) {
+if (isset($pluginsAdminPages[$page]) && file_exists(BASE . $pluginsAdminPages[$page])) {
 	$file = BASE . $pluginsAdminPages[$page];
-}
-else {
+} else {
 	// include our page
 	$file = __DIR__ . '/pages/' . $page . '.php';
-	if(!@file_exists($file)) {
+	if (!@file_exists($file)) {
 		if (str_contains($page, 'plugins/')) {
 			$file = BASE . $page;
-		}
-		else {
+		} else {
 			$page = '404';
 			$file = SYSTEM . 'pages/404.php';
 		}
@@ -63,7 +60,7 @@ else {
 }
 
 ob_start();
-if($hooks->trigger(HOOK_ADMIN_BEFORE_PAGE)) {
+if ($hooks->trigger(HOOK_ADMIN_BEFORE_PAGE)) {
 	require $file;
 }
 

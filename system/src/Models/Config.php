@@ -4,7 +4,8 @@ namespace MyAAC\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Config extends Model {
+class Config extends Model
+{
 
 	protected $table = TABLE_PREFIX . 'config';
 

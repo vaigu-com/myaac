@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Project: MyAAC
  *     Automatic Account Creator for Open Tibia Servers
@@ -31,19 +32,18 @@ require_once 'common.php';
 require_once SYSTEM . 'functions.php';
 
 $uri = $_SERVER['REQUEST_URI'];
-if(str_contains($uri, 'index.php')) {
+if (str_contains($uri, 'index.php')) {
 	$uri = str_replace_first('/index.php', '', $uri);
 }
 
-if(str_starts_with($uri, '/')) {
+if (str_starts_with($uri, '/')) {
 	$uri = str_replace_first('/', '', $uri);
 }
 
-if(preg_match("/^[A-Za-z0-9-_%'+\/]+\.png$/i", $uri)) {
+if (preg_match("/^[A-Za-z0-9-_%'+\/]+\.png$/i", $uri)) {
 	if (!empty(BASE_DIR)) {
 		$tmp = explode('.', str_replace_first(str_replace_first('/', '', BASE_DIR) . '/', '', $uri));
-	}
-	else {
+	} else {
 		$tmp = explode('.', $uri);
 	}
 
@@ -54,13 +54,12 @@ if(preg_match("/^[A-Za-z0-9-_%'+\/]+\.png$/i", $uri)) {
 	exit();
 }
 
-if(preg_match("/^(.*)\.(gif|jpg|png|jpeg|tiff|bmp|css|js|less|map|html|zip|rar|gz|ttf|woff|ico)$/i", $_SERVER['REQUEST_URI'])) {
+if (preg_match("/^(.*)\.(gif|jpg|png|jpeg|tiff|bmp|css|js|less|map|html|zip|rar|gz|ttf|woff|ico)$/i", $_SERVER['REQUEST_URI'])) {
 	http_response_code(404);
 	exit;
 }
 
-if((!isset($config['installed']) || !$config['installed']) && file_exists(BASE . 'install'))
-{
+if ((!isset($config['installed']) || !$config['installed']) && file_exists(BASE . 'install')) {
 	header('Location: ' . BASE_URL . 'install/');
 	exit();
 }
@@ -79,7 +78,7 @@ $twig->addGlobal('status', $status);
 $hooks->trigger(HOOK_STARTUP);
 
 // backward support for gesior
-if(setting('core.backward_support')) {
+if (setting('core.backward_support')) {
 	define('INITIALIZED', true);
 	$SQL = $db;
 	$layout_header = template_header();
@@ -90,7 +89,7 @@ if(setting('core.backward_support')) {
 
 	$config['access_admin_panel'] = 2;
 	$group_id_of_acc_logged = 0;
-	if($logged && $account_logged)
+	if ($logged && $account_logged)
 		$group_id_of_acc_logged = $account_logged->getGroupId();
 
 	$config['serverPath'] = $config['server_path'];
@@ -99,11 +98,11 @@ if(setting('core.backward_support')) {
 	$config['site']['shop_system'] = setting('core.gifts_system');
 	$config['site']['gallery_page'] = true;
 
-	if(!isset($config['vdarkborder']))
+	if (!isset($config['vdarkborder']))
 		$config['vdarkborder'] = '#505050';
-	if(!isset($config['darkborder']))
+	if (!isset($config['darkborder']))
 		$config['darkborder'] = '#D4C0A1';
-	if(!isset($config['lightborder']))
+	if (!isset($config['lightborder']))
 		$config['lightborder'] = '#F1E0C6';
 
 	$config['site']['download_page'] = true;
@@ -111,18 +110,18 @@ if(setting('core.backward_support')) {
 	$config['site']['screenshot_page'] = true;
 
 	$forumSetting = setting('core.forum');
-	if($forumSetting != '')
+	if ($forumSetting != '')
 		$config['forum_link'] = (strtolower($forumSetting) === 'site' ? getLink('forum') : $forumSetting);
 
-	foreach($status as $key => $value)
+	foreach ($status as $key => $value)
 		$config['status']['serverStatus_' . $key] = $value;
 }
 
-if(setting('core.views_counter')) {
+if (setting('core.views_counter')) {
 	require_once SYSTEM . 'counter.php';
 }
 
-if(setting('core.visitors_counter')) {
+if (setting('core.visitors_counter')) {
 	$visitors = new Visitors(setting('core.visitors_counter_ttl'));
 }
 
@@ -130,33 +129,31 @@ require_once SYSTEM . 'router.php';
 
 // anonymous usage statistics
 // sent only when user agrees
-if(setting('core.anonymous_usage_statistics')) {
+if (setting('core.anonymous_usage_statistics')) {
 	$report_time = 30 * 24 * 60 * 60; // report one time per 30 days
 	$should_report = true;
 
 	$value = '';
-	if($cache->enabled() && $cache->fetch('last_usage_report', $value)) {
+	if ($cache->enabled() && $cache->fetch('last_usage_report', $value)) {
 		$should_report = time() > (int)$value + $report_time;
-	}
-	else {
+	} else {
 		$value = '';
-		if(fetchDatabaseConfig('last_usage_report', $value)) {
+		if (fetchDatabaseConfig('last_usage_report', $value)) {
 			$should_report = time() > (int)$value + $report_time;
-			if($cache->enabled()) {
+			if ($cache->enabled()) {
 				$cache->set('last_usage_report', $value, 60 * 60);
 			}
-		}
-		else {
+		} else {
 			registerDatabaseConfig('last_usage_report', time() - ($report_time - (7 * 24 * 60 * 60))); // first report after a week
 			$should_report = false;
 		}
 	}
 
-	if($should_report) {
+	if ($should_report) {
 		UsageStatistics::report();
 
 		updateDatabaseConfig('last_usage_report', time());
-		if($cache->enabled()) {
+		if ($cache->enabled()) {
 			$cache->set('last_usage_report', time(), 60 * 60);
 		}
 	}
@@ -166,10 +163,10 @@ $title_full =  (isset($title) ? $title . ' - ' : '') . $config['lua']['serverNam
 require $template_path . '/' . $template_index;
 
 echo base64_decode('PCEtLSBQb3dlcmVkIGJ5IE15QUFDIDo6IGh0dHBzOi8vd3d3Lm15LWFhYy5vcmcvIC0tPg==') . PHP_EOL;
-if(superAdmin()) {
+if (superAdmin()) {
 	echo '<!-- Generated in: ' . round(microtime(true) - START_TIME, 4) . 'ms -->';
 	echo PHP_EOL . '<!-- Queries done: ' . $db->queries() . ' -->';
-	if(function_exists('memory_get_peak_usage')) {
+	if (function_exists('memory_get_peak_usage')) {
 		echo PHP_EOL . '<!-- Peak memory usage: ' . convert_bytes(memory_get_peak_usage(true)) . ' -->';
 	}
 }

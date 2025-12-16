@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class GuildInvite extends Model {
+class GuildInvite extends Model
+{
 
 	protected $table = 'guild_invites';
 
@@ -18,5 +20,4 @@ class GuildInvite extends Model {
 	{
 		return $this->belongsTo(Guild::class);
 	}
-
 }

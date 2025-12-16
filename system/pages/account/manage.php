@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Account management
  *
@@ -14,12 +15,11 @@ $title = 'Account Management';
 require __DIR__ . '/login.php';
 require __DIR__ . '/base.php';
 
-if(!$logged) {
+if (!$logged) {
 	return;
 }
 
-if(isset($_REQUEST['redirect']))
-{
+if (isset($_REQUEST['redirect'])) {
 	$redirect = urldecode($_REQUEST['redirect']);
 
 	// should never happen, unless hacker modify the URL
@@ -44,17 +44,16 @@ $dayOrDays = $account_logged->getPremDays() == 1 ? 'day' : 'days';
  * @var OTS_Account $account_logged
  */
 $user_premium_points = $account_logged->getCustomField('coins_transferable');
-if(!$account_logged->isPremium())
+if (!$account_logged->isPremium())
 	$account_status = '<b><span style="color: red">Free Account</span></b>';
 else
-	$account_status = '<b><span style="color: green">' . ($freePremium ? 'Gratis Premium Account' : 'Premium Account, ' . $account_logged->getPremDays() . ' '.$dayOrDays.' left') . '</span></b>';
+	$account_status = '<b><span style="color: green">' . ($freePremium ? 'Gratis Premium Account' : 'Premium Account, ' . $account_logged->getPremDays() . ' ' . $dayOrDays . ' left') . '</span></b>';
 
 $recovery_key = $account_logged->getCustomField('key');
-if(empty($recovery_key))
+if (empty($recovery_key))
 	$account_registered = '<b><span style="color: red">No</span></b>';
-else
-{
-	if(setting('core.account_generate_new_reckey') && setting('core.mail_enabled'))
+else {
+	if (setting('core.account_generate_new_reckey') && setting('core.mail_enabled'))
 		$account_registered = '<b><span style="color: green">Yes ( <a href="' . getLink('account/register-new') . '"> Buy new Recovery Key </a> )</span></b>';
 	else
 		$account_registered = '<b><span style="color: green">Yes</span></b>';
@@ -63,13 +62,13 @@ else
 $account_created = $account_logged->getCreated();
 $account_email = $account_logged->getEMail();
 $email_new_time = $account_logged->getCustomField("email_new_time");
-if($email_new_time > 1)
+if ($email_new_time > 1)
 	$email_new = $account_logged->getCustomField("email_new");
 $account_rlname = $account_logged->getRLName();
 $account_location = $account_logged->getLocation();
-if($account_logged->isBanned())
-	if($account_logged->getBanTime() > 0)
-		$welcome_message = '<span style="color: red">Your account is banished until '.date("j F Y, G:i:s", $account_logged->getBanTime()).'!</span>';
+if ($account_logged->isBanned())
+	if ($account_logged->getBanTime() > 0)
+		$welcome_message = '<span style="color: red">Your account is banished until ' . date("j F Y, G:i:s", $account_logged->getBanTime()) . '!</span>';
 	else
 		$welcome_message = '<span style="color: red">Your account is banished FOREVER!</span>';
 else
@@ -77,19 +76,17 @@ else
 
 $email_change = '';
 $email_request = false;
-if($email_new_time > 1)
-{
-	if($email_new_time < time())
-		$email_change = '<br>(You can accept <b>'.$email_new.'</b> as a new email.)';
-	else
-	{
-		$email_change = ' <br>You can accept <b>new e-mail after '.date("j F Y", $email_new_time).".</b>";
+if ($email_new_time > 1) {
+	if ($email_new_time < time())
+		$email_change = '<br>(You can accept <b>' . $email_new . '</b> as a new email.)';
+	else {
+		$email_change = ' <br>You can accept <b>new e-mail after ' . date("j F Y", $email_new_time) . ".</b>";
 		$email_request = true;
 	}
 }
 
 $actions = array();
-foreach($account_logged->getActionsLog(0, 1000) as $action) {
+foreach ($account_logged->getActionsLog(0, 1000) as $action) {
 	$actions[] = array('action' => $action['action'], 'date' => $action['date'], 'ip' => $action['ip'] != 0 ? long2ip($action['ip']) : inet_ntop($action['ipv6']));
 }
 

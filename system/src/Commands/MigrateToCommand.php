@@ -15,7 +15,8 @@ class MigrateToCommand extends Command
 	{
 		$this->setName('migrate:to')
 			->setDescription('This command migrates to specific version of database')
-			->addArgument('version',
+			->addArgument(
+				'version',
 				InputArgument::REQUIRED,
 				'Version number'
 			);
@@ -41,15 +42,13 @@ class MigrateToCommand extends Command
 				echo $i . ' ';
 				$this->executeMigration($i, false);
 			}
-		}
-		else if ($currentVersion < $versionDest) {
+		} else if ($currentVersion < $versionDest) {
 			// upgrade
 			for ($i = $currentVersion + 1; $i <= $versionDest; $i++) {
 				echo $i . ' ';
 				$this->executeMigration($i, true);
 			}
-		}
-		else {
+		} else {
 			$io->success('Nothing to be done');
 			return Command::SUCCESS;
 		}
@@ -71,8 +70,7 @@ class MigrateToCommand extends Command
 			if (isset($up)) {
 				$up();
 			}
-		}
-		else {
+		} else {
 			if (isset($down)) {
 				$down();
 			}
@@ -88,12 +86,12 @@ class MigrateToCommand extends Command
 			throw new \RuntimeException('MyAAC has not been installed yet or there was error during installation. Please install again.');
 		}
 
-		if(empty($config['server_path'])) {
+		if (empty($config['server_path'])) {
 			throw new \RuntimeException('Server Path has been not set. Go to config.php and set it.');
 		}
 
 		// take care of trailing slash at the end
-		if($config['server_path'][strlen($config['server_path']) - 1] !== '/')
+		if ($config['server_path'][strlen($config['server_path']) - 1] !== '/')
 			$config['server_path'] .= '/';
 
 		$config['lua'] = load_config_lua($config['server_path'] . 'config.lua');

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * List of countries, following ISO 3166 standard.
  *
@@ -9,8 +10,7 @@
  */
 defined('MYAAC') or die('Direct access not allowed!');
 
-$config['countries'] = array
-(
+$config['countries'] = array(
 	'af' => 'Afghanistan',
 	'al' => 'Albania',
 	'dz' => 'Algeria',
@@ -251,4 +251,3 @@ $config['countries'] = array
 	'zm' => 'Zambia',
 	'zw' => 'Zimbabwe'
 );
-?>

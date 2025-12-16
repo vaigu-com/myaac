@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Visitors class
  *
@@ -25,10 +26,9 @@ class Visitors
 		$this->cache = Cache::getInstance();
 
 		$this->cacheEnabled = $this->cache->enabled();
-		if($this->cacheEnabled)
-		{
+		if ($this->cacheEnabled) {
 			$tmp = '';
-			if($this->cache->fetch('visitors', $tmp))
+			if ($this->cache->fetch('visitors', $tmp))
 				$this->data = unserialize($tmp);
 			else
 				$this->data = array();
@@ -40,7 +40,7 @@ class Visitors
 		$ip = get_browser_real_ip();
 		$userAgentShortened = substr($_SERVER['HTTP_USER_AGENT'] ?? 'unknown', 0, 255);
 
-		if($this->visitorExists($ip))
+		if ($this->visitorExists($ip))
 			$this->updateVisitor($ip, $_SERVER['REQUEST_URI'], $userAgentShortened);
 		else
 			$this->addVisitor($ip, $_SERVER['REQUEST_URI'], $userAgentShortened);
@@ -48,13 +48,13 @@ class Visitors
 
 	public function __destruct()
 	{
-		if($this->cacheEnabled)
+		if ($this->cacheEnabled)
 			$this->cache->set('visitors', serialize($this->data), 120);
 	}
 
 	public function visitorExists($ip)
 	{
-		if($this->cacheEnabled) {
+		if ($this->cacheEnabled) {
 			return isset($this->data[$ip]);
 		}
 
@@ -63,12 +63,10 @@ class Visitors
 
 	private function cleanVisitors()
 	{
-		if($this->cacheEnabled)
-		{
+		if ($this->cacheEnabled) {
 			$timeNow = time();
-			foreach($this->data as $ip => $details)
-			{
-				if($timeNow - (int)$details['lastvisit'] > $this->sessionTime * 60)
+			foreach ($this->data as $ip => $details) {
+				if ($timeNow - (int)$details['lastvisit'] > $this->sessionTime * 60)
 					unset($this->data[$ip]);
 			}
 
@@ -80,7 +78,7 @@ class Visitors
 
 	private function updateVisitor($ip, $page, $userAgent)
 	{
-		if($this->cacheEnabled) {
+		if ($this->cacheEnabled) {
 			$this->data[$ip] = array('page' => $page, 'lastvisit' => time(), 'user_agent' => $userAgent);
 			return;
 		}
@@ -90,7 +88,7 @@ class Visitors
 
 	private function addVisitor($ip, $page, $userAgent)
 	{
-		if($this->cacheEnabled) {
+		if ($this->cacheEnabled) {
 			$this->data[$ip] = array('page' => $page, 'lastvisit' => time(), 'user_agent' => $userAgent);
 			return;
 		}
@@ -100,8 +98,8 @@ class Visitors
 
 	public function getVisitors()
 	{
-		if($this->cacheEnabled) {
-			foreach($this->data as $ip => &$details)
+		if ($this->cacheEnabled) {
+			foreach ($this->data as $ip => &$details)
 				$details['ip'] = $ip;
 
 			return $this->data;
@@ -112,15 +110,15 @@ class Visitors
 
 	public function getAmountVisitors()
 	{
-		if($this->cacheEnabled) {
+		if ($this->cacheEnabled) {
 			return count($this->data);
 		}
 
 		return Visitor::count();
 	}
 
-	public function show() {
+	public function show()
+	{
 		echo $this->getAmountVisitors();
 	}
 }
-?>

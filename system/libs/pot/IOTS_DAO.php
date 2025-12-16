@@ -15,10 +15,6 @@
  * @package POT
  * @deprecated 0.1.0 This interface is not used anymore.
  */
-interface IOTS_DAO
-{
-}
+interface IOTS_DAO {}
 
 /**#@-*/
-
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * New forum thread
  *
@@ -18,9 +19,9 @@ if ($ret === false) {
 	return;
 }
 
-if(!$logged) {
+if (!$logged) {
 	$extra_url = '';
-	if(isset($_GET['section_id'])) {
+	if (isset($_GET['section_id'])) {
 		$extra_url = '?action=new_thread&section_id=' . $_GET['section_id'];
 	}
 
@@ -30,13 +31,13 @@ if(!$logged) {
 
 csrfProtect();
 
-if(Forum::canPost($account_logged)) {
-	$players_from_account = $db->query('SELECT `players`.`name`, `players`.`id` FROM `players` WHERE `players`.`account_id` = '.(int) $account_logged->getId())->fetchAll();
+if (Forum::canPost($account_logged)) {
+	$players_from_account = $db->query('SELECT `players`.`name`, `players`.`id` FROM `players` WHERE `players`.`account_id` = ' . (int) $account_logged->getId())->fetchAll();
 	$section_id = $_REQUEST['section_id'] ?? null;
-	if($section_id !== null) {
+	if ($section_id !== null) {
 		echo '<a href="' . getLink('forum') . '">Boards</a> >> <a href="' . getForumBoardLink($section_id) . '">' . $sections[$section_id]['name'] . '</a> >> <b>Post new thread</b><br />';
 
-		if(isset($sections[$section_id]['name']) && Forum::hasAccess($section_id)) {
+		if (isset($sections[$section_id]['name']) && Forum::hasAccess($section_id)) {
 			if ($sections[$section_id]['closed'] && !Forum::isModerator())
 				$errors[] = 'You cannot create topic on this board.';
 
@@ -139,18 +140,15 @@ if(Forum::canPost($account_logged)) {
 					'canEdit' => $canEdit
 				));
 			}
-		}
-		else {
+		} else {
 			$errors[] = "Board with ID $section_id doesn't exist.";
 			displayErrorBoxWithBackButton($errors, getLink('forum'));
 		}
-	}
-	else {
+	} else {
 		$errors[] = 'Please enter section_id.';
 		displayErrorBoxWithBackButton($errors, getLink('forum'));
 	}
-}
-else {
-	$errors[] = 'Your account is banned, deleted or you don\'t have any player with level '.setting('core.forum_level_required').' on your account. You can\'t post.';
+} else {
+	$errors[] = 'Your account is banned, deleted or you don\'t have any player with level ' . setting('core.forum_level_required') . ' on your account. You can\'t post.';
 	displayErrorBoxWithBackButton($errors, getLink('forum'));
 }

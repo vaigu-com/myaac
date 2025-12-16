@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Creatures class
  *
@@ -13,44 +14,46 @@ namespace MyAAC;
 
 use MyAAC\Models\Monster;
 
-class Monsters {
+class Monsters
+{
 	/**
 	 * @var \OTS_MonstersList
 	 */
 	private static $monstersList;
 	private static $lastError = '';
 
-	public static function loadFromXML($show = false) {
+	public static function loadFromXML($show = false)
+	{
 		try {
 			Monster::query()->delete();
-		} catch(\Exception $error) {}
+		} catch (\Exception $error) {
+		}
 
-		if($show) {
+		if ($show) {
 			echo '<h2>Reload monsters.</h2>';
 			echo "<h2>All records deleted from table '" . TABLE_PREFIX . "monsters' in database.</h2>";
 		}
 
 		try {
 			self::$monstersList = new \OTS_MonstersList(config('data_path') . 'monster/');
-		}
-		catch(\Exception $e) {
+		} catch (\Exception $e) {
 			self::$lastError = $e->getMessage();
 			return false;
 		}
 
 		$items = array();
 		Items::load();
-		foreach((array)Items::$items as $id => $item) {
+		foreach ((array)Items::$items as $id => $item) {
 			$items[$item['name']] = $id;
 		}
 
 		//$names_added must be an array
 		$names_added[] = '';
 		//add monsters
-		foreach(self::$monstersList as $lol) {
+		foreach (self::$monstersList as $lol) {
 			$monster = self::$monstersList->current();
-			if(!$monster->loaded()) {
-				if($show) {
+			if (!$monster->loaded()) {
+				if ($show) {
 					warning('Error while adding monster: ' . self::$monstersList->currentFile());
 				}
 				continue;
@@ -65,7 +68,7 @@ class Monsters {
 			$health = $monster->getHealth();
 			//load monster speed and calculate "speed level"
 			$speed_ini = $monster->getSpeed();
-			if($speed_ini <= 220) {
+			if ($speed_ini <= 220) {
 				$speed_lvl = 1;
 			} else {
 				$speed_lvl = ($speed_ini - 220) / 2;
@@ -73,8 +76,8 @@ class Monsters {
 			//check "is monster use haste spell"
 			$defenses = $monster->getDefenses();
 			$use_haste = 0;
-			foreach($defenses as $defense) {
-				if($defense == 'speed') {
+			foreach ($defenses as $defense) {
+				if ($defense == 'speed') {
 					$use_haste = 1;
 				}
 			}
@@ -89,42 +92,42 @@ class Monsters {
 
 			//load monster flags
 			$flags = $monster->getFlags();
-			if(!isset($flags['summonable']))
+			if (!isset($flags['summonable']))
 				$flags['summonable'] = '0';
-			if(!isset($flags['convinceable']))
+			if (!isset($flags['convinceable']))
 				$flags['convinceable'] = '0';
 
-			if(!isset($flags['pushable']))
+			if (!isset($flags['pushable']))
 				$flags['pushable'] = '0';
-			if(!isset($flags['canpushitems']))
+			if (!isset($flags['canpushitems']))
 				$flags['canpushitems'] = '0';
-			if(!isset($flags['canpushcreatures']))
+			if (!isset($flags['canpushcreatures']))
 				$flags['canpushcreatures'] = '0';
-			if(!isset($flags['runonhealth']))
+			if (!isset($flags['runonhealth']))
 				$flags['runonhealth'] = '0';
-			if(!isset($flags['canwalkonenergy']))
+			if (!isset($flags['canwalkonenergy']))
 				$flags['canwalkonenergy'] = '0';
-			if(!isset($flags['canwalkonpoison']))
+			if (!isset($flags['canwalkonpoison']))
 				$flags['canwalkonpoison'] = '0';
-			if(!isset($flags['canwalkonfire']))
+			if (!isset($flags['canwalkonfire']))
 				$flags['canwalkonfire'] = '0';
-			if(!isset($flags['hostile']))
+			if (!isset($flags['hostile']))
 				$flags['hostile'] = '0';
-			if(!isset($flags['attackable']))
+			if (!isset($flags['attackable']))
 				$flags['attackable'] = '0';
-			if(!isset($flags['rewardboss']))
+			if (!isset($flags['rewardboss']))
 				$flags['rewardboss'] = '0';
 
 			$summons = $monster->getSummons();
 			$loot = $monster->getLoot();
-			foreach($loot as &$item) {
-				if(!\Validator::number($item['id'])) {
-					if(isset($items[$item['id']])) {
+			foreach ($loot as &$item) {
+				if (!\Validator::number($item['id'])) {
+					if (isset($items[$item['id']])) {
 						$item['id'] = $items[$item['id']];
 					}
 				}
 			}
-			if(!in_array($name, $names_added)) {
+			if (!in_array($name, $names_added)) {
 				try {
 					Monster::create(array(
 						'name' => $name,
@@ -156,12 +159,11 @@ class Monsters {
 						'summons' => json_encode($summons)
 					));
 
-					if($show) {
+					if ($show) {
 						success('Added: ' . $name . '<br/>');
 					}
-				}
-				catch(\Exception $error) {
-					if($show) {
+				} catch (\Exception $error) {
+					if ($show) {
 						warning('Error while adding monster (' . $name . '): ' . $error->getMessage());
 					}
 				}
@@ -173,11 +175,13 @@ class Monsters {
 		return true;
 	}
 
-	public static function getMonstersList() {
+	public static function getMonstersList()
+	{
 		return self::$monstersList;
 	}
 
-	public static function getLastError() {
+	public static function getLastError()
+	{
 		return self::$lastError;
 	}
 }

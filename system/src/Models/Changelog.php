@@ -12,13 +12,15 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $player_id
  * @property int $date
  */
-class Changelog extends Model {
+class Changelog extends Model
+{
 
 	protected $table = TABLE_PREFIX . 'changelog';
 
 	public $timestamps = false;
 
-	public function scopeIsPublic($query) {
+	public function scopeIsPublic($query)
+	{
 		$query->where('hide', '!=', 1);
 	}
 }

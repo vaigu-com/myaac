@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Menus
  *
@@ -100,8 +101,7 @@ if (isset($_POST['template'])) {
 
 			onTemplateMenusChange();
 			success('Menus has been reset at ' . date('H:i'));
-		}
-		else {
+		} else {
 			error("This template don't support reinstalling menus.");
 		}
 	}
@@ -119,7 +119,7 @@ if (isset($_POST['template'])) {
 		'template' => $template,
 		'canResetColors' => $canResetColors
 	]);
-	?>
+?>
 	<?php
 	$menus = Menu::query()
 		->select('name', 'link', 'blank', 'color', 'category', 'ordering')
@@ -134,8 +134,8 @@ if (isset($_POST['template'])) {
 	?>
 	<form method="post" id="menus-form" action="?p=menus">
 		<?php csrf(); ?>
-		<input type="hidden" name="template" value="<?php echo $template ?>"/>
-		<button type="submit" name="save" class="btn btn-info">Save</button><br/><br/>
+		<input type="hidden" name="template" value="<?php echo $template ?>" />
+		<button type="submit" name="save" class="btn btn-info">Save</button><br /><br />
 		<div class="row">
 			<?php foreach ($config['menu_categories'] as $id => $cat): ?>
 				<div class="col-md-12 col-lg-6">
@@ -150,14 +150,16 @@ if (isset($_POST['template'])) {
 									$i = 0;
 									foreach ($menus[$id] as $menu):
 										$color = (empty($menu['color']) ? ($cat['default_links_color'] ?? ($config['menu_default_links_color'] ?? ($config['menu_default_color'] ?? '#ffffff'))) : '#' . $menu['color']);
-										?>
-										<li class="ui-state-default" id="list-<?php echo $id ?>-<?php echo $i ?>"><label>Name:</label> <input type="text" name="menu[<?php echo $id ?>][]" value="<?php echo escapeHtml($menu['name']); ?>"/>
-											<label>Link:</label> <input type="text" name="menu_link[<?php echo $id ?>][]" value="<?php echo $menu['link'] ?>"/>
-											<input type="hidden" name="menu_blank[<?php echo $id ?>][]" value="0"/>
-											<label><input class="blank-checkbox" type="checkbox" <?php echo($menu['blank'] == 1 ? 'checked' : '') ?>/><span title="Open in New Window">New Window</span></label>
-											<input class="color-picker" type="text" name="menu_color[<?php echo $id ?>][]" value="<?php echo $color; ?>"/>
-											<a class="remove-button" id="remove-button-<?php echo $id ?>-<?php echo $i ?>"><i class="fas fa-trash"></a></i></li>
-										<?php $i++; $last_id[$id] = $i;
+								?>
+										<li class="ui-state-default" id="list-<?php echo $id ?>-<?php echo $i ?>"><label>Name:</label> <input type="text" name="menu[<?php echo $id ?>][]" value="<?php echo escapeHtml($menu['name']); ?>" />
+											<label>Link:</label> <input type="text" name="menu_link[<?php echo $id ?>][]" value="<?php echo $menu['link'] ?>" />
+											<input type="hidden" name="menu_blank[<?php echo $id ?>][]" value="0" />
+											<label><input class="blank-checkbox" type="checkbox" <?php echo ($menu['blank'] == 1 ? 'checked' : '') ?> /><span title="Open in New Window">New Window</span></label>
+											<input class="color-picker" type="text" name="menu_color[<?php echo $id ?>][]" value="<?php echo $color; ?>" />
+											<a class="remove-button" id="remove-button-<?php echo $id ?>-<?php echo $i ?>"><i class="fas fa-trash"></a></i>
+										</li>
+								<?php $i++;
+										$last_id[$id] = $i;
 									endforeach;
 								} ?>
 							</ul>
@@ -181,7 +183,7 @@ if (isset($_POST['template'])) {
 		'last_id' => $last_id,
 	));
 	?>
-	<?php
+<?php
 } else {
 	$templates = Menu::select('template')->distinct()->get()->toArray();
 	foreach ($templates as $key => $value) {

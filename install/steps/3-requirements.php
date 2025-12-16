@@ -17,7 +17,10 @@ $dirs_optional = [
 ];
 
 $extensions_required = [
-	'pdo', 'pdo_mysql', 'json', 'xml'
+	'pdo',
+	'pdo_mysql',
+	'json',
+	'xml'
 ];
 $extensions_optional = [
 	'gd' => $locale['step_requirements_warning_player_signatures'],
@@ -34,11 +37,11 @@ function version_check($name, $ok, $info = '', $warning = false)
 {
 	global $failed;
 	echo '<div class="alert alert-' . ($ok ? 'success' : ($warning ? 'warning' : 'danger')) . '">' . $name;
-	if(!empty($info))
+	if (!empty($info))
 		echo ': <b>' . $info . '</b>';
 
 	echo '</div>';
-	if(!$ok && !$warning)
+	if (!$ok && !$warning)
 		$failed = true;
 }
 
@@ -47,8 +50,7 @@ $failed = false;
 // start validating
 version_check($locale['step_requirements_php_version'], (PHP_VERSION_ID >= 50500), PHP_VERSION);
 
-foreach ($dirs_required_writable as $value)
-{
+foreach ($dirs_required_writable as $value) {
 	$is_writable = is_writable(BASE . $value) && (MYAAC_OS != 'WINDOWS' || win_is_writable(BASE . $value));
 	version_check($locale['step_requirements_write_perms'] . ': ' . $value, $is_writable);
 }
@@ -58,8 +60,7 @@ foreach ($dirs_optional as $dir => $errorMsg) {
 	version_check($locale['step_requirements_write_perms'] . ': ' . $dir, $is_writable, $is_writable ? '' : $errorMsg, true);
 }
 
-foreach ($dirs_required as $dir => $errorMsg)
-{
+foreach ($dirs_required as $dir => $errorMsg) {
 	$exists = is_dir(BASE . $dir);
 	version_check($locale['step_requirements_folder_exists'] . ': ' . $dir, $exists, $exists ? '' : $errorMsg);
 }
@@ -72,20 +73,20 @@ version_check('safe_mode', !$ini_safe_mode, $ini_safe_mode ? $locale['on'] : $lo
 
 foreach ($extensions_required as $ext) {
 	$loaded = extension_loaded($ext);
-	version_check(str_replace('$EXTENSION$', strtoupper($ext), $locale['step_requirements_extension']) , $loaded, $loaded ? $locale['loaded'] : $locale['not_loaded']);
+	version_check(str_replace('$EXTENSION$', strtoupper($ext), $locale['step_requirements_extension']), $loaded, $loaded ? $locale['loaded'] : $locale['not_loaded']);
 }
 
 foreach ($extensions_optional as $ext => $errorMsg) {
 	$loaded = extension_loaded($ext);
-	version_check(str_replace('$EXTENSION$', strtoupper($ext), $locale['step_requirements_extension']) , $loaded, $loaded ? $locale['loaded'] : $locale['not_loaded'] . '. ' . $errorMsg, true);
+	version_check(str_replace('$EXTENSION$', strtoupper($ext), $locale['step_requirements_extension']), $loaded, $loaded ? $locale['loaded'] : $locale['not_loaded'] . '. ' . $errorMsg, true);
 }
 
 echo '<div class="text-center m-3">';
 
-if($failed) {
+if ($failed) {
 	echo '<div class="alert alert-warning"><span>' . $locale['step_requirements_failed'] . '</span></div>';
 	echo next_form(true, false);
-}else {
+} else {
 	echo next_form(true, true);
 }
 

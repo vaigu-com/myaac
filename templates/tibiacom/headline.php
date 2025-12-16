@@ -1,6 +1,6 @@
 <?php
 $text = $_GET['t'];
-if(strlen($text) > 100) // max limit
+if (strlen($text) > 100) // max limit
 	$text = '';
 
 // set font path

@@ -2,6 +2,4 @@
 
 namespace MyAAC\Exceptions;
 
-class SensitiveException extends \Exception
-{
-}
+class SensitiveException extends \Exception {}

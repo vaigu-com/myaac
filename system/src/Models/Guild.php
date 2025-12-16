@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class Guild extends Model {
+class Guild extends Model
+{
 
 	protected $table = 'guilds';
 
@@ -13,7 +15,7 @@ class Guild extends Model {
 	{
 		global $db;
 		$column = 'ownerid';
-		if($db->hasColumn('guilds', 'owner_id')) {
+		if ($db->hasColumn('guilds', 'owner_id')) {
 			$column = 'owner_id';
 		}
 
@@ -29,5 +31,4 @@ class Guild extends Model {
 	{
 		return $this->belongsToMany(Player::class, 'guild_invites');
 	}
-
 }

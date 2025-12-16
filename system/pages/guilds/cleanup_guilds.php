@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Cleanup guilds
  *
@@ -12,8 +13,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 require __DIR__ . '/base.php';
 
-if(!$logged)
-{
+if (!$logged) {
 	echo "You are not logged in.";
 	$twig->display('guilds.back_button.html.twig');
 	return;
@@ -21,55 +21,42 @@ if(!$logged)
 
 $guilds_list = new OTS_Guilds_List();
 $guilds_list->init();
-if(count($guilds_list) > 0)
-{
+if (count($guilds_list) > 0) {
 	/**
 	 * @var OTS_Guild $guild
 	 */
-	foreach($guilds_list as $guild)
-	{
+	foreach ($guilds_list as $guild) {
 		$error = 0;
 		/**
 		 * @var OTS_Player $leader
 		 */
 		$leader = $guild->getOwner();
-		if($leader->isLoaded())
-		{
+		if ($leader->isLoaded()) {
 			$leader_rank = $leader->getRank();
-			if($leader_rank->isLoaded())
-			{
-				if($leader_rank->isLoaded())
-				{
+			if ($leader_rank->isLoaded()) {
+				if ($leader_rank->isLoaded()) {
 					$leader_guild = $leader_rank->getGuild();
-					if($leader_guild->isLoaded())
-					{
-						if($leader_guild->getId() != $guild->getId())
+					if ($leader_guild->isLoaded()) {
+						if ($leader_guild->getId() != $guild->getId())
 							$error = 1;
-					}
-					else
+					} else
 						$error = 1;
-				}
-				else
+				} else
 					$error = 1;
-			}
-			else
+			} else
 				$error = 1;
-		}
-		else
+		} else
 			$error = 1;
-		if($error == 1)
-		{
+		if ($error == 1) {
 			$deleted_guilds[] = $guild->getName();
 			$status = delete_guild($guild->getId());
 		}
 	}
 	echo "<b>Deleted guilds (leaders of this guilds are not members of this guild [fix bugged guilds]):</b>";
-	if(!empty($deleted_guilds))
-		foreach($deleted_guilds as $guild)
-			echo "<li>".$guild;
-}
-else
+	if (!empty($deleted_guilds))
+		foreach ($deleted_guilds as $guild)
+			echo "<li>" . $guild;
+} else
 	echo "0 guilds found.";
 
 $twig->display('guilds.back_button.html.twig');
-?>

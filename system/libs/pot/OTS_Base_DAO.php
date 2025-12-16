@@ -29,56 +29,56 @@
  */
 abstract class OTS_Base_DAO implements IOTS_DAO
 {
-/**
- * Database connection.
- *
- * @var PDO
- */
+    /**
+     * Database connection.
+     *
+     * @var PDO
+     */
     protected $db;
 
-/**
- * Sets database connection handler.
- *
- * @version 0.1.0
- */
+    /**
+     * Sets database connection handler.
+     *
+     * @version 0.1.0
+     */
     public function __construct()
     {
         $this->db = POT::getInstance()->getDBHandle();
     }
 
-/**
- * Magic PHP5 method.
- *
- * <p>
- * Allows object serialisation.
- * </p>
- *
- * @return array List of properties that should be saved.
- */
+    /**
+     * Magic PHP5 method.
+     *
+     * <p>
+     * Allows object serialisation.
+     * </p>
+     *
+     * @return array List of properties that should be saved.
+     */
     public function __sleep()
     {
         return array('data');
     }
 
-/**
- * Magic PHP5 method.
- *
- * <p>
- * Allows object unserialisation.
- * </p>
- */
+    /**
+     * Magic PHP5 method.
+     *
+     * <p>
+     * Allows object unserialisation.
+     * </p>
+     */
     public function __wakeup()
     {
         $this->db = POT::getInstance()->getDBHandle();
     }
 
-/**
- * Creates clone of object.
- *
- * <p>
- * Copy of object needs to have different ID.
- * </p>
- */
+    /**
+     * Creates clone of object.
+     *
+     * <p>
+     * Copy of object needs to have different ID.
+     * </p>
+     */
     public function __clone()
     {
         unset($this->data['id']);

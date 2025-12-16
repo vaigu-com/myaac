@@ -1,4 +1,5 @@
 <?php
+
 /**
  * account-create index.php
  *

@@ -1,4 +1,5 @@
 <?php
+
 /** https://github.com/Voronenko/PHPOTP/blob/08cda9cb9c30b7242cf0b3a9100a6244a2874927/code/base32static.php
  * Encode in Base32 based on RFC 4648.
  * Requires 20% more space than base64
@@ -7,21 +8,78 @@
  * @package default
  * @author Bryan Ruiz
  **/
-class Base32Static {
+class Base32Static
+{
 
 	private static $map = array(
-		'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', //  7
-		'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', // 15
-		'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', // 23
-		'Y', 'Z', '2', '3', '4', '5', '6', '7', // 31
+		'A',
+		'B',
+		'C',
+		'D',
+		'E',
+		'F',
+		'G',
+		'H', //  7
+		'I',
+		'J',
+		'K',
+		'L',
+		'M',
+		'N',
+		'O',
+		'P', // 15
+		'Q',
+		'R',
+		'S',
+		'T',
+		'U',
+		'V',
+		'W',
+		'X', // 23
+		'Y',
+		'Z',
+		'2',
+		'3',
+		'4',
+		'5',
+		'6',
+		'7', // 31
 		'='  // padding character
 	);
 
 	private static $flippedMap = array(
-		'A'=>'0', 'B'=>'1', 'C'=>'2', 'D'=>'3', 'E'=>'4', 'F'=>'5', 'G'=>'6', 'H'=>'7',
-		'I'=>'8', 'J'=>'9', 'K'=>'10', 'L'=>'11', 'M'=>'12', 'N'=>'13', 'O'=>'14', 'P'=>'15',
-		'Q'=>'16', 'R'=>'17', 'S'=>'18', 'T'=>'19', 'U'=>'20', 'V'=>'21', 'W'=>'22', 'X'=>'23',
-		'Y'=>'24', 'Z'=>'25', '2'=>'26', '3'=>'27', '4'=>'28', '5'=>'29', '6'=>'30', '7'=>'31'
+		'A' => '0',
+		'B' => '1',
+		'C' => '2',
+		'D' => '3',
+		'E' => '4',
+		'F' => '5',
+		'G' => '6',
+		'H' => '7',
+		'I' => '8',
+		'J' => '9',
+		'K' => '10',
+		'L' => '11',
+		'M' => '12',
+		'N' => '13',
+		'O' => '14',
+		'P' => '15',
+		'Q' => '16',
+		'R' => '17',
+		'S' => '18',
+		'T' => '19',
+		'U' => '20',
+		'V' => '21',
+		'W' => '22',
+		'X' => '23',
+		'Y' => '24',
+		'Z' => '25',
+		'2' => '26',
+		'3' => '27',
+		'4' => '28',
+		'5' => '29',
+		'6' => '30',
+		'7' => '31'
 	);
 
 	/**
@@ -30,65 +88,69 @@ class Base32Static {
 	 * @return base32 encoded string
 	 * @author Bryan Ruiz
 	 **/
-	public static function encode($input, $padding = true) {
-		if(empty($input)) return "";
+	public static function encode($input, $padding = true)
+	{
+		if (empty($input)) return "";
 
 		$input = str_split($input);
 		$binaryString = "";
 
-		for($i = 0; $i < count($input); $i++) {
+		for ($i = 0; $i < count($input); $i++) {
 			$binaryString .= str_pad(base_convert(ord($input[$i]), 10, 2), 8, '0', STR_PAD_LEFT);
 		}
 
 		$fiveBitBinaryArray = str_split($binaryString, 5);
 		$base32 = "";
-		$i=0;
+		$i = 0;
 
-		while($i < count($fiveBitBinaryArray)) {
-			$base32 .= self::$map[base_convert(str_pad($fiveBitBinaryArray[$i], 5,'0'), 2, 10)];
+		while ($i < count($fiveBitBinaryArray)) {
+			$base32 .= self::$map[base_convert(str_pad($fiveBitBinaryArray[$i], 5, '0'), 2, 10)];
 			$i++;
 		}
 
-		if($padding && ($x = strlen($binaryString) % 40) != 0) {
-			if($x == 8) $base32 .= str_repeat(self::$map[32], 6);
-			else if($x == 16) $base32 .= str_repeat(self::$map[32], 4);
-			else if($x == 24) $base32 .= str_repeat(self::$map[32], 3);
-			else if($x == 32) $base32 .= self::$map[32];
+		if ($padding && ($x = strlen($binaryString) % 40) != 0) {
+			if ($x == 8) $base32 .= str_repeat(self::$map[32], 6);
+			else if ($x == 16) $base32 .= str_repeat(self::$map[32], 4);
+			else if ($x == 24) $base32 .= str_repeat(self::$map[32], 3);
+			else if ($x == 32) $base32 .= self::$map[32];
 		}
 
 		return $base32;
 	}
 
-	public static function decode($input) {
-		if(empty($input)) return;
+	public static function decode($input)
+	{
+		if (empty($input)) return;
 
 		$paddingCharCount = substr_count($input, self::$map[32]);
-		$allowedValues = array(6,4,3,1,0);
+		$allowedValues = array(6, 4, 3, 1, 0);
 
-		if(!in_array($paddingCharCount, $allowedValues)) return false;
+		if (!in_array($paddingCharCount, $allowedValues)) return false;
 
-		for($i=0; $i<4; $i++){
-			if($paddingCharCount == $allowedValues[$i] &&
-				substr($input, -($allowedValues[$i])) != str_repeat(self::$map[32], $allowedValues[$i])) return false;
+		for ($i = 0; $i < 4; $i++) {
+			if (
+				$paddingCharCount == $allowedValues[$i] &&
+				substr($input, - ($allowedValues[$i])) != str_repeat(self::$map[32], $allowedValues[$i])
+			) return false;
 		}
 
-		$input = str_replace('=','', $input);
+		$input = str_replace('=', '', $input);
 		$input = str_split($input);
 		$binaryString = "";
 
-		for($i=0; $i < count($input); $i = $i+8) {
+		for ($i = 0; $i < count($input); $i = $i + 8) {
 			$x = "";
 
-			if(!in_array($input[$i], self::$map)) return false;
+			if (!in_array($input[$i], self::$map)) return false;
 
-			for($j=0; $j < 8; $j++) {
+			for ($j = 0; $j < 8; $j++) {
 				$x .= str_pad(base_convert(@self::$flippedMap[@$input[$i + $j]], 10, 2), 5, '0', STR_PAD_LEFT);
 			}
 
 			$eightBits = str_split($x, 8);
 
-			for($z = 0; $z < count($eightBits); $z++) {
-				$binaryString .= ( ($y = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48 ) ? $y:"";
+			for ($z = 0; $z < count($eightBits); $z++) {
+				$binaryString .= (($y = chr(base_convert($eightBits[$z], 2, 10))) || ord($y) == 48) ? $y : "";
 			}
 		}
 
@@ -99,7 +161,8 @@ class Base32Static {
 // http://www.faqs.org/rfcs/rfc6238.html
 // https://github.com/Voronenko/PHPOTP/blob/08cda9cb9c30b7242cf0b3a9100a6244a2874927/code/rfc6238.php
 // Local changes: http -> https, consistent indentation, 200x200 -> 300x300 QR image size, PHP end tag
-class TokenAuth6238 {
+class TokenAuth6238
+{
 
 	/**
 	 * verify
@@ -107,105 +170,111 @@ class TokenAuth6238 {
 	 * @param string $secretkey Secret clue (base 32).
 	 * @return bool True if success, false if failure
 	 */
-	public static function verify($secretkey, $code, $rangein30s = 3) {
+	public static function verify($secretkey, $code, $rangein30s = 3)
+	{
 		$key = base32static::decode($secretkey);
-		$unixtimestamp = time()/30;
+		$unixtimestamp = time() / 30;
 
-		for($i=-($rangein30s); $i<=$rangein30s; $i++) {
-			$checktime = (int)($unixtimestamp+$i);
+		for ($i = - ($rangein30s); $i <= $rangein30s; $i++) {
+			$checktime = (int)($unixtimestamp + $i);
 			$thiskey = self::oath_hotp($key, $checktime);
 
-			if ((int)$code == self::oath_truncate($thiskey,6)) {
+			if ((int)$code == self::oath_truncate($thiskey, 6)) {
 				return true;
 			}
-
 		}
 		return false;
 	}
 
 
-	public static function getTokenCode($secretkey,$rangein30s = 3) {
+	public static function getTokenCode($secretkey, $rangein30s = 3)
+	{
 		$result = "";
 		$key = base32static::decode($secretkey);
-		$unixtimestamp = time()/30;
+		$unixtimestamp = time() / 30;
 
-		for($i=-($rangein30s); $i<=$rangein30s; $i++) {
-			$checktime = (int)($unixtimestamp+$i);
+		for ($i = - ($rangein30s); $i <= $rangein30s; $i++) {
+			$checktime = (int)($unixtimestamp + $i);
 			$thiskey = self::oath_hotp($key, $checktime);
-			$result = $result." # ".self::oath_truncate($thiskey,6);
+			$result = $result . " # " . self::oath_truncate($thiskey, 6);
 		}
 
 		return $result;
 	}
 
-	public static function getTokenCodeDebug($secretkey,$rangein30s = 3) {
+	public static function getTokenCodeDebug($secretkey, $rangein30s = 3)
+	{
 		$result = "";
 		print "<br/>SecretKey: $secretkey <br/>";
 
 		$key = base32static::decode($secretkey);
 		print "Key(base 32 decode): $key <br/>";
 
-		$unixtimestamp = time()/30;
+		$unixtimestamp = time() / 30;
 		print "UnixTimeStamp (time()/30): $unixtimestamp <br/>";
 
-		for($i=-($rangein30s); $i<=$rangein30s; $i++) {
-			$checktime = (int)($unixtimestamp+$i);
+		for ($i = - ($rangein30s); $i <= $rangein30s; $i++) {
+			$checktime = (int)($unixtimestamp + $i);
 			print "Calculating oath_hotp from (int)(unixtimestamp +- 30sec offset): $checktime basing on secret key<br/>";
 
 			$thiskey = self::oath_hotp($key, $checktime, true);
 			print "======================================================<br/>";
-			print "CheckTime: $checktime oath_hotp:".$thiskey."<br/>";
+			print "CheckTime: $checktime oath_hotp:" . $thiskey . "<br/>";
 
-			$result = $result." # ".self::oath_truncate($thiskey,6,true);
+			$result = $result . " # " . self::oath_truncate($thiskey, 6, true);
 		}
 
 		return $result;
 	}
 
-	public static function getBarCodeUrl($username, $domain, $secretkey, $issuer) {
+	public static function getBarCodeUrl($username, $domain, $secretkey, $issuer)
+	{
 		$url = "https://chart.apis.google.com/chart";
-		$url = $url."?chs=300x300&chld=M|0&cht=qr&chl=otpauth://totp/";
-		$url = $url.$username . "@" . $domain . "%3Fsecret%3D" . $secretkey . '%26issuer%3D' . rawurlencode($issuer);
+		$url = $url . "?chs=300x300&chld=M|0&cht=qr&chl=otpauth://totp/";
+		$url = $url . $username . "@" . $domain . "%3Fsecret%3D" . $secretkey . '%26issuer%3D' . rawurlencode($issuer);
 		return $url;
 	}
 
-	public static function generateRandomClue($length = 16) {
+	public static function generateRandomClue($length = 16)
+	{
 		$b32 = "234567QWERTYUIOPASDFGHJKLZXCVBNM";
 		$s = "";
 
 		for ($i = 0; $i < $length; $i++)
-			$s .= $b32[rand(0,31)];
+			$s .= $b32[rand(0, 31)];
 
 		return $s;
 	}
 
-	private static function hotp_tobytestream($key) {
+	private static function hotp_tobytestream($key)
+	{
 		$result = array();
 		$last = strlen($key);
 		for ($i = 0; $i < $last; $i = $i + 2) {
 			$x = $key[$i] + $key[$i + 1];
 			$x = strtoupper($x);
 			$x = hexdec($x);
-			$result =  $result.chr($x);
+			$result =  $result . chr($x);
 		}
 
 		return $result;
 	}
 
-	private static function oath_hotp ($key, $counter, $debug=false) {
+	private static function oath_hotp($key, $counter, $debug = false)
+	{
 		$result = "";
 		$orgcounter = $counter;
-		$cur_counter = array(0,0,0,0,0,0,0,0);
+		$cur_counter = array(0, 0, 0, 0, 0, 0, 0, 0);
 
 		if ($debug) {
-			print "Packing counter $counter (".dechex($counter).")into binary string - pay attention to hex representation of key and binary representation<br/>";
+			print "Packing counter $counter (" . dechex($counter) . ")into binary string - pay attention to hex representation of key and binary representation<br/>";
 		}
 
-		for($i=7;$i>=0;$i--) { // C for unsigned char, * for  repeating to the end of the input data
-			$cur_counter[$i] = pack ('C*', $counter);
+		for ($i = 7; $i >= 0; $i--) { // C for unsigned char, * for  repeating to the end of the input data
+			$cur_counter[$i] = pack('C*', $counter);
 
-			if ($debug)  {
-				print $cur_counter[$i]."(".dechex(ord($cur_counter[$i])).")"." from $counter <br/>";
+			if ($debug) {
+				print $cur_counter[$i] . "(" . dechex(ord($cur_counter[$i])) . ")" . " from $counter <br/>";
 			}
 
 			$counter = $counter >> 8;
@@ -224,13 +293,13 @@ class TokenAuth6238 {
 		// Pad to 8 characters
 		str_pad($binary, 8, chr(0), STR_PAD_LEFT);
 
-		if ($debug)  {
+		if ($debug) {
 			print "Prior to HMAC calculation pad with zero on the left until 8 characters.<br/>";
 			print "Calculate sha1 HMAC(Hash-based Message Authentication Code http://en.wikipedia.org/wiki/HMAC).<br/>";
 			print "hash_hmac ('sha1', $binary, $key)<br/>";
 		}
 
-		$result = hash_hmac ('sha1', $binary, $key);
+		$result = hash_hmac('sha1', $binary, $key);
 
 		if ($debug) {
 			print "Result: $result <br/>";
@@ -239,26 +308,27 @@ class TokenAuth6238 {
 		return $result;
 	}
 
-	private static function oath_truncate($hash, $length = 6, $debug=false) {
-		$result="";
+	private static function oath_truncate($hash, $length = 6, $debug = false)
+	{
+		$result = "";
 
 		// Convert to dec
-		if($debug) {
+		if ($debug) {
 			print "converting hex hash into characters<br/>";
 		}
 
-		$hashcharacters = str_split($hash,2);
+		$hashcharacters = str_split($hash, 2);
 
-		if($debug) {
+		if ($debug) {
 			print_r($hashcharacters);
 			print "<br/>and convert to decimals:<br/>";
 		}
 
-		for ($j=0; $j<count($hashcharacters); $j++) {
-			$hmac_result[]=hexdec($hashcharacters[$j]);
+		for ($j = 0; $j < count($hashcharacters); $j++) {
+			$hmac_result[] = hexdec($hashcharacters[$j]);
 		}
 
-		if($debug) {
+		if ($debug) {
 			print_r($hmac_result);
 		}
 
@@ -267,17 +337,17 @@ class TokenAuth6238 {
 
 		$offset = $hmac_result[19] & 0xf;
 
-		if($debug) {
-			print "Calculating offset as 19th element of hmac:".$hmac_result[19]."<br/>";
-			print "offset:".$offset;
+		if ($debug) {
+			print "Calculating offset as 19th element of hmac:" . $hmac_result[19] . "<br/>";
+			print "offset:" . $offset;
 		}
 
 		$result = (
-				(($hmac_result[$offset+0] & 0x7f) << 24 ) |
-				(($hmac_result[$offset+1] & 0xff) << 16 ) |
-				(($hmac_result[$offset+2] & 0xff) << 8 ) |
-				($hmac_result[$offset+3] & 0xff)
-			) % pow(10,$length);
+			(($hmac_result[$offset + 0] & 0x7f) << 24) |
+			(($hmac_result[$offset + 1] & 0xff) << 16) |
+			(($hmac_result[$offset + 2] & 0xff) << 8) |
+			($hmac_result[$offset + 3] & 0xff)
+		) % pow(10, $length);
 
 		return $result;
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var OTS_DB_MySQL $db
  */
@@ -17,4 +18,3 @@ $down = function () use ($db) {
 	$db->modifyColumn('guilds', 'description', "TEXT NOT NULL");
 	$db->modifyColumn('players', 'comment', "TEXT NOT NULL");
 };
-

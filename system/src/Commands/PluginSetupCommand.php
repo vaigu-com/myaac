@@ -25,12 +25,12 @@ class PluginSetupCommand extends Command
 		$io = new SymfonyStyle($input, $output);
 
 		$pluginName = $input->getArgument('plugin');
-		if(!Plugins::executeInstall($pluginName)) {
+		if (!Plugins::executeInstall($pluginName)) {
 			$io->error(Plugins::getError());
 			return 2;
 		}
 
-		foreach(Plugins::getWarnings() as $warning) {
+		foreach (Plugins::getWarnings() as $warning) {
 			$io->warning($warning);
 		}
 

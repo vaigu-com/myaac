@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Ajax validator
  * Returns json with result
@@ -19,58 +20,52 @@ require SYSTEM . 'init.php';
 require SYSTEM . 'login.php';
 
 $error = '';
-if(isset($_GET['account']))
-{
+if (isset($_GET['account'])) {
 	$account = $_GET['account'];
-	if(USE_ACCOUNT_NAME) {
-		if(!Validator::accountName($account)) {
+	if (USE_ACCOUNT_NAME) {
+		if (!Validator::accountName($account)) {
 			error_(Validator::getLastError());
 		}
-	}
-	else if(!Validator::accountId($account)) {
+	} else if (!Validator::accountId($account)) {
 		error_(Validator::getLastError());
 	}
 
 	$_account = new OTS_Account();
-	if(USE_ACCOUNT_NAME || USE_ACCOUNT_NUMBER) {
+	if (USE_ACCOUNT_NAME || USE_ACCOUNT_NUMBER) {
 		$_account->find($account);
 	} else {
 		$_account->load($account);
 	}
 
 	$accountNameOrNumber = (USE_ACCOUNT_NAME ? ' name' : 'number');
-	if($_account->isLoaded()) {
+	if ($_account->isLoaded()) {
 		error_("Account with this $accountNameOrNumber already exist.");
 	}
 
 	success_("Good account $accountNameOrNumber ($account).");
-}
-else if(isset($_GET['email']))
-{
+} else if (isset($_GET['email'])) {
 	$email = $_GET['email'];
-	if(!Validator::email($email)) {
+	if (!Validator::email($email)) {
 		error_(Validator::getLastError());
 	}
 
-	if(setting('core.account_mail_unique')) {
-		if(Account::where('email', '=', $email)->exists())
+	if (setting('core.account_mail_unique')) {
+		if (Account::where('email', '=', $email)->exists())
 			error_('Account with this e-mail already exist.');
 	}
 
 	success_(1);
-}
-else if(isset($_GET['name']))
-{
+} else if (isset($_GET['name'])) {
 	$name = $_GET['name'];
-	if(!admin()) {
+	if (!admin()) {
 		$name = strtolower(stripslashes($name));
 	}
 
-	if(!Validator::characterName($name)) {
+	if (!Validator::characterName($name)) {
 		error_(Validator::getLastError());
 	}
 
-	if(!admin() && !Validator::newCharacterName($name)) {
+	if (!admin() && !Validator::newCharacterName($name)) {
 		error_(Validator::getLastError());
 	}
 
@@ -80,26 +75,24 @@ else if(isset($_GET['name']))
 	}
 
 	success_('Good. Your name will be:<br /><b>' . (admin() ? $name : ucwords($name)) . '</b>');
-}
-else if(isset($_GET['password']) && isset($_GET['password_confirm'])) {
+} else if (isset($_GET['password']) && isset($_GET['password_confirm'])) {
 	$password = $_GET['password'];
 	$password_confirm = $_GET['password_confirm'];
 
-	if(!isset($password[0])) {
+	if (!isset($password[0])) {
 		error_('Please enter the password for your new account.');
 	}
 
-	if(!Validator::password($password)) {
+	if (!Validator::password($password)) {
 		error_(Validator::getLastError());
 	}
 
-	if($password != $password_confirm) {
+	if ($password != $password_confirm) {
 		error_('Passwords are not the same.');
 	}
 
 	success_(1);
-}
-else {
+} else {
 	error_('Error: no input specified.');
 }
 
@@ -108,13 +101,15 @@ else {
  *
  * @param string $desc Description
  */
-function success_($desc) {
+function success_($desc)
+{
 	echo json_encode(array(
 		'success' => $desc
 	));
 	exit();
 }
-function error_($desc) {
+function error_($desc)
+{
 	echo json_encode(array(
 		'error' => $desc
 	));

@@ -1,6 +1,7 @@
 <?php defined('MYAAC') or die('Direct access not allowed!'); ?>
 <!DOCTYPE html>
 <html dir="<?php echo $locale['direction']; ?>" lang="<?php echo $locale['lang']; ?>" xml:lang="<?php echo $locale['lang']; ?>">
+
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=<?php echo $locale['encoding']; ?>" />
 	<meta name="viewport" content="width=device-width, initial-scale=1">
@@ -9,6 +10,7 @@
 	<link rel="stylesheet" type="text/css" href="template/style.css" />
 	<script type="text/javascript" src="<?php echo BASE_URL; ?>tools/ext/jquery/jquery.min.js"></script>
 </head>
+
 <body>
 
 	<div id="body" class="container">
@@ -23,15 +25,15 @@
 				<h3><?php echo $locale['steps']; ?></h3>
 				<ul class="list-group mt-4">
 					<?php
-						$i = 0;
-						foreach($steps as $key => $value){
+					$i = 0;
+					foreach ($steps as $key => $value) {
 
-							if ($step == $value) {
-								$progress = ($i == 6) ? 100 : $i * 16;
-							}
-
-							echo '<li class="list-group-item' . ($step == $value ? ' active' : '') . '">' . ++$i . '. ' . $locale['step_' . $value] . '</li>';
+						if ($step == $value) {
+							$progress = ($i == 6) ? 100 : $i * 16;
 						}
+
+						echo '<li class="list-group-item' . ($step == $value ? ' active' : '') . '">' . ++$i . '. ' . $locale['step_' . $value] . '</li>';
+					}
 
 					?>
 				</ul>
@@ -40,22 +42,22 @@
 			<div id="content" class="col-md-9">
 
 				<?php
-					if(isset($locale['step_' . $step . '_title']))
-						echo '<h3 class="mb-4 mt-4 mt-md-0">' . $locale['step_' . $step . '_title'] . '</h3>';
-					else
-						echo '<h3 class="mb-4 mt-4 mt-md-0">' . $locale['step_' . $step] . '</h3>';
+				if (isset($locale['step_' . $step . '_title']))
+					echo '<h3 class="mb-4 mt-4 mt-md-0">' . $locale['step_' . $step . '_title'] . '</h3>';
+				else
+					echo '<h3 class="mb-4 mt-4 mt-md-0">' . $locale['step_' . $step] . '</h3>';
 				?>
 
 				<?php
-				if(!isset($config['installed'])):
+				if (!isset($config['installed'])):
 				?>
-				<div class="row">
-					<div class="col-md-12">
-						<div class="progress mb-2">
-							<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <?php echo $progress; ?>%" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+					<div class="row">
+						<div class="col-md-12">
+							<div class="progress mb-2">
+								<div class="progress-bar progress-bar-striped progress-bar-animated" style="width: <?php echo $progress; ?>%" role="progressbar" aria-valuenow="<?php echo $progress; ?>" aria-valuemin="0" aria-valuemax="100"></div>
+							</div>
 						</div>
 					</div>
-				</div>
 				<?php endif; ?>
 
 				<?php echo $content; ?>
@@ -72,4 +74,5 @@
 		<p style="text-align: center;"><?php echo base64_decode('UG93ZXJlZCBieSA8YSBocmVmPSJodHRwOi8vbXktYWFjLm9yZyIgdGFyZ2V0PSJfYmxhbmsiPk15QUFDLjwvYT4='); ?></p>
 	</footer>
 </body>
+
 </html>

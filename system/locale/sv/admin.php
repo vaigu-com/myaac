@@ -1,4 +1,5 @@
 <?php
+
 /**
  * swedish language file
  * admin.php

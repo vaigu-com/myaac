@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class GuildRank extends Model {
+class GuildRank extends Model
+{
 
 	protected $table = 'guild_ranks';
 
@@ -15,5 +17,4 @@ class GuildRank extends Model {
 	{
 		return $this->belongsTo(Guild::class);
 	}
-
 }

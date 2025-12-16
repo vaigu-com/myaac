@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Router
  *
@@ -13,24 +14,22 @@ use MyAAC\Plugins;
 
 defined('MYAAC') or die('Direct access not allowed!');
 
-if(!isset($content[0]))
+if (!isset($content[0]))
 	$content = '';
 
 // check if site has been closed
 $load_it = true;
 $site_closed = false;
-if(fetchDatabaseConfig('site_closed', $site_closed)) {
+if (fetchDatabaseConfig('site_closed', $site_closed)) {
 	$site_closed = ($site_closed == 1);
-	if($site_closed) {
-		if(!admin())
-		{
+	if ($site_closed) {
+		if (!admin()) {
 			$title = getDatabaseConfig('site_closed_title');
 			$content .= '<p class="note">' . getDatabaseConfig('site_closed_message') . '</p><br/>';
 			$load_it = false;
 		}
 
-		if(!$logged)
-		{
+		if (!$logged) {
 			ob_start();
 			require SYSTEM . 'pages/account/manage.php';
 			$content .= ob_get_contents();
@@ -46,8 +45,7 @@ define('SITE_CLOSED', $site_closed);
 if (false !== $pos = strpos($uri, '?')) {
 	if ($pos !== 1) {
 		$uri = substr($uri, 0, $pos);
-	}
-	else {
+	} else {
 		$uri = str_replace_first('?', '', $uri);
 	}
 }
@@ -58,13 +56,13 @@ if (BASE_DIR !== '') {
 	$uri = str_replace_first($tmp, '', $uri);
 }
 
-if(0 === strpos($uri, '/')) {
+if (0 === strpos($uri, '/')) {
 	$uri = str_replace_first('/', '', $uri);
 }
 
 define('URI', $uri);
 
-if(!$load_it) {
+if (!$load_it) {
 	// ignore warnings in some functions/plugins
 	// page is not loaded anyway
 	define('PAGE', '');
@@ -73,7 +71,7 @@ if(!$load_it) {
 }
 
 /** @var string $content */
-if(SITE_CLOSED && admin())
+if (SITE_CLOSED && admin())
 	$content .= '<p class="note">Site is under maintenance (closed mode). Only privileged users can see it.</p>';
 
 $ignore = false;
@@ -81,124 +79,122 @@ $ignore = false;
 /** @var boolean $logged */
 /** @var OTS_Account $account_logged */
 $logged_access = 0;
-if($logged && $account_logged && $account_logged->isLoaded()) {
+if ($logged && $account_logged && $account_logged->isLoaded()) {
 	$logged_access = $account_logged->getAccess();
 }
 
 /**
  * Routes loading
  */
-$dispatcher = FastRoute\cachedDispatcher(function (FastRoute\RouteCollector $r) {
-	$routesFinal = [];
-	foreach(getDatabasePages() as $page) {
-		$routesFinal[] = ['*', $page, '__database__/' . $page, 100];
-	}
-
-	$routes = require SYSTEM . 'routes.php';
-	Plugins::clearWarnings();
-
-	foreach (Plugins::getRoutes() as $pluginRoute) {
-
-		$routesFinal[] = [$pluginRoute[0], $pluginRoute[1], $pluginRoute[2], $pluginRoute[3] ?? 1000];
-
-		// Possibility to override routes with plugins pages, like characters.php
-		foreach ($routes as &$route) {
-			if (str_contains($pluginRoute[2], 'pages/' . $route[2])) {
-				$route[2] = $pluginRoute[2];
-			}
+$dispatcher = FastRoute\cachedDispatcher(
+	function (FastRoute\RouteCollector $r) {
+		$routesFinal = [];
+		foreach (getDatabasePages() as $page) {
+			$routesFinal[] = ['*', $page, '__database__/' . $page, 100];
 		}
-/*
+
+		$routes = require SYSTEM . 'routes.php';
+		Plugins::clearWarnings();
+
+		foreach (Plugins::getRoutes() as $pluginRoute) {
+
+			$routesFinal[] = [$pluginRoute[0], $pluginRoute[1], $pluginRoute[2], $pluginRoute[3] ?? 1000];
+
+			// Possibility to override routes with plugins pages, like characters.php
+			foreach ($routes as &$route) {
+				if (str_contains($pluginRoute[2], 'pages/' . $route[2])) {
+					$route[2] = $pluginRoute[2];
+				}
+			}
+			/*
 		echo '<pre>';
 		var_dump($pluginRoute[1], $pluginRoute[3], $pluginRoute[2]);
 		echo '/<pre>';
 */
-	}
+		}
 
-	foreach ($routes as $route) {
-		if (!str_contains($route[2], '__redirect__') && !str_contains($route[2], '__database__')
-			&& !str_contains($route[2], 'plugins/')
-		) {
-			if (!is_file(BASE . 'system/pages/' . $route[2])) {
-				continue;
+		foreach ($routes as $route) {
+			if (
+				!str_contains($route[2], '__redirect__') && !str_contains($route[2], '__database__')
+				&& !str_contains($route[2], 'plugins/')
+			) {
+				if (!is_file(BASE . 'system/pages/' . $route[2])) {
+					continue;
+				}
+
+				$routesFinal[] = [$route[0], $route[1], 'system/pages/' . $route[2], $route[3] ?? 10000];
+			} else {
+				$routesFinal[] = [$route[0], $route[1], $route[2], $route[3] ?? 10000];
+			}
+		}
+
+		// sort required for the next step (filter)
+		usort($routesFinal, function ($a, $b) {
+			// key 3 is priority
+			if ($a[3] == $b[3]) {
+				return 0;
 			}
 
-			$routesFinal[] = [$route[0], $route[1], 'system/pages/' . $route[2], $route[3] ?? 10000];
-		}
-		else {
-			$routesFinal[] = [$route[0], $route[1], $route[2], $route[3] ?? 10000];
-		}
-	}
+			return ($a[3] < $b[3]) ? -1 : 1;
+		});
 
-	// sort required for the next step (filter)
-	usort($routesFinal, function ($a, $b)
-	{
-		// key 3 is priority
-		if ($a[3] == $b[3]) {
-			return 0;
-		}
+		$aliases = [
+			[':int', ':string', ':alphanum'],
+			[':\d+', ':[A-Za-z0-9-_%+\' ]+', ':[A-Za-z0-9]+'],
+		];
 
-		return ($a[3] < $b[3]) ? -1 : 1;
-	});
+		// remove duplicates
+		// if same route pattern, but different priority
+		$routesFinal = array_filter($routesFinal, function ($a) use ($aliases) {
+			// apply aliases
+			$a[1] = str_replace($aliases[0], $aliases[1], $a[1]);
 
-	$aliases = [
-		[':int', ':string', ':alphanum'],
-		[':\d+', ':[A-Za-z0-9-_%+\' ]+', ':[A-Za-z0-9]+'],
-	];
+			static $duplicates = [];
+			if (isset($duplicates[$a[1]])) {
+				return false;
+			}
 
-	// remove duplicates
-	// if same route pattern, but different priority
-	$routesFinal = array_filter($routesFinal, function ($a) use ($aliases) {
-		// apply aliases
-		$a[1] = str_replace($aliases[0], $aliases[1], $a[1]);
-
-		static $duplicates = [];
-		if (isset($duplicates[$a[1]])) {
-			return false;
-		}
-
-		$duplicates[$a[1]] = true;
-		return true;
-	});
-/*
+			$duplicates[$a[1]] = true;
+			return true;
+		});
+		/*
 	echo '<pre>';
 	var_dump($routesFinal);
 	echo '</pre>';
 	die;
 */
-	foreach ($routesFinal as $route) {
-		if ($route[0] === '*') {
-			$route[0] = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'];
-		}
-		else {
-			if (is_string($route[0])) {
-				$route[0] = explode(',', $route[0]);
+		foreach ($routesFinal as $route) {
+			if ($route[0] === '*') {
+				$route[0] = ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'HEAD'];
+			} else {
+				if (is_string($route[0])) {
+					$route[0] = explode(',', $route[0]);
+				}
+
+				$toUpperCase = function (string $value): string {
+					return trim(strtoupper($value));
+				};
+
+				// convert to upper case, fast-route accepts only upper case
+				$route[0] = array_map($toUpperCase, $route[0]);
 			}
 
-			$toUpperCase = function(string $value): string {
-				return trim(strtoupper($value));
-			};
+			// apply aliases
+			$route[1] = str_replace($aliases[0], $aliases[1], $route[1]);
 
-			// convert to upper case, fast-route accepts only upper case
-			$route[0] = array_map($toUpperCase, $route[0]);
+			try {
+				$r->addRoute($route[0], $route[1], $route[2]);
+			} catch (\Exception $e) {
+				// duplicated route, just ignore
+			}
 		}
 
-		// apply aliases
-		$route[1] = str_replace($aliases[0], $aliases[1], $route[1]);
-
-		try {
-			$r->addRoute($route[0], $route[1], $route[2]);
+		if (config('env') === 'dev') {
+			foreach (Plugins::getWarnings() as $warning) {
+				log_append('router.log', $warning);
+			}
 		}
-		catch (\Exception $e) {
-			// duplicated route, just ignore
-		}
-	}
-
-	if (config('env') === 'dev') {
-		foreach(Plugins::getWarnings() as $warning) {
-			log_append('router.log', $warning);
-		}
-	}
-},
+	},
 	[
 		'cacheFile' => CACHE . 'route.cache',
 		'cacheDisabled' => config('env') === 'dev',
@@ -212,7 +208,7 @@ $found = true;
 
 // old support for pages like /?subtopic=accountmanagement
 $page = $_REQUEST['p'] ?? ($_REQUEST['subtopic'] ?? '');
-if(!empty($page) && preg_match('/^[A-z0-9\-]+$/', $page)) {
+if (!empty($page) && preg_match('/^[A-z0-9\-]+$/', $page)) {
 	if (isset($_REQUEST['p'])) { // some plugins may require this
 		$_REQUEST['subtopic'] = $_REQUEST['p'];
 	}
@@ -222,11 +218,10 @@ if(!empty($page) && preg_match('/^[A-z0-9\-]+$/', $page)) {
 	}
 
 	$file = loadPageFromFileSystem($page, $found);
-	if(!$found) {
+	if (!$found) {
 		$file = false;
 	}
-}
-else {
+} else {
 	$routeInfo = $dispatcher->dispatch($httpMethod, $uri);
 	switch ($routeInfo[0]) {
 		case FastRoute\Dispatcher::NOT_FOUND:
@@ -267,8 +262,10 @@ else {
 					$content .= $tmp_content;
 					if (hasFlag(FLAG_CONTENT_PAGES) || superAdmin()) {
 						$pageInfo = getCustomPageInfo($pageName);
-						$content = $twig->render('admin.links.html.twig', ['page' => 'pages', 'id' => $pageInfo !== null ? $pageInfo['id'] : 0, 'hide' => $pageInfo !== null ? $pageInfo['hide'] : '0']
-							) . $content;
+						$content = $twig->render(
+							'admin.links.html.twig',
+							['page' => 'pages', 'id' => $pageInfo !== null ? $pageInfo['id'] : 0, 'hide' => $pageInfo !== null ? $pageInfo['hide'] : '0']
+						) . $content;
 					}
 
 					$hooks->trigger(HOOK_AFTER_PAGE_CUSTOM);
@@ -316,14 +313,14 @@ if (!$found) {
 define('PAGE', $page);
 
 ob_start();
-if($hooks->trigger(HOOK_BEFORE_PAGE)) {
-	if(!$ignore && $file !== false)
+if ($hooks->trigger(HOOK_BEFORE_PAGE)) {
+	if (!$ignore && $file !== false)
 		require $file;
 }
 
 unset($file);
 
-if(setting('core.backward_support') && isset($main_content[0]))
+if (setting('core.backward_support') && isset($main_content[0]))
 	$content .= $main_content;
 
 $content .= ob_get_contents();
@@ -335,14 +332,14 @@ if (isset($_REQUEST['_page_only'])) {
 	die;
 }
 
-if(!isset($title)) {
+if (!isset($title)) {
 	$title = str_replace('index.php/', '', $page);
 	$title = str_replace(['_', '-', '/'], ' ', $page);
 
 	$title = ucwords($title);
 }
 
-if(setting('core.backward_support')) {
+if (setting('core.backward_support')) {
 	$main_content = $content;
 	$topic = $title;
 }
@@ -357,7 +354,7 @@ function getDatabasePages($withHidden = false): array
 	})->get('name');
 
 	$ret = [];
-	foreach($pages as $page) {
+	foreach ($pages as $page) {
 		$ret[] = $page->name;
 	}
 

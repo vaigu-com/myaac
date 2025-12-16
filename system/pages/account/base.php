@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Account confirm mail
  * Keept for compability
@@ -10,11 +11,10 @@
  */
 defined('MYAAC') or die('Direct access not allowed!');
 
-if(!$logged)
-{
+if (!$logged) {
 	$title = 'Login';
 
-	if(!empty($errors))
+	if (!empty($errors))
 		$twig->display('error_box.html.twig', array('errors' => $errors));
 
 	$twig->display('account.login.html.twig', array(
@@ -26,7 +26,6 @@ if(!$logged)
 	));
 
 	return;
-}
-else {
+} else {
 	$show_form = true;
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Data class
  *
@@ -14,7 +15,8 @@ class Data
 {
 	private $table = '';
 
-	public function __construct($table) {
+	public function __construct($table)
+	{
 		$this->table = $table;
 	}
 

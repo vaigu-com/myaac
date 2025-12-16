@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Team
  *
@@ -11,21 +12,20 @@
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Support in game';
 
-if(setting('core.account_country'))
+if (setting('core.account_country'))
 	require SYSTEM . 'countries.conf.php';
 
 $groups = new OTS_Groups_List();
-if(!$groups->count())
-{
+if (!$groups->count()) {
 	echo 'Error while reading groups.xml';
 	return;
 }
 
 $outfit_addons = false;
 $outfit = '';
-if(setting('core.team_outfit')) {
+if (setting('core.team_outfit')) {
 	$outfit = ', lookbody, lookfeet, lookhead, looklegs, looktype';
-	if($db->hasColumn('players', 'lookaddons')) {
+	if ($db->hasColumn('players', 'lookaddons')) {
 		$outfit .= ', lookaddons';
 		$outfit_addons = true;
 	}
@@ -33,24 +33,22 @@ if(setting('core.team_outfit')) {
 
 $groupMember = array();
 $groupList = $groups->getGroups();
-foreach($groupList as $id => $group)
-{
-	if($id <= 1)
+foreach ($groupList as $id => $group) {
+	if ($id <= 1)
 		continue;
 
 	$group_members = $group->getPlayersList();
-	if(!count($group_members))
+	if (!count($group_members))
 		continue;
 
 	$members = array();
-	foreach($group_members as $member)
-	{
+	foreach ($group_members as $member) {
 		/** @var OTS_Player $member */
-		if(!admin() && $member->isHidden())
+		if (!admin() && $member->isHidden())
 			continue;
 
 		$lastLogin = 'Never.';
-		if($member->getLastLogin() > 0)
+		if ($member->getLastLogin() > 0)
 			$lastLogin = date("j F Y, g:i a", $member->getLastLogin());
 
 		$members[] = array(

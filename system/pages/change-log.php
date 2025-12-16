@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Changelog
  *
@@ -22,13 +23,11 @@ $canEdit = hasFlag(FLAG_CONTENT_NEWS) || superAdmin();
 $changelogs = Changelog::isPublic()->orderByDesc('date')->limit($limit + 1)->offset($offset)->get()->toArray();
 
 $i = 0;
-foreach($changelogs as $key => &$log)
-{
-	if($i < $limit) {
+foreach ($changelogs as $key => &$log) {
+	if ($i < $limit) {
 		$log['type'] = getChangelogType($log['type']);
 		$log['where'] = getChangelogWhere($log['where']);
-	}
-	else {
+	} else {
 		unset($changelogs[$key]);
 	}
 

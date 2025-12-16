@@ -8,7 +8,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property integer $lastday
  * @property integer $premdays
  */
-class Account extends Model {
+class Account extends Model
+{
 
 	protected $table = 'accounts';
 
@@ -33,17 +34,17 @@ class Account extends Model {
 
 	public function getPremiumDaysAttribute()
 	{
-		if(isset($this->premium_ends_at) || isset($this->premend)) {
+		if (isset($this->premium_ends_at) || isset($this->premend)) {
 			$col = isset($this->premium_ends_at) ? 'premium_ends_at' : 'premend';
-			$ret = ceil(($this->{$col}- time()) / (24 * 60 * 60));
+			$ret = ceil(($this->{$col} - time()) / (24 * 60 * 60));
 			return $ret > 0 ? $ret : 0;
 		}
 
-		if($this->premdays == 0) {
+		if ($this->premdays == 0) {
 			return 0;
 		}
 
-		if($this->premdays == 65535){
+		if ($this->premdays == 65535) {
 			return 65535;
 		}
 
@@ -53,15 +54,14 @@ class Account extends Model {
 
 	public function getIsPremiumAttribute()
 	{
-		if(isset($this->premium_ends_at)) {
+		if (isset($this->premium_ends_at)) {
 			return $this->premium_ends_at > time();
 		}
 
-		if(isset($this->premend)) {
+		if (isset($this->premend)) {
 			return $this->premend > time();
 		}
 
 		return ($this->premdays - (date("z", time()) + (365 * (date("Y", time()) - date("Y", $this->lastday))) - date("z", $this->lastday)) > 0);
 	}
-
 }

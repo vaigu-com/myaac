@@ -21,13 +21,13 @@
  */
 class E_OTS_OTBMError extends E_OTS_ErrorCode
 {
-/**
- * Unsupported file version.
- */
+    /**
+     * Unsupported file version.
+     */
     const LOADMAPERROR_OUTDATEDHEADER = 3;
-/**
- * Unknown node type.
- */
+    /**
+     * Unknown node type.
+     */
     const LOADMAPERROR_UNKNOWNNODETYPE = 8;
 }
 

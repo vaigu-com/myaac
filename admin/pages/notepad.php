@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Notepad
  *
@@ -27,8 +28,7 @@ if (isset($_POST['content'])) {
 			'account_id' => $account_logged->getId(),
 			'content' => $_content
 		]);
-	}
-	else {
+	} else {
 		ModelsNotepad::where('account_id', $account_logged->getId())->update(['content' => $_content]);
 	}
 

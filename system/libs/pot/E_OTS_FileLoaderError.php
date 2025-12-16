@@ -21,36 +21,34 @@
  */
 class E_OTS_FileLoaderError extends E_OTS_ErrorCode
 {
-/**
- * Unsupported file version.
- */
+    /**
+     * Unsupported file version.
+     */
     const ERROR_INVALID_FILE_VERSION = 1;
-/**
- * Could not open file.
- */
+    /**
+     * Could not open file.
+     */
     const ERROR_CAN_NOT_OPEN = 2;
-/**
- * Unexpected end of file.
- */
+    /**
+     * Unexpected end of file.
+     */
     const ERROR_EOF = 4;
-/**
- * Failed to seek in given position in file.
- */
+    /**
+     * Failed to seek in given position in file.
+     */
     const ERROR_SEEK_ERROR = 5;
-/**
- * Attempted to execute operation on not opened file.
- */
+    /**
+     * Attempted to execute operation on not opened file.
+     */
     const ERROR_NOT_OPEN = 6;
-/**
- * File corrupted.
- */
+    /**
+     * File corrupted.
+     */
     const ERROR_INVALID_FORMAT = 8;
-/**
- * Failed to read position in file.
- */
+    /**
+     * Failed to read position in file.
+     */
     const ERROR_TELL_ERROR = 9;
 }
 
 /**#@-*/
-
-?>

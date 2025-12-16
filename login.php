@@ -12,7 +12,8 @@ require_once SYSTEM . 'init.php';
 require_once SYSTEM . 'status.php';
 
 # error function
-function sendError($message, $code = 3){
+function sendError($message, $code = 3)
+{
 	$ret = [];
 	$ret['errorCode'] = $code;
 	$ret['errorMessage'] = $message;
@@ -32,7 +33,7 @@ function parseEvent($table1, $date, $table2)
 				return date_create("{$date}")->format('U');
 			}
 		} else {
-			foreach($table1 as $attr) {
+			foreach ($table1 as $attr) {
 				if ($attr) {
 					return $attr->getAttribute($table2);
 				}
@@ -71,18 +72,21 @@ switch ($action) {
 		$tableevent = $xml->getElementsByTagName('event');
 
 		foreach ($tableevent as $event) {
-			if ($event) { $tmplist = [
-			'colorlight' => parseEvent($event->getElementsByTagName('colors'), false, 'colorlight'),
-			'colordark' => parseEvent($event->getElementsByTagName('colors'), false, 'colordark'),
-			'description' => parseEvent($event->getElementsByTagName('description'), false, 'description'),
-			'displaypriority' => intval(parseEvent($event->getElementsByTagName('details'), false, 'displaypriority')),
-			'enddate' => intval(parseEvent($event, true, false)),
-			'isseasonal' => getBoolean(intval(parseEvent($event->getElementsByTagName('details'), false, 'isseasonal'))),
-			'name' => $event->getAttribute('name'),
-			'startdate' => intval(parseEvent($event, true, true)),
-			'specialevent' => intval(parseEvent($event->getElementsByTagName('details'), false, 'specialevent'))
+			if ($event) {
+				$tmplist = [
+					'colorlight' => parseEvent($event->getElementsByTagName('colors'), false, 'colorlight'),
+					'colordark' => parseEvent($event->getElementsByTagName('colors'), false, 'colordark'),
+					'description' => parseEvent($event->getElementsByTagName('description'), false, 'description'),
+					'displaypriority' => intval(parseEvent($event->getElementsByTagName('details'), false, 'displaypriority')),
+					'enddate' => intval(parseEvent($event, true, false)),
+					'isseasonal' => getBoolean(intval(parseEvent($event->getElementsByTagName('details'), false, 'isseasonal'))),
+					'name' => $event->getAttribute('name'),
+					'startdate' => intval(parseEvent($event, true, true)),
+					'specialevent' => intval(parseEvent($event->getElementsByTagName('details'), false, 'specialevent'))
 				];
-			$eventlist[] = $tmplist; } }
+				$eventlist[] = $tmplist;
+			}
+		}
 		die(json_encode(['eventlist' => $eventlist, 'lastupdatetimestamp' => time()]));
 
 	case 'boostedcreature':
@@ -138,8 +142,7 @@ switch ($action) {
 		$account = Account::query();
 		if ($inputEmail != false) { // login by email
 			$account->where('email', $inputEmail);
-		}
-		else if($inputAccountName != false) { // login by account name
+		} else if ($inputAccountName != false) { // login by account name
 			$account->where('name', $inputAccountName);
 		}
 
@@ -212,7 +215,7 @@ switch ($action) {
 		}
 
 		$players = Player::where('account_id', $account->id)->notDeleted()->selectRaw($columns)->get();
-		if($players && $players->count()) {
+		if ($players && $players->count()) {
 			$highestLevelId = $players->sortByDesc('experience')->first()->getKey();
 
 			foreach ($players as $player) {
@@ -272,7 +275,7 @@ switch ($action) {
 		// otservbr requires just login and password
 		// so we check for istutorial field which is present in otservbr, and not in TFS
 		if (!fieldExist('istutorial', 'players')) {
-			$sessionKey .= "\n".floor(time() / 30);
+			$sessionKey .= "\n" . floor(time() / 30);
 		}
 
 		$session = [
@@ -293,10 +296,11 @@ switch ($action) {
 
 	default:
 		sendError("Unrecognized event {$action}.");
-	break;
+		break;
 }
 
-function create_char($player, $highestLevelId) {
+function create_char($player, $highestLevelId)
+{
 	return [
 		'worldid' => 0,
 		'name' => $player->name,

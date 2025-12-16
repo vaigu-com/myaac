@@ -19,10 +19,6 @@
  * 
  * @package POT
  */
-class E_OTS_OutOfBuffer extends Exception
-{
-}
+class E_OTS_OutOfBuffer extends Exception {}
 
 /**#@-*/
-
-?>

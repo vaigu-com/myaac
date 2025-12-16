@@ -7,7 +7,7 @@
 
 use MyAAC\Models\Pages;
 
-$up = function() {
+$up = function () {
 	Pages::where('name', 'rules_on_the_page')->update(['hide' => 1]);
 
 	$rules = Pages::where('name', 'rules')->first();
@@ -26,7 +26,6 @@ $up = function() {
 	}
 };
 
-$down = function() {
+$down = function () {
 	Pages::where('name', 'rules_on_the_page')->update(['hide' => 0]);
 };
-

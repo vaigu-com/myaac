@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Change Email
  *
@@ -13,7 +14,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Change E-Mail';
 require __DIR__ . '/base.php';
 
-if(!$logged) {
+if (!$logged) {
 	return;
 }
 
@@ -21,30 +22,29 @@ csrfProtect();
 
 $email_new_time = $account_logged->getCustomField("email_new_time");
 
-if($email_new_time > 10) {
+if ($email_new_time > 10) {
 	$email_new = $account_logged->getCustomField("email_new");
 }
 
-if($email_new_time < 10) {
-	if(isset($_POST['changeemailsave']) && $_POST['changeemailsave'] == 1) {
+if ($email_new_time < 10) {
+	if (isset($_POST['changeemailsave']) && $_POST['changeemailsave'] == 1) {
 		$email_new = $_POST['new_email'];
 		$post_password = $_POST['password'];
 
-		if(!Validator::email($email_new)) {
+		if (!Validator::email($email_new)) {
 			$errors[] = Validator::getLastError();
 		}
 
-		if(empty($post_password)) {
+		if (empty($post_password)) {
 			$errors[] = 'Please enter password to your account.';
-		}
-		else {
+		} else {
 			$post_password = encrypt((USE_ACCOUNT_SALT ? $account_logged->getCustomField('salt') : '') . $post_password);
-			if($post_password != $account_logged->getPassword()) {
+			if ($post_password != $account_logged->getPassword()) {
 				$errors[] = 'Wrong password to account.';
 			}
 		}
 
-		if(empty($errors)) {
+		if (empty($errors)) {
 			$email_new_time = time() + setting('core.account_mail_change') * 24 * 3600;
 			$account_logged->setCustomField("email_new", $email_new);
 			$account_logged->setCustomField("email_new_time", $email_new_time);
@@ -52,9 +52,7 @@ if($email_new_time < 10) {
 				'title' => 'New Email Address Requested',
 				'description' => 'You have requested to change your email address to <b>' . $email_new . '</b>. The actual change will take place after <b>' . date("j F Y, G:i:s", $email_new_time) . '</b>, during which you can cancel the request at any time.'
 			));
-		}
-		else
-		{
+		} else {
 			//show errors
 			$twig->display('error_box.html.twig', array('errors' => $errors));
 
@@ -63,18 +61,13 @@ if($email_new_time < 10) {
 				'new_email' => isset($_POST['new_email']) ? $_POST['new_email'] : null
 			));
 		}
-	}
-	else
-	{
+	} else {
 		$twig->display('account.change-email.html.twig', array(
 			'new_email' => isset($_POST['new_email']) ? $_POST['new_email'] : null
 		));
 	}
-
-}
-else
-{
-	if($email_new_time < time()) {
+} else {
+	if ($email_new_time < time()) {
 		if (isset($_POST['changeemailsave']) && $_POST['changeemailsave'] == 1) {
 			$account_logged->setCustomField("email_new", "");
 			$account_logged->setCustomField("email_new_time", 0);
@@ -86,9 +79,7 @@ else
 				'title' => 'Email Address Change Accepted',
 				'description' => 'You have accepted <b>' . $account_logged->getEmail() . '</b> as your new email adress.'
 			));
-		}
-		else
-		{
+		} else {
 			$custom_buttons = '
 <table width="100%">
 	<tr>
@@ -118,19 +109,17 @@ else
 </table>';
 			$twig->display('success.html.twig', array(
 				'title' => 'Email Address Change Accepted',
-				'description' => 'Do you accept <b>'.$email_new.'</b> as your new email adress?',
+				'description' => 'Do you accept <b>' . $email_new . '</b> as your new email adress?',
 				'custom_buttons' => $custom_buttons
 			));
 		}
-	}
-	else if(!isset($_POST['emailchangecancel']) || $_POST['emailchangecancel'] != 1)
-	{
+	} else if (!isset($_POST['emailchangecancel']) || $_POST['emailchangecancel'] != 1) {
 		$custom_buttons = '
 <table style="width:100%;" >
 	<tr align="center">
 		<td>
 			<table border="0" cellspacing="0" cellpadding="0" >
-				<form action="' .getLink('account/email') . '" method="post" >
+				<form action="' . getLink('account/email') . '" method="post" >
 					' . csrf(true) . '
 					<tr>
 						<td style="border:0px;" >
@@ -157,12 +146,12 @@ else
 </table>';
 		$twig->display('success.html.twig', array(
 			'title' => 'Change of Email Address',
-			'description' => 'A request has been submitted to change the email address of this account to <b>'.$email_new.'</b>.<br/>The actual change will take place on <b>'.date("j F Y, G:i:s", $email_new_time).'</b>.<br>If you do not want to change your email address, please click on "Cancel".',
+			'description' => 'A request has been submitted to change the email address of this account to <b>' . $email_new . '</b>.<br/>The actual change will take place on <b>' . date("j F Y, G:i:s", $email_new_time) . '</b>.<br>If you do not want to change your email address, please click on "Cancel".',
 			'custom_buttons' => $custom_buttons
 		));
 	}
 }
-if(isset($_POST['emailchangecancel']) && $_POST['emailchangecancel'] == 1) {
+if (isset($_POST['emailchangecancel']) && $_POST['emailchangecancel'] == 1) {
 	$account_logged->setCustomField("email_new", "");
 	$account_logged->setCustomField("email_new_time", 0);
 

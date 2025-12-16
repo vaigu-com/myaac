@@ -6,7 +6,8 @@ use Composer\Semver\Semver;
 use MyAAC\Cache\Cache;
 use MyAAC\Models\Menu;
 
-class Plugins {
+class Plugins
+{
 	private static $warnings = [];
 	private static $error = null;
 	private static $plugin_json = [];
@@ -15,7 +16,7 @@ class Plugins {
 	{
 		return Cache::remember('plugins_inits', 10 * 60, function () {
 			$inits = [];
-			foreach(self::getAllPluginsJson() as $plugin) {
+			foreach (self::getAllPluginsJson() as $plugin) {
 				if (!self::getAutoLoadOption($plugin, 'init', false)) {
 					continue;
 				}
@@ -34,7 +35,7 @@ class Plugins {
 	{
 		return Cache::remember('plugins_admin_pages', 10 * 60, function () {
 			$adminPages = [];
-			foreach(self::getAllPluginsJson() as $plugin) {
+			foreach (self::getAllPluginsJson() as $plugin) {
 				if (!self::getAutoLoadOption($plugin, 'admin-pages', true)) {
 					continue;
 				}
@@ -87,8 +88,7 @@ class Plugins {
 				}
 			}
 
-			usort($adminPages, function ($a, $b)
-			{
+			usort($adminPages, function ($a, $b) {
 				if ($a['priority'] == $b['priority']) {
 					return 0;
 				}
@@ -116,7 +116,7 @@ class Plugins {
 		}
 
 		$routes = [];
-		foreach(self::getAllPluginsJson() as $plugin) {
+		foreach (self::getAllPluginsJson() as $plugin) {
 			$routesDefaultPriority = 1000;
 			if (isset($plugin['routes-default-priority'])) {
 				$routesDefaultPriority = $plugin['routes-default-priority'];
@@ -136,8 +136,7 @@ class Plugins {
 								self::$warnings[] = $warningPreTitle . 'Not allowed method ' . $method . '... Disabling this route...';
 							}
 						}
-					}
-					else {
+					} else {
 						$methods = '*'; // all available methods
 					}
 
@@ -151,8 +150,7 @@ class Plugins {
 						$info['pattern'] = $info['redirect_from'];
 						if (!isset($info['redirect_to'])) {
 							self::$warnings[] = $warningPreTitle . 'redirect set without "redirect_to".';
-						}
-						else {
+						} else {
 							removeIfFirstSlash($info['redirect_to']);
 							$info['file'] = '__redirect__/' . $info['redirect_to'];
 						}
@@ -184,8 +182,10 @@ class Plugins {
 				}
 			}
 
-			if ($autoLoadPages && self::getAutoLoadOption($plugin, 'pagesSubFolders', true) &&
-				self::getAutoLoadOption($plugin, 'pages-sub-folders', true)) {
+			if (
+				$autoLoadPages && self::getAutoLoadOption($plugin, 'pagesSubFolders', true) &&
+				self::getAutoLoadOption($plugin, 'pages-sub-folders', true)
+			) {
 				//
 				// Get all plugins/*/pages/subFolder/*.php pages
 				//
@@ -220,8 +220,7 @@ class Plugins {
 		global $hooks;
 		$hooks->triggerFilter(HOOK_FILTER_ROUTES, $routes);
 
-		usort($routes, function ($a, $b)
-		{
+		usort($routes, function ($a, $b) {
 			// key 3 is priority
 			if ($a[3] == $b[3]) {
 				return 0;
@@ -254,7 +253,7 @@ class Plugins {
 		}
 
 		$themes = [];
-		foreach(self::getAllPluginsJson() as $plugin) {
+		foreach (self::getAllPluginsJson() as $plugin) {
 			if (!self::getAutoLoadOption($plugin, 'themes', true)) {
 				continue;
 			}
@@ -286,7 +285,7 @@ class Plugins {
 		}
 
 		$commands = [];
-		foreach(self::getAllPluginsJson() as $plugin) {
+		foreach (self::getAllPluginsJson() as $plugin) {
 			if (!self::getAutoLoadOption($plugin, 'commands', true)) {
 				continue;
 			}
@@ -315,7 +314,7 @@ class Plugins {
 		}
 
 		$hooks = [];
-		foreach(self::getAllPluginsJson() as $plugin) {
+		foreach (self::getAllPluginsJson() as $plugin) {
 			if (isset($plugin['hooks'])) {
 				foreach ($plugin['hooks'] as $_name => $info) {
 					$priority = 1000;
@@ -328,8 +327,8 @@ class Plugins {
 						$priority = (int)$info['priority'];
 					}
 
-					if (defined('HOOK_'. $info['type'])) {
-						$hook = constant('HOOK_'. $info['type']);
+					if (defined('HOOK_' . $info['type'])) {
+						$hook = constant('HOOK_' . $info['type']);
 						$hooks[] = ['name' => $_name, 'type' => $hook, 'file' => $info['file'], 'priority' => $priority];
 					} else {
 						self::$warnings[] = 'Plugin: ' . $plugin['name'] . '. Unknown event type: ' . $info['type'];
@@ -338,8 +337,7 @@ class Plugins {
 			}
 		}
 
-		usort($hooks, function ($a, $b)
-		{
+		usort($hooks, function ($a, $b) {
 			if ($a['priority'] == $b['priority']) {
 				return 0;
 			}
@@ -444,8 +442,7 @@ class Plugins {
 			if (!isset($plugin_json['settings']) || !is_file(BASE . $plugin_json['settings'])) {
 				return false;
 			}
-		}
-		else {
+		} else {
 			return 'plugins/' . $plugin_json['filename'] . '/settings.php';
 		}
 
@@ -454,7 +451,7 @@ class Plugins {
 
 	public static function getPluginJson($filename = null)
 	{
-		if(!isset($filename)) {
+		if (!isset($filename)) {
 			return self::$plugin_json;
 		}
 
@@ -485,29 +482,29 @@ class Plugins {
 	{
 		global $db;
 
-		if(!\class_exists('\ZipArchive')) {
+		if (!\class_exists('\ZipArchive')) {
 			throw new \RuntimeException('Please install PHP zip extension. Plugins upload disabled until then.');
 		}
 
 		$zip = new \ZipArchive();
-		if($zip->open($file) !== true) {
+		if ($zip->open($file) !== true) {
 			self::$error = 'There was a problem with opening zip archive.';
 			return false;
 		}
 
 		for ($i = 0; $i < $zip->numFiles; $i++) {
 			$tmp = $zip->getNameIndex($i);
-			if(pathinfo($tmp, PATHINFO_DIRNAME) == 'plugins' && pathinfo($tmp, PATHINFO_EXTENSION) == 'json')
+			if (pathinfo($tmp, PATHINFO_DIRNAME) == 'plugins' && pathinfo($tmp, PATHINFO_EXTENSION) == 'json')
 				$json_file = $tmp;
 		}
 
-		if(!isset($json_file)) {
+		if (!isset($json_file)) {
 			self::$error = 'Cannot find plugin info .json file. Installation is discontinued.';
 			return false;
 		}
 
 		$plugin_temp_dir = CACHE . 'plugins/' . str_replace('.zip', '', basename($file)) . '/';
-		if(!$zip->extractTo($plugin_temp_dir)) { // place in cache dir
+		if (!$zip->extractTo($plugin_temp_dir)) { // place in cache dir
 			self::$error = 'There was a problem with extracting zip archive to cache directory.';
 			$zip->close();
 			return false;
@@ -515,7 +512,7 @@ class Plugins {
 
 		self::$error = 'There was a problem with extracting zip archive.';
 		$file_name = $plugin_temp_dir . $json_file;
-		if(!file_exists($file_name)) {
+		if (!file_exists($file_name)) {
 			self::$error = "Cannot load " . $file_name . ". File doesn't exist.";
 			$zip->close();
 			return false;
@@ -537,90 +534,87 @@ class Plugins {
 
 		$continue = true;
 
-		if(!isset($plugin_json['name']) || empty(trim($plugin_json['name']))) {
+		if (!isset($plugin_json['name']) || empty(trim($plugin_json['name']))) {
 			self::$error = 'Plugin "name" tag is not set.';
 			return false;
 		}
 
-		if(!isset($plugin_json['version']) || empty(trim($plugin_json['version']))) {
+		if (!isset($plugin_json['version']) || empty(trim($plugin_json['version']))) {
 			self::$warnings[] = 'Plugin "version" tag is not set.';
 		}
 
-		if(isset($plugin_json['require'])) {
+		if (isset($plugin_json['require'])) {
 			$require = $plugin_json['require'];
 
 			$myaac_satified = true;
-			if(isset($require['myaac_'])) {
+			if (isset($require['myaac_'])) {
 				$require_myaac = $require['myaac_'];
-				if(!Semver::satisfies(MYAAC_VERSION, $require_myaac)) {
+				if (!Semver::satisfies(MYAAC_VERSION, $require_myaac)) {
 					$myaac_satified = false;
 				}
-			}
-			else if(isset($require['myaac'])) {
+			} else if (isset($require['myaac'])) {
 				$require_myaac = $require['myaac'];
-				if(version_compare(MYAAC_VERSION, $require_myaac, '<')) {
+				if (version_compare(MYAAC_VERSION, $require_myaac, '<')) {
 					$myaac_satified = false;
 				}
 			}
 
-			if(!$myaac_satified) {
+			if (!$myaac_satified) {
 				self::$error = "Your AAC version doesn't meet the requirement of this plugin. Required version is: " . $require_myaac . ", and you're using version " . MYAAC_VERSION . ".";
 				return false;
 			}
 
 			$php_satisfied = true;
-			if(isset($require['php_'])) {
+			if (isset($require['php_'])) {
 				$require_php = $require['php_'];
-				if(!Semver::satisfies(phpversion(), $require_php)) {
+				if (!Semver::satisfies(phpversion(), $require_php)) {
 					$php_satisfied = false;
 				}
-			}
-			else if(isset($require['php'])) {
+			} else if (isset($require['php'])) {
 				$require_php = $require['php'];
-				if(version_compare(phpversion(), $require_php, '<')) {
+				if (version_compare(phpversion(), $require_php, '<')) {
 					$php_satisfied = false;
 				}
 			}
 
-			if(!$php_satisfied) {
+			if (!$php_satisfied) {
 				self::$error = "Your PHP version doesn't meet the requirement of this plugin. Required version is: " . $require_php . ", and you're using version " . phpversion() . ".";
 				$continue = false;
 			}
 
 			$database_satisfied = true;
-			if(isset($require['database_'])) {
+			if (isset($require['database_'])) {
 				$require_database = $require['database_'];
-				if(!Semver::satisfies(DATABASE_VERSION, $require_database)) {
+				if (!Semver::satisfies(DATABASE_VERSION, $require_database)) {
 					$database_satisfied = false;
 				}
-			}
-			else if(isset($require['database'])) {
+			} else if (isset($require['database'])) {
 				$require_database = $require['database'];
-				if(version_compare(DATABASE_VERSION, $require_database, '<')) {
+				if (version_compare(DATABASE_VERSION, $require_database, '<')) {
 					$database_satisfied = false;
 				}
 			}
 
-			if(!$database_satisfied) {
+			if (!$database_satisfied) {
 				self::$error = "Your database version doesn't meet the requirement of this plugin. Required version is: " . $require_database . ", and you're using version " . DATABASE_VERSION . ".";
 				$continue = false;
 			}
 
-			if($continue) {
-				foreach($require as $req => $version) {
+			if ($continue) {
+				foreach ($require as $req => $version) {
 					$req = strtolower(trim($req));
 					$version = trim($version);
 
-					if(in_array($req, array('myaac', 'myaac_', 'php', 'php_', 'database', 'database_'))) {
+					if (in_array($req, array('myaac', 'myaac_', 'php', 'php_', 'database', 'database_'))) {
 						continue;
 					}
 
-					if(in_array($req, array('php-ext', 'php-extension'))) { // require php extension
+					if (in_array($req, array('php-ext', 'php-extension'))) { // require php extension
 						$tmpDisplayError = false;
 						$explode = explode(',', $version);
 
 						foreach ($explode as $item) {
-							if(!extension_loaded($item)) {
+							if (!extension_loaded($item)) {
 								$errors[] = "This plugin requires php extension: " . $item . " to be installed.";
 								$tmpDisplayError = true;
 							}
@@ -631,12 +625,11 @@ class Plugins {
 							$continue = false;
 							break;
 						}
-					}
-					else if($req == 'table') {
+					} else if ($req == 'table') {
 						$tmpDisplayError = false;
 						$explode = explode(',', $version);
 						foreach ($explode as $item) {
-							if(!$db->hasTable($item)) {
+							if (!$db->hasTable($item)) {
 								$errors[] = "This plugin requires table: " . $item . " to exist in the database.";
 								$tmpDisplayError = true;
 							}
@@ -647,20 +640,18 @@ class Plugins {
 							$continue = false;
 							break;
 						}
-					}
-					else if($req == 'column') {
+					} else if ($req == 'column') {
 						$tmpDisplayError = false;
 						$explode = explode(',', $version);
 						foreach ($explode as $item) {
 							$tmp = explode('.', $item);
 
-							if(count($tmp) == 2) {
-								if(!$db->hasColumn($tmp[0], $tmp[1])) {
+							if (count($tmp) == 2) {
+								if (!$db->hasColumn($tmp[0], $tmp[1])) {
 									$errors[] = "This plugin requires database column: " . $tmp[0] . "." . $tmp[1] . " to exist in database.";
 									$tmpDisplayError = true;
 								}
-							}
-							else {
+							} else {
 								self::$warnings[] = "Invalid plugin require column: " . $item;
 							}
 						}
@@ -670,18 +661,16 @@ class Plugins {
 							$continue = false;
 							break;
 						}
-					}
-					else if(strpos($req, 'ext-') !== false) {
+					} else if (strpos($req, 'ext-') !== false) {
 						$tmp = explode('-', $req);
-						if(count($tmp) == 2) {
-							if(!extension_loaded($tmp[1]) || !Semver::satisfies(phpversion($tmp[1]), $version)) {
+						if (count($tmp) == 2) {
+							if (!extension_loaded($tmp[1]) || !Semver::satisfies(phpversion($tmp[1]), $version)) {
 								self::$error = "This plugin requires php extension: " . $tmp[1] . ", version " . $version . " to be installed.";
 								$continue = false;
 								break;
 							}
 						}
-					}
-					else if(!self::is_installed($req, $version)) {
+					} else if (!self::is_installed($req, $version)) {
 						self::$error = "This plugin requires another plugin to run correctly. The another plugin is: " . $req . ", with version " . $version . ".";
 						$continue = false;
 						break;
@@ -690,11 +679,11 @@ class Plugins {
 			}
 		}
 
-		if(!$continue) {
+		if (!$continue) {
 			return false;
 		}
 
-		if(!$zip->extractTo(BASE)) { // "Real" Install
+		if (!$zip->extractTo(BASE)) { // "Real" Install
 			self::$error = 'There was a problem with extracting zip archive to base directory.';
 			$zip->close();
 			return false;
@@ -710,8 +699,7 @@ class Plugins {
 				$db->revalidateCache();
 				require BASE . $install;
 				$db->revalidateCache();
-			}
-			else {
+			} else {
 				self::$warnings[] = 'Cannot load install script. Your plugin might be not working correctly.';
 			}
 		}
@@ -732,11 +720,13 @@ class Plugins {
 		return is_file(PLUGINS . 'disabled.' . $filenameJson);
 	}
 
-	public static function enable($pluginFileName): bool {
+	public static function enable($pluginFileName): bool
+	{
 		return self::enableDisable($pluginFileName, true);
 	}
 
-	public static function disable($pluginFileName): bool {
+	public static function disable($pluginFileName): bool
+	{
 		return self::enableDisable($pluginFileName, false);
 	}
 
@@ -768,14 +758,14 @@ class Plugins {
 	public static function executeInstall($plugin_name): bool
 	{
 		$filename = BASE . 'plugins/' . $plugin_name . '.json';
-		if(!file_exists($filename)) {
+		if (!file_exists($filename)) {
 			self::$error = 'Plugin ' . $plugin_name . ' does not exist.';
 			return false;
 		}
 
 		$string = file_get_contents($filename);
 		$plugin_json = json_decode($string, true);
-		if(!$plugin_json) {
+		if (!$plugin_json) {
 			self::$error = 'Cannot load plugin info ' . $plugin_name . '.json';
 			return false;
 		}
@@ -795,8 +785,7 @@ class Plugins {
 			$db->revalidateCache();
 			require BASE . $install;
 			$db->revalidateCache();
-		}
-		else {
+		} else {
 			self::$warnings[] = 'Cannot load install script. Your plugin might be not working correctly.';
 		}
 
@@ -806,18 +795,18 @@ class Plugins {
 	public static function uninstall($plugin_name): bool
 	{
 		$isDisabled = self::existDisabled($plugin_name);
-		if($isDisabled) {
+		if ($isDisabled) {
 			self::enable($plugin_name);
 		}
 
-		$revertEnable = function() use ($isDisabled, $plugin_name) {
-			if($isDisabled) {
+		$revertEnable = function () use ($isDisabled, $plugin_name) {
+			if ($isDisabled) {
 				self::disable($plugin_name);
 			}
 		};
 
 		$filename = BASE . 'plugins/' . $plugin_name . '.json';
-		if(!file_exists($filename)) {
+		if (!file_exists($filename)) {
 			self::$error = 'Plugin ' . $plugin_name . ' does not exist.';
 			$revertEnable();
 			return false;
@@ -825,21 +814,21 @@ class Plugins {
 
 		$string = file_get_contents($filename);
 		$plugin_info = json_decode($string, true);
-		if(!$plugin_info) {
+		if (!$plugin_info) {
 			self::$error = 'Cannot load plugin info ' . $plugin_name . '.json';
 			$revertEnable();
 			return false;
 		}
 
-		if(!isset($plugin_info['uninstall'])) {
+		if (!isset($plugin_info['uninstall'])) {
 			self::$error = "Plugin doesn't have uninstall options defined. Skipping...";
 			$revertEnable();
 			return false;
 		}
 
 		$success = true;
-		foreach($plugin_info['uninstall'] as $file) {
-			if(str_starts_with($file, '/')) {
+		foreach ($plugin_info['uninstall'] as $file) {
+			if (str_starts_with($file, '/')) {
 				$success = false;
 				self::$error = "You cannot use absolute paths (starting with slash - '/'): " . $file;
 				break;
@@ -847,20 +836,20 @@ class Plugins {
 
 			$file = str_replace('\\', '/', BASE . $file);
 			$realpath = str_replace('\\', '/', realpath(dirname($file)));
-			if(!is_sub_dir($file, BASE) || $realpath != dirname($file)) {
+			if (!is_sub_dir($file, BASE) || $realpath != dirname($file)) {
 				$success = false;
 				self::$error = "You don't have rights to delete: " . $file;
 				break;
 			}
 		}
 
-		if(!$success) {
+		if (!$success) {
 			$revertEnable();
 			return false;
 		}
 
-		foreach($plugin_info['uninstall'] as $file) {
-			if(!deleteDirectory(BASE . $file)) {
+		foreach ($plugin_info['uninstall'] as $file) {
+			if (!deleteDirectory(BASE . $file)) {
 				self::$warnings[] = 'Cannot delete: ' . $file;
 			}
 		}
@@ -872,32 +861,35 @@ class Plugins {
 	public static function is_installed($plugin_name, $version): bool
 	{
 		$filename = BASE . 'plugins/' . $plugin_name . '.json';
-		if(!file_exists($filename)) {
+		if (!file_exists($filename)) {
 			return false;
 		}
 
 		$string = file_get_contents($filename);
 		$plugin_info = json_decode($string, true);
-		if(!$plugin_info) {
+		if (!$plugin_info) {
 			return false;
 		}
 
-		if(!isset($plugin_info['version'])) {
+		if (!isset($plugin_info['version'])) {
 			return false;
 		}
 
 		return Semver::satisfies($plugin_info['version'], $version);
 	}
 
-	public static function getWarnings() {
+	public static function getWarnings()
+	{
 		return self::$warnings;
 	}
 
-	public static function clearWarnings() {
+	public static function clearWarnings()
+	{
 		self::$warnings = [];
 	}
 
-	public static function getError() {
+	public static function getError()
+	{
 		return self::$error;
 	}
 
@@ -949,7 +941,7 @@ class Plugins {
 				];
 
 				// support for color and blank attributes
-				if($db->hasColumn(TABLE_PREFIX . 'menu', 'blank') && $db->hasColumn(TABLE_PREFIX . 'menu', 'color')) {
+				if ($db->hasColumn(TABLE_PREFIX . 'menu', 'blank') && $db->hasColumn(TABLE_PREFIX . 'menu', 'color')) {
 					$insert_array['blank'] = $blank;
 					$insert_array['color'] = $color;
 				}
@@ -967,8 +959,7 @@ class Plugins {
 				if (isset($autoload[$optionName])) {
 					return getBoolean($autoload[$optionName]);
 				}
-			}
-			else if (is_bool($autoload)) {
+			} else if (is_bool($autoload)) {
 				return $autoload;
 			}
 		}

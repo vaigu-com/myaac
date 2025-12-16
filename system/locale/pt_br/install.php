@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Brazilian Portuguese language file
  * install.php

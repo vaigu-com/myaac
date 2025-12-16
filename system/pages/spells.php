@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spells
  *
@@ -14,22 +15,19 @@ use MyAAC\Models\Spell;
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Spells';
 
-if(isset($_REQUEST['vocation_id'])) {
+if (isset($_REQUEST['vocation_id'])) {
 	$vocation_id = $_REQUEST['vocation_id'];
-	if($vocation_id == 'all') {
+	if ($vocation_id == 'all') {
 		$vocation = 'all';
-	}
-	else {
+	} else {
 		$vocation = $config['vocations'][$vocation_id];
 	}
-}
-else {
+} else {
 	$vocation = (isset($_REQUEST['vocation']) ? urldecode($_REQUEST['vocation']) : 'all');
 
-	if($vocation == 'all') {
+	if ($vocation == 'all') {
 		$vocation_id = 'all';
-	}
-	else {
+	} else {
 		$vocation_ids = array_flip($config['vocations']);
 		$vocation_id = $vocation_ids[$vocation];
 	}
@@ -39,21 +37,20 @@ $order = 'name';
 $spells = array();
 $spells_db = Spell::where('hide', '!=', 1)->where('type', '<', 4)->orderBy($order)->get();
 
-if((string)$vocation_id != 'all') {
-	foreach($spells_db as $spell) {
+if ((string)$vocation_id != 'all') {
+	foreach ($spells_db as $spell) {
 		$spell_vocations = json_decode($spell['vocations'], true);
-		if(in_array($vocation_id, $spell_vocations) || count($spell_vocations) == 0) {
+		if (in_array($vocation_id, $spell_vocations) || count($spell_vocations) == 0) {
 			$spell['vocations'] = null;
 			$spells[] = $spell;
 		}
 	}
-}
-else {
-	foreach($spells_db as $spell) {
+} else {
+	foreach ($spells_db as $spell) {
 		$vocations = json_decode($spell['vocations'], true);
 
-		foreach($vocations as &$tmp_vocation) {
-			if(isset($config['vocations'][$tmp_vocation]))
+		foreach ($vocations as &$tmp_vocation) {
+			if (isset($config['vocations'][$tmp_vocation]))
 				$tmp_vocation = $config['vocations'][$tmp_vocation];
 			else
 				$tmp_vocation = 'Unknown';
@@ -76,11 +73,10 @@ $twig->display('spells.html.twig', array(
 ?>
 
 <script>
-	$(document).ready( function () {
+	$(document).ready(function() {
 		$("#tb_instantSpells").DataTable();
 		$("#tb_conjureSpells").DataTable();
 		$("#tb_runeSpells").DataTable();
-	} );
-
+	});
 </script>
 <script src="<?php echo BASE_URL; ?>tools/js/datatables.min.js"></script>

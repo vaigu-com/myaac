@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Timer class
  *
@@ -16,11 +17,13 @@ class Timer
 	private $stop = 0;
 	private $elapsed = 0;
 
-	function __construct($start = true) {
-		if($start) $this->start();
+	function __construct($start = true)
+	{
+		if ($start) $this->start();
 	}
 
-	function start() {
+	function start()
+	{
 		$this->start = $this->_gettime();
 	}
 
@@ -32,7 +35,7 @@ class Timer
 
 	function elapsed()
 	{
-		if(!$this->elapsed)
+		if (!$this->elapsed)
 			$this->stop();
 
 		return $this->elapsed;
@@ -45,12 +48,13 @@ class Timer
 		$this->elapsed = 0;
 	}
 
-	private function _gettime() {
+	private function _gettime()
+	{
 		return microtime(true);
 	}
 
-	private function _compute() {
+	private function _compute()
+	{
 		return $this->stop - $this->start;
 	}
 }
-?>

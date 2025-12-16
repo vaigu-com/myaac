@@ -16,11 +16,13 @@ class SettingsSetCommand extends Command
 	{
 		$this->setName('settings:set')
 			->setDescription('Updates the setting specified by argument in database')
-			->addArgument('key',
+			->addArgument(
+				'key',
 				InputArgument::REQUIRED,
 				'Setting key in format name.key'
 			)
-			->addArgument('value',
+			->addArgument(
+				'value',
 				InputArgument::REQUIRED,
 				'New value'
 			);

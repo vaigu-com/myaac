@@ -1,4 +1,5 @@
 <?php
+
 /**
  * 405 error page
  *

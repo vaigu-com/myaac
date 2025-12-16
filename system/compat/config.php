@@ -87,7 +87,7 @@ foreach ($deprecatedConfig as $key => $value) {
 	config(
 		[
 			(is_string($key) ? $key : $value),
-			setting('core.'.$value)
+			setting('core.' . $value)
 		]
 	);
 
@@ -111,7 +111,7 @@ $deprecatedConfigCharacters = [
 
 $tmp = [];
 foreach ($deprecatedConfigCharacters as $key => $value) {
-	$tmp[(is_string($key) ? $key : $value)] = setting('core.characters_'.$value);
+	$tmp[(is_string($key) ? $key : $value)] = setting('core.characters_' . $value);
 }
 
 config(['characters', $tmp]);

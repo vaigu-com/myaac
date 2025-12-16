@@ -17,10 +17,6 @@
  * 
  * @package POT
  */
-class E_OTS_NotLoaded extends Exception
-{
-}
+class E_OTS_NotLoaded extends Exception {}
 
 /**#@-*/
-
-?>

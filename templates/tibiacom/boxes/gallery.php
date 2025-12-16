@@ -2,7 +2,7 @@
 
 use MyAAC\Models\Gallery;
 
-if(PAGE !== 'news') {
+if (PAGE !== 'news') {
 	return;
 }
 

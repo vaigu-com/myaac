@@ -1,4 +1,5 @@
 <?php
+
 /**
  * german language file
  * admin.php

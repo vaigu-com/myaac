@@ -31,38 +31,38 @@
  */
 interface IOTS_GuildAction
 {
-/**
- * Objects are initialized with a guild that they are assigned to.
- * 
- * It is recommeded that your implementations calls assignment functions of $guild to automaticly assign itself as action handler.
- * 
- * @param OTS_Guild $guild Guild that this driver is assigned to.
- */
+    /**
+     * Objects are initialized with a guild that they are assigned to.
+     * 
+     * It is recommeded that your implementations calls assignment functions of $guild to automaticly assign itself as action handler.
+     * 
+     * @param OTS_Guild $guild Guild that this driver is assigned to.
+     */
     public function __construct(OTS_Guild $guild);
 
-/**
- * List of saved pending actions.
- * 
- * @return array List of actions.
- */
+    /**
+     * List of saved pending actions.
+     * 
+     * @return array List of actions.
+     */
     public function listRequests();
-/**
- * Adds new request.
- * 
- * @param OTS_Player $player Player which is object of request.
- */
+    /**
+     * Adds new request.
+     * 
+     * @param OTS_Player $player Player which is object of request.
+     */
     public function addRequest(OTS_Player $player);
-/**
- * Deletes request.
- * 
- * @param OTS_Player $player Player which is object of request.
- */
+    /**
+     * Deletes request.
+     * 
+     * @param OTS_Player $player Player which is object of request.
+     */
     public function deleteRequest(OTS_Player $player);
-/**
- * Finalizes request.
- * 
- * @param OTS_Player $player Player which is object of request.
- */
+    /**
+     * Finalizes request.
+     * 
+     * @param OTS_Player $player Player which is object of request.
+     */
     public function submitRequest(OTS_Player $player);
 }
 

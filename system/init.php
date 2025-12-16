@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Initialize some defaults
  *
@@ -19,11 +20,11 @@ use MyAAC\Settings;
 defined('MYAAC') or die('Direct access not allowed!');
 
 global $config;
-if(!isset($config['installed']) || !$config['installed']) {
+if (!isset($config['installed']) || !$config['installed']) {
 	throw new RuntimeException('MyAAC has not been installed yet or there was error during installation. Please install again.');
 }
 
-if(config('env') === 'dev') {
+if (config('env') === 'dev') {
 	require SYSTEM . 'exception.php';
 }
 
@@ -31,16 +32,16 @@ if (config('env') === 'dev' || getBoolean(config('enable_debugbar'))) {
 	$debugBar = new StandardDebugBar();
 }
 
-if(empty($config['server_path'])) {
+if (empty($config['server_path'])) {
 	throw new RuntimeException('Server Path has been not set. Go to config.php and set it.');
 }
 
 // take care of trailing slash at the end
-if($config['server_path'][strlen($config['server_path']) - 1] !== '/')
+if ($config['server_path'][strlen($config['server_path']) - 1] !== '/')
 	$config['server_path'] .= '/';
 
 // enable gzip compression if supported by the browser
-if(isset($config['gzip_output']) && $config['gzip_output'] && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && str_contains($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && function_exists('ob_gzhandler'))
+if (isset($config['gzip_output']) && $config['gzip_output'] && isset($_SERVER['HTTP_ACCEPT_ENCODING']) && str_contains($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') && function_exists('ob_gzhandler'))
 	ob_start('ob_gzhandler');
 
 // cache
@@ -69,69 +70,69 @@ define('ACTION', $action);
 $errors = [];
 
 // trim values we receive
-foreach($_POST as $var => $value) {
-	if(is_string($value)) {
+foreach ($_POST as $var => $value) {
+	if (is_string($value)) {
 		$_POST[$var] = trim($value);
 	}
 }
 
-foreach($_GET as $var => $value) {
-	if(is_string($value))
+foreach ($_GET as $var => $value) {
+	if (is_string($value))
 		$_GET[$var] = trim($value);
 }
 
-foreach($_REQUEST as $var => $value) {
-	if(is_string($value))
+foreach ($_REQUEST as $var => $value) {
+	if (is_string($value))
 		$_REQUEST[$var] = trim($value);
 }
 
 // load otserv config file
 $config_lua_reload = true;
-if($cache->enabled()) {
+if ($cache->enabled()) {
 	$tmp = null;
-	if($cache->fetch('server_path', $tmp) && $tmp == $config['server_path']) {
+	if ($cache->fetch('server_path', $tmp) && $tmp == $config['server_path']) {
 		$tmp = null;
-		if($cache->fetch('config_lua', $tmp) && $tmp) {
+		if ($cache->fetch('config_lua', $tmp) && $tmp) {
 			$config['lua'] = unserialize($tmp);
 			$config_lua_reload = false;
 		}
 	}
 }
 
-if($config_lua_reload) {
+if ($config_lua_reload) {
 	$config['lua'] = load_config_lua($config['server_path'] . 'config.lua');
 
 	// cache config
-	if($cache->enabled()) {
+	if ($cache->enabled()) {
 		$cache->set('config_lua', serialize($config['lua']), 2 * 60);
 		$cache->set('server_path', $config['server_path'], 10 * 60);
 	}
 }
 unset($tmp);
 
-if(isset($config['lua']['servername']))
+if (isset($config['lua']['servername']))
 	$config['lua']['serverName'] = $config['lua']['servername'];
 
-if(isset($config['lua']['houserentperiod']))
+if (isset($config['lua']['houserentperiod']))
 	$config['lua']['houseRentPeriod'] = $config['lua']['houserentperiod'];
 
 // localize data/ directory based on data directory set in config.lua
-foreach(array('dataDirectory', 'data_directory', 'datadir') as $key) {
-	if(!isset($config['lua'][$key][0])) {
+foreach (array('dataDirectory', 'data_directory', 'datadir') as $key) {
+	if (!isset($config['lua'][$key][0])) {
 		break;
 	}
 
 	$foundValue = $config['lua'][$key];
-	if($foundValue[0] !== '/') {
+	if ($foundValue[0] !== '/') {
 		$foundValue = $config['server_path'] . $foundValue;
 	}
 
-	if($foundValue[strlen($foundValue) - 1] !== '/') {// do not forget about trailing slash
+	if ($foundValue[strlen($foundValue) - 1] !== '/') { // do not forget about trailing slash
 		$foundValue .= '/';
 	}
 }
 
-if(!isset($foundValue)) {
+if (!isset($foundValue)) {
 	$foundValue = $config['server_path'] . 'data/';
 }
 
@@ -157,7 +158,7 @@ $twig->addGlobal('logged', false);
 $twig->addGlobal('account_logged', new \OTS_Account());
 
 // verify myaac tables exists in database
-if(!defined('MYAAC_INSTALL') && !$db->hasTable('myaac_account_actions')) {
+if (!defined('MYAAC_INSTALL') && !$db->hasTable('myaac_account_actions')) {
 	throw new RuntimeException('Seems that the table myaac_account_actions of MyAAC doesn\'t exist in the database. This is a fatal error. You can try to reinstall MyAAC by visiting ' . (IS_CLI ? 'http://your-ip.com/' : BASE_URL) . 'install');
 }
 
@@ -193,7 +194,7 @@ setting(
 );
 
 $settingsItemImagesURL = setting('core.item_images_url');
-if($settingsItemImagesURL[strlen($settingsItemImagesURL) - 1] !== '/') {
+if ($settingsItemImagesURL[strlen($settingsItemImagesURL) - 1] !== '/') {
 	setting(['core.item_images_url', $settingsItemImagesURL . '/']);
 }
 

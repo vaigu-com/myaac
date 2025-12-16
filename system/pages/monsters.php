@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Monsters
  *
@@ -25,7 +26,7 @@ if (empty($_REQUEST['name'])) {
 		})->get()->toArray();
 
 		if ($preview) {
-			foreach($monsters as &$monster) {
+			foreach ($monsters as &$monster) {
 				$monster['img_link'] = getMonsterImage($monster);
 			}
 		}
@@ -59,7 +60,7 @@ if ($monsterModel && isset($monsterModel->name)) {
 
 	$title = $monster['name'] . " - Monsters";
 
-	$monster['img_link']= getMonsterImage($monster);
+	$monster['img_link'] = getMonsterImage($monster);
 
 	$voices = json_decode($monster['voices'], true);
 	$summons = json_decode($monster['summons'], true);
@@ -74,7 +75,7 @@ if ($monsterModel && isset($monsterModel->name)) {
 		$item['name'] = getItemNameById($item['id']);
 		$item['rarity_chance'] = round($item['chance'] / 1000, 2);
 		$item['rarity'] = getItemRarity($item['chance']);
-		$item['tooltip'] = ucfirst($item['name']) . '<br/>Chance: ' . $item['rarity'] . (setting('core.monsters_loot_percentage') ? ' ('. $item['rarity_chance'] .'%)' : '') . '<br/>Max count: ' . $item['count'];
+		$item['tooltip'] = ucfirst($item['name']) . '<br/>Chance: ' . $item['rarity'] . (setting('core.monsters_loot_percentage') ? ' (' . $item['rarity_chance'] . '%)' : '') . '<br/>Max count: ' . $item['count'];
 	}
 
 	$monster['loot'] = $loot ?? null;
@@ -86,7 +87,6 @@ if ($monsterModel && isset($monsterModel->name)) {
 	$twig->display('monster.html.twig', array(
 		'monster' => $monster,
 	));
-
 } else {
 	echo "Monster with name <b>" . htmlspecialchars($monster_name) . "</b> doesn't exist.";
 }

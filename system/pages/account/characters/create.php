@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Create character
  *
@@ -16,7 +17,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Create Character';
 require PAGES . 'account/base.php';
 
-if(!$logged) {
+if (!$logged) {
 	return;
 }
 
@@ -34,17 +35,17 @@ if (!admin() && !empty($character_name)) {
 $character_created = false;
 $save = isset($_POST['save']) && $_POST['save'] == 1;
 $errors = array();
-if($save) {
+if ($save) {
 	$createCharacter = new CreateCharacter();
 
 	$character_created = $createCharacter->doCreate($character_name, $character_sex, $character_vocation, $character_town, $account_logged, $errors);
 }
 
-if(count($errors) > 0) {
+if (count($errors) > 0) {
 	$twig->display('error_box.html.twig', array('errors' => $errors));
 }
 
-if(!$character_created) {
+if (!$character_created) {
 	$twig->display('account.characters.create.html.twig', array(
 		'name' => $character_name,
 		'sex' => $character_sex,

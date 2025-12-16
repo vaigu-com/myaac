@@ -6,7 +6,7 @@ require SYSTEM . 'functions.php';
 require SYSTEM . 'init.php';
 require SYSTEM . 'login.php';
 
-if(!admin())
+if (!admin())
 	die('Access denied.');
 
 // Don't attempt to process the upload on an OPTIONS request
@@ -17,7 +17,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
 
 $imageFolder = BASE . EDITOR_IMAGES_DIR;
 
-reset ($_FILES);
+reset($_FILES);
 $temp = current($_FILES);
 if (is_uploaded_file($temp['tmp_name'])) {
 	header('Access-Control-Allow-Credentials: true');
@@ -37,7 +37,7 @@ if (is_uploaded_file($temp['tmp_name'])) {
 	}
 
 	do {
-		$randomName = generateRandomString(8). ".$ext";
+		$randomName = generateRandomString(8) . ".$ext";
 		$fileToWrite = $imageFolder . $randomName;
 	} while (file_exists($fileToWrite));
 
@@ -49,5 +49,3 @@ if (is_uploaded_file($temp['tmp_name'])) {
 	// Notify editor that the upload failed
 	header('HTTP/1.1 500 Server Error');
 }
-
-

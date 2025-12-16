@@ -1,6 +1,7 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
 /**
@@ -10,7 +11,8 @@ use Illuminate\Database\Eloquent\Model;
  * @property int $php
  * @property int $hide
  */
-class Pages extends Model {
+class Pages extends Model
+{
 
 	protected $table = TABLE_PREFIX . 'pages';
 
@@ -30,8 +32,8 @@ class Pages extends Model {
 		return $this->belongsTo(Player::class);
 	}
 
-	public function scopeIsPublic($query) {
+	public function scopeIsPublic($query)
+	{
 		$query->where('hide', '!=', 1);
 	}
-
 }

@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class PlayerItem extends Model {
+class PlayerItem extends Model
+{
 
 	protected $table = 'player_items';
 
@@ -13,5 +15,4 @@ class PlayerItem extends Model {
 	{
 		return $this->belongsTo(Player::class);
 	}
-
 }

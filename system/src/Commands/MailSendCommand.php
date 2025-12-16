@@ -40,42 +40,39 @@ class MailSendCommand extends Command
 
 		$message = file_get_contents('php://stdin');
 
-		if(!str_contains($email_account_name, '@')) {
+		if (!str_contains($email_account_name, '@')) {
 			$account = new \OTS_Account();
-			if(USE_ACCOUNT_NAME) {
+			if (USE_ACCOUNT_NAME) {
 				$account->find($email_account_name);
-			}
-			else {
+			} else {
 				$account->load($email_account_name);
 			}
 
-			if($account->isLoaded()) {
+			if ($account->isLoaded()) {
 				$email_account_name = $account->getEMail();
-			}
-			else {
+			} else {
 				$player = new \OTS_Player();
 				$player->find($email_account_name);
-				if($player->isLoaded()) {
+				if ($player->isLoaded()) {
 					$email_account_name = $player->getAccount()->getEMail();
-				}
-				else {
+				} else {
 					$io->error('Cannot find player or account with name: ' . $email_account_name);
 					return 3;
 				}
 			}
 		}
 
-		if(!\Validator::email($email_account_name)) {
+		if (!\Validator::email($email_account_name)) {
 			$io->error('Invalid E-Mail format');
 			return 4;
 		}
 
-		if(strlen($subject) > 255) {
+		if (strlen($subject) > 255) {
 			$io->error('Subject max length is 255 characters');
 			return 5;
 		}
 
-		if(!_mail($email_account_name, $subject, $message)) {
+		if (!_mail($email_account_name, $subject, $message)) {
 			$io->error('An error occurred while sending email. More info can be found in system/logs/mailer-error.log');
 			return 6;
 		}

@@ -24,39 +24,39 @@
 abstract class OTS_Base_DB extends PDO implements IOTS_DB
 {
 	use OTS_DB_PDOQuery;
-/**
- * Tables prefix.
- *
- * @var string
- */
-    protected $prefix = '';
+	/**
+	 * Tables prefix.
+	 *
+	 * @var string
+	 */
+	protected $prefix = '';
 
-/**
- * Query counter
- *
- * @var int
- */
-    private $queries = 0;
+	/**
+	 * Query counter
+	 *
+	 * @var int
+	 */
+	private $queries = 0;
 
 	protected $logged = false;
 	private $log = '';
 
-/**
- * Query-quoted field name.
- *
- * @param string $name Field name.
- * @return string Quoted name.
- */
-    public function fieldName($name)
-    {
-        return '"' . $name . '"';
-    }
+	/**
+	 * Query-quoted field name.
+	 *
+	 * @param string $name Field name.
+	 * @return string Quoted name.
+	 */
+	public function fieldName($name)
+	{
+		return '"' . $name . '"';
+	}
 
 	public function fieldNames()
 	{
 		$ret = '';
 
-		foreach(func_get_args() as $v) {
+		foreach (func_get_args() as $v) {
 			$ret .= $this->fieldName($v) . ',';
 		}
 
@@ -64,33 +64,33 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 		return $ret;
 	}
 
-/**
- * Query-quoted table name.
- *
- * @param string $name Table name.
- * @return string Quoted name.
- */
-    public function tableName($name)
-    {
-        return $this->fieldName($this->prefix . $name);
-    }
+	/**
+	 * Query-quoted table name.
+	 *
+	 * @param string $name Table name.
+	 * @return string Quoted name.
+	 */
+	public function tableName($name)
+	{
+		return $this->fieldName($this->prefix . $name);
+	}
 
 	private function doQuery(...$args)
 	{
 		$this->queries++;
 
-		if($this->logged) {
+		if ($this->logged) {
 			$startTime = microtime(true);
 		}
 
 		$ret = parent::query(...$args);
-		if($this->logged) {
+		if ($this->logged) {
 			$totalTime = microtime(true) - $startTime;
 			$this->log .= round($totalTime, 4) . ' ms - ' . $args[0] . PHP_EOL;
 		}
 
 		return $ret;
-    }
+	}
 
 	public function select($table, $where = [], $limit = null)
 	{
@@ -111,9 +111,9 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 		}
 
 		if (isset($limit))
-			$query .=' LIMIT '.$limit.';';
+			$query .= ' LIMIT ' . $limit . ';';
 		else
-			$query .=';';
+			$query .= ';';
 
 		$query = $this->query($query);
 		$rowCount = $query->rowCount();
@@ -123,7 +123,6 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 		}
 
 		return $query->fetchAll();
-
 	}
 
 	public function insert($table, $data)
@@ -132,7 +131,7 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 		$values = array_values($data);
 		$query = 'INSERT INTO ' . $this->tableName($table) . ' (';
 		foreach ($fields as $field) {
-			$query.= $this->fieldName($field).',';
+			$query .= $this->fieldName($field) . ',';
 		}
 
 		$query = substr($query, 0, -1);
@@ -140,9 +139,8 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 		foreach ($values as $value) {
 			if ($value === null) {
 				$query .= 'NULL,';
-			}
-			else {
-				$query .= $this->quote($value).',';
+			} else {
+				$query .= $this->quote($value) . ',';
 			}
 		}
 
@@ -157,17 +155,17 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 	{
 		$fields = array_keys($data);
 		$values = array_values($data);
-		$query = 'REPLACE INTO '.$this->tableName($table).' (';
+		$query = 'REPLACE INTO ' . $this->tableName($table) . ' (';
 		foreach ($fields as $field)
-			$query.= $this->fieldName($field).',';
+			$query .= $this->fieldName($field) . ',';
 
 		$query = substr($query, 0, -1);
-		$query.= ') VALUES (';
+		$query .= ') VALUES (';
 		foreach ($values as $value)
 			if ($value === null)
-				$query.= 'NULL,';
+				$query .= 'NULL,';
 			else
-				$query.= $this->quote($value).',';
+				$query .= $this->quote($value) . ',';
 
 		$query = substr($query, 0, -1);
 		$query .= ')';
@@ -181,7 +179,7 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 		$fields = array_keys($data);
 		$values = array_values($data);
 
-		$query = 'UPDATE '.$this->tableName($table).' SET ';
+		$query = 'UPDATE ' . $this->tableName($table) . ' SET ';
 
 		$count = count($fields);
 		for ($i = 0; $i < $count; $i++) {
@@ -190,23 +188,23 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 				$value = $this->quote($values[$i]);
 			}
 
-			$query.= $this->fieldName($fields[$i]).' = '.$value.', ';
+			$query .= $this->fieldName($fields[$i]) . ' = ' . $value . ', ';
 		}
 
 		$query = substr($query, 0, -2);
-		$query.=' WHERE (';
+		$query .= ' WHERE (';
 		$fields = array_keys($where);
 		$values = array_values($where);
 
 		$count = count($fields);
 		for ($i = 0; $i < $count; $i++)
-			$query.= $this->fieldName($fields[$i]).' = '.$this->quote($values[$i]).' AND ';
+			$query .= $this->fieldName($fields[$i]) . ' = ' . $this->quote($values[$i]) . ' AND ';
 
 		$query = substr($query, 0, -4);
 		if (isset($limit))
-			$query .=') LIMIT '.$limit.';';
+			$query .= ') LIMIT ' . $limit . ';';
 		else
-			$query .=');';
+			$query .= ');';
 
 		$this->exec($query);
 		return true;
@@ -226,70 +224,75 @@ abstract class OTS_Base_DB extends PDO implements IOTS_DB
 
 		$query = substr($query, 0, -4);
 		if ($limit > 0) {
-			$query.=') LIMIT '.$limit.';';
-		}
-		else {
-			$query.=');';
+			$query .= ') LIMIT ' . $limit . ';';
+		} else {
+			$query .= ');';
 		}
 
 		$this->exec($query);
 		return true;
 	}
 
-	public function addColumn($table, $column, $definition): void {
+	public function addColumn($table, $column, $definition): void
+	{
 		$this->exec('ALTER TABLE ' . $this->tableName($table) . ' ADD ' . $this->fieldName($column) . ' ' . $definition . ';');
 	}
 
-	public function modifyColumn($table, $column, $definition): void {
+	public function modifyColumn($table, $column, $definition): void
+	{
 		$this->exec('ALTER TABLE ' . $this->tableName($table) . ' MODIFY ' . $this->fieldName($column) . ' ' . $definition . ';');
 	}
 
-	public function changeColumn($table, $from, $to, $definition): void {
+	public function changeColumn($table, $from, $to, $definition): void
+	{
 		$this->exec('ALTER TABLE ' . $this->tableName($table) . ' CHANGE ' . $this->fieldName($from) . ' ' . $this->fieldName($to) . ' ' . $definition . ';');
 	}
 
-	public function dropColumn($table, $column): void {
+	public function dropColumn($table, $column): void
+	{
 		$this->exec('ALTER TABLE ' . $this->tableName($table) . ' DROP COLUMN ' . $this->fieldName($column) . ';');
 	}
 
-	public function renameTable($from, $to): void {
+	public function renameTable($from, $to): void
+	{
 		$this->exec('RENAME TABLE ' . $this->tableName($from) . ' TO ' . $this->tableName($to) . ';');
 	}
 
-	public function dropTable($table, $ifExists = true): void {
+	public function dropTable($table, $ifExists = true): void
+	{
 		$this->exec('DROP TABLE ' . ($ifExists ? 'IF EXISTS' : '') . ' ' . $this->tableName($table) . ';');
 	}
-/**
- * LIMIT/OFFSET clause for queries.
- *
- * @param int|bool $limit Limit of rows to be affected by query (false if no limit).
- * @param int|bool $offset Number of rows to be skipped before applying query effects (false if no offset).
- * @return string LIMIT/OFFSET SQL clause for query.
- */
-    public function limit($limit = false, $offset = false)
-    {
-        // by default this is empty part
-        $sql = '';
+	/**
+	 * LIMIT/OFFSET clause for queries.
+	 *
+	 * @param int|bool $limit Limit of rows to be affected by query (false if no limit).
+	 * @param int|bool $offset Number of rows to be skipped before applying query effects (false if no offset).
+	 * @return string LIMIT/OFFSET SQL clause for query.
+	 */
+	public function limit($limit = false, $offset = false)
+	{
+		// by default this is empty part
+		$sql = '';
 
-        if($limit !== false)
-        {
-            $sql = ' LIMIT ' . $limit;
+		if ($limit !== false) {
+			$sql = ' LIMIT ' . $limit;
 
-            // OFFSET has no effect if there is no LIMIT
-            if($offset !== false)
-            {
-                $sql .= ' OFFSET ' . $offset;
-            }
-        }
+			// OFFSET has no effect if there is no LIMIT
+			if ($offset !== false) {
+				$sql .= ' OFFSET ' . $offset;
+			}
+		}
 
-        return $sql;
-    }
+		return $sql;
+	}
 
-	public function queries() {
+	public function queries()
+	{
 		return $this->queries;
 	}
 
-	public function getLog() {
+	public function getLog()
+	{
 		return $this->log;
 	}
 }

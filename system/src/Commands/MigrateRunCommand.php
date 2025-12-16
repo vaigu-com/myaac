@@ -14,7 +14,8 @@ class MigrateRunCommand extends Command
 	{
 		$this->setName('migrate:run')
 			->setDescription('This command runs the migration specified by id')
-			->addArgument('id',
+			->addArgument(
+				'id',
 				InputArgument::IS_ARRAY | InputArgument::REQUIRED,
 				'Id or ids of migration(s)'
 			)
@@ -68,7 +69,8 @@ class MigrateRunCommand extends Command
 		return Command::SUCCESS;
 	}
 
-	private function migrationExists($id): bool {
+	private function migrationExists($id): bool
+	{
 		return file_exists(SYSTEM . 'migrations/' . $id . '.php');
 	}
 
@@ -83,8 +85,7 @@ class MigrateRunCommand extends Command
 			if (isset($up)) {
 				$up();
 			}
-		}
-		else {
+		} else {
 			if (isset($down)) {
 				$down();
 			}

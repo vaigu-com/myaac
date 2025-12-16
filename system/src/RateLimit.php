@@ -32,7 +32,8 @@ class RateLimit
 		return 0;
 	}
 
-	public function exceeded(string $ip): bool {
+	public function exceeded(string $ip): bool
+	{
 		if (!$this->enabled) {
 			return false;
 		}

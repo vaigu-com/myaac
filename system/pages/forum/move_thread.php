@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Move forum thread (for moderator)
  *
@@ -18,23 +19,23 @@ if ($ret === false) {
 	return;
 }
 
-if(!$logged) {
+if (!$logged) {
 	echo 'You are not logged in. <a href="' . getLink('account/manage') . '?redirect=' . urlencode(getLink('forum')) . '">Log in</a> to post on the forum.<br /><br />';
 	return;
 }
 
 csrfProtect();
 
-if(!Forum::isModerator()) {
+if (!Forum::isModerator()) {
 	echo 'You are not logged in or you are not moderator.';
 	return;
 }
 
 $save = isset($_POST['save']) && (int)$_POST['save'] == 1;
-if($save) {
+if ($save) {
 	$post_id = (int)$_POST['id'];
 	$board = (int)$_POST['section'];
-	if(!Forum::hasAccess($board)) {
+	if (!Forum::hasAccess($board)) {
 		$errors[] = "You don't have access to this board.";
 		displayErrorBoxWithBackButton($errors, getLink('forum'));
 		return;
@@ -47,20 +48,18 @@ if($save) {
 			$nPost = $db->query('SELECT `section` FROM `' . FORUM_TABLE_PREFIX . 'forum` WHERE `id` = \'' . $post_id . '\' LIMIT 1;')->fetch();
 			header('Location: ' . getForumBoardLink($nPost['section']));
 		}
-	}
-	else {
+	} else {
 		$errors[] = 'Post with ID ' . $post_id . ' does not exist.';
 		displayErrorBoxWithBackButton($errors, getLink('forum'));
 	}
-}
-else {
+} else {
 	$post_id = (int)$_REQUEST['id'];
 	$post = $db->query("SELECT `id`, `section`, `first_post`, `post_topic`, `author_guid` FROM `" . FORUM_TABLE_PREFIX . "forum` WHERE `id` = " . $post_id . " LIMIT 1")->fetch();
 	$name = $db->query("SELECT `name` FROM `players` WHERE `id` = " . $post['author_guid'] . " ")->fetch();
 
 	$sections_allowed = array();
-	foreach($sections as $id => $section) {
-		if(Forum::hasAccess($id)) {
+	foreach ($sections as $id => $section) {
+		if (Forum::hasAccess($id)) {
 			$sections_allowed[$id] = $section;
 		}
 	}
@@ -76,8 +75,7 @@ else {
 				'section_link' => getForumBoardLink($post['section']),
 			));
 		}
-	}
-	else {
+	} else {
 		$errors[] = 'Post with ID ' . $post_id . ' does not exist.';
 		displayErrorBoxWithBackButton($errors, getLink('forum'));
 	}

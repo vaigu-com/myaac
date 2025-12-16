@@ -7,7 +7,7 @@ use MyAAC\Settings;
 defined('MYAAC') or die('Direct access not allowed!');
 
 ini_set('max_execution_time', 300);
-if(isset($config['installed']) && $config['installed'] && !isset($_SESSION['saved'])) {
+if (isset($config['installed']) && $config['installed'] && !isset($_SESSION['saved'])) {
 	warning($locale['already_installed']);
 	return;
 }
@@ -19,25 +19,24 @@ if ($cache->enabled()) {
 }
 
 require SYSTEM . 'init.php';
-if($error) {
+if ($error) {
 	return;
 }
 
-if(USE_ACCOUNT_NAME || USE_ACCOUNT_NUMBER)
+if (USE_ACCOUNT_NAME || USE_ACCOUNT_NUMBER)
 	$account = $_SESSION['var_account'] ?? null;
 else
 	$account_id = $_SESSION['var_account_id'] ?? null;
 
 $password = $_SESSION['var_password'];
 
-if(USE_ACCOUNT_SALT)
-{
+if (USE_ACCOUNT_SALT) {
 	$salt = generateRandomString(10, false, true, true);
 	$password = $salt . $password;
 }
 
 $account_db = new OTS_Account();
-if(isset($account))
+if (isset($account))
 	$account_db->find($account);
 else
 	$account_db->load($account_id);
@@ -47,14 +46,12 @@ if ($db->hasTable('players')) {
 	$player_db = new OTS_Player();
 	$player_db->find($player_name);
 
-	if(!$player_db->isLoaded())
-	{
+	if (!$player_db->isLoaded()) {
 		$player = new OTS_Player();
 		$player->setName($player_name);
 
 		$player_used = &$player;
-	}
-	else {
+	} else {
 		$player_used = &$player_db;
 	}
 
@@ -63,19 +60,17 @@ if ($db->hasTable('players')) {
 }
 
 $email = $_SESSION['var_email'];
-if($account_db->isLoaded()) {
+if ($account_db->isLoaded()) {
 	$account_db->setPassword(encrypt($password));
 	$account_db->setEMail($email);
 	$account_db->save();
 
 	$account_used = &$account_db;
-}
-else {
+} else {
 	$new_account = new OTS_Account();
-	if(USE_ACCOUNT_NAME) {
+	if (USE_ACCOUNT_NAME) {
 		$new_account->create($account);
-	}
-	else {
+	} else {
 		$new_account->create(null, $account_id);
 	}
 
@@ -90,24 +85,23 @@ else {
 	$account_used = &$new_account;
 }
 
-if(USE_ACCOUNT_SALT)
+if (USE_ACCOUNT_SALT)
 	$account_used->setCustomField('salt', $salt);
 
 $account_used->setCustomField('web_flags', FLAG_ADMIN + FLAG_SUPER_ADMIN);
 $account_used->setCustomField('country', 'us');
 $account_used->setCustomField('email_verified', 1);
 
-if($db->hasColumn('accounts', 'group_id'))
+if ($db->hasColumn('accounts', 'group_id'))
 	$account_used->setCustomField('group_id', $groups->getHighestId());
-if($db->hasColumn('accounts', 'type'))
+if ($db->hasColumn('accounts', 'type'))
 	$account_used->setCustomField('type', 6);
 
 if ($db->hasTable('players')) {
-	if(!$player_db->isLoaded()) {
+	if (!$player_db->isLoaded()) {
 		$player->setAccountId($account_used->getId());
 		$player->save();
-	}
-	else {
+	} else {
 		$player_db->setAccountId($account_used->getId());
 		$player_db->save();
 	}
@@ -119,12 +113,12 @@ setSession('account', $account_used->getId());
 setSession('password', encrypt($password));
 setSession('remember_me', true);
 
-if(!News::all()->count()) {
+if (!News::all()->count()) {
 	$player_id = 0;
 
 	if ($db->hasTable('players')) {
 		$tmpNewsPlayer = \MyAAC\Models\Player::where('name', $player_name)->first();
-		if($tmpNewsPlayer) {
+		if ($tmpNewsPlayer) {
 			$player_id = $tmpNewsPlayer->id;
 		}
 	}
@@ -155,7 +149,7 @@ if(!News::all()->count()) {
 }
 
 $settings = Settings::getInstance();
-foreach($_SESSION as $key => $value) {
+foreach ($_SESSION as $key => $value) {
 	if (in_array($key, ['var_usage', 'var_date_timezone', 'var_client'])) {
 		if ($key == 'var_usage') {
 			$key = 'anonymous_usage_statistics';
@@ -176,18 +170,16 @@ $twig->display('install.installer.html.twig', array(
 	'message' => $locale['importing_spinner']
 ));
 
-if(!isset($_SESSION['installed'])) {
+if (!isset($_SESSION['installed'])) {
 	if (!array_key_exists('CI', getenv())) {
 		$report_url = 'https://my-aac.org/report_install.php?v=' . MYAAC_VERSION . '&b=' . urlencode(BASE_URL);
-		if (function_exists('curl_version'))
-		{
+		if (function_exists('curl_version')) {
 			$curl = curl_init();
 			curl_setopt($curl, CURLOPT_URL, $report_url);
 			curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
 			curl_exec($curl);
 			curl_close($curl);
-		}
-		else if (ini_get('allow_url_fopen') ) {
+		} else if (ini_get('allow_url_fopen')) {
 			file_get_contents($report_url);
 		}
 	}

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Usage Statistics
  *
@@ -12,16 +13,18 @@ namespace MyAAC;
 
 use MyAAC\Cache\Cache;
 
-class UsageStatistics {
+class UsageStatistics
+{
 	private static $report_url = 'https://my-aac.org/report_usage.php';
 
-	public static function report() {
+	public static function report()
+	{
 		$data = json_encode(self::getStats());
 
 		$options = array(
 			'http' => array(
 				'header'  => 'Content-type: application/json' . "\r\n"
-				. 'Content-Length: ' . strlen($data) . "\r\n",
+					. 'Content-Length: ' . strlen($data) . "\r\n",
 				'content' => $data
 			)
 		);
@@ -32,7 +35,8 @@ class UsageStatistics {
 		return $result !== false;
 	}
 
-	public static function getStats() {
+	public static function getStats()
+	{
 		global $config, $db;
 
 		$ret = array();
@@ -43,9 +47,9 @@ class UsageStatistics {
 		$ret['myaac_version'] = MYAAC_VERSION;
 		$ret['myaac_db_version'] = DATABASE_VERSION;
 
-		if($db->hasTable('server_config')) {
+		if ($db->hasTable('server_config')) {
 			$query = $db->query('SELECT `value` FROM `server_config` WHERE `config` = ' . $db->quote('database_version'));
-			if($query->rowCount() == 1) {
+			if ($query->rowCount() == 1) {
 				$query = $query->fetch();
 				$ret['otserv_db_version'] = $query['value'];
 			}
@@ -56,7 +60,7 @@ class UsageStatistics {
 		$ret['php_version'] = phpversion();
 
 		$query = $db->query('SELECT VERSION() as `version`;');
-		if($query->rowCount() == 1) {
+		if ($query->rowCount() == 1) {
 			$query = $query->fetch();
 			$ret['mysql_version'] = $query['version'];
 		}
@@ -65,7 +69,7 @@ class UsageStatistics {
 FROM INFORMATION_SCHEMA.TABLES
 WHERE TABLE_SCHEMA = "' . $config['database_name'] . '";');
 
-		if($query->rowCount() == 1) {
+		if ($query->rowCount() == 1) {
 			$query = $query->fetch();
 			$ret['database_size'] = $query['size'];
 		}
@@ -73,36 +77,36 @@ WHERE TABLE_SCHEMA = "' . $config['database_name'] . '";');
 		$ret['views_counter'] = getDatabaseConfig('views_counter');
 
 		$query = $db->query('SELECT COUNT(`id`) as `size` FROM `accounts`;');
-		if($query->rowCount() == 1) {
+		if ($query->rowCount() == 1) {
 			$query = $query->fetch();
 			$ret['accounts_size'] = $query['size'];
 		}
 
 		$query = $db->query('SELECT COUNT(`id`) as `size` FROM `players`;');
-		if($query->rowCount() == 1) {
+		if ($query->rowCount() == 1) {
 			$query = $query->fetch();
 			$ret['players_size'] = $query['size'];
 		}
 
 		$query = $db->query('SELECT COUNT(`id`) as `size` FROM `' . TABLE_PREFIX . 'monsters`;');
-		if($query->rowCount() == 1) {
+		if ($query->rowCount() == 1) {
 			$query = $query->fetch();
 			$ret['monsters_size'] = $query['size'];
 		}
 
 		$query = $db->query('SELECT COUNT(`id`) as `size` FROM `' . TABLE_PREFIX . 'spells`;');
-		if($query->rowCount() == 1) {
+		if ($query->rowCount() == 1) {
 			$query = $query->fetch();
 			$ret['spells_size'] = $query['size'];
 		}
 
 		$ret['locales'] = get_locales();
 		$ret['plugins'] = array();
-		foreach(get_plugins() as $plugin) {
+		foreach (get_plugins() as $plugin) {
 			$string = file_get_contents(BASE . 'plugins/' . $plugin . '.json');
 			$plugin_info = json_decode($string, true);
-			if($plugin_info != false) {
-				if(isset($plugin_info['version'])) {
+			if ($plugin_info != false) {
+				if (isset($plugin_info['version'])) {
 					$ret['plugins'][$plugin] = $plugin_info['version'];
 				}
 			}
@@ -113,7 +117,7 @@ WHERE TABLE_SCHEMA = "' . $config['database_name'] . '";');
 		$ret['backward_support'] = setting('core.backward_support');
 
 		$cache_engine = strtolower($config['cache_engine']);
-		if($cache_engine == 'auto') {
+		if ($cache_engine == 'auto') {
 			$cache_engine = Cache::detect();
 		}
 

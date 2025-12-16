@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Delete guild
  *
@@ -13,70 +14,65 @@ defined('MYAAC') or die('Direct access not allowed!');
 require __DIR__ . '/base.php';
 
 $guild_name = isset($_REQUEST['guild']) ? urldecode($_REQUEST['guild']) : null;
-if(!Validator::guildName($guild_name)) {
+if (!Validator::guildName($guild_name)) {
 	$errors[] = Validator::getLastError();
 }
 
-if(empty($errors)) {
+if (empty($errors)) {
 	$guild = new OTS_Guild();
 	$guild->find($guild_name);
-	if(!$guild->isLoaded()) {
+	if (!$guild->isLoaded()) {
 		$errors[] = "Guild with name <b>$guild_name</b> doesn't exist.";
 	}
 }
 
-if(empty($errors)) {
-	if($logged) {
+if (empty($errors)) {
+	if ($logged) {
 		$guild_leader_char = $guild->getOwner();
 		$rank_list = $guild->getGuildRanksList();
 		$rank_list->orderBy('level', POT::ORDER_DESC);
 		$guild_leader = false;
 		$account_players = $account_logged->getPlayersList();
 
-		foreach($account_players as $player) {
-			if($guild->getOwner()->getId() == $player->getId()) {
+		foreach ($account_players as $player) {
+			if ($guild->getOwner()->getId() == $player->getId()) {
 				$guild_vice = true;
 				$guild_leader = true;
 				$level_in_guild = 3;
 			}
 		}
 
-		if($guild_leader) {
+		if ($guild_leader) {
 			$saved = false;
 
-			if(isset($_POST['todo']) && $_POST['todo'] == 'save') {
+			if (isset($_POST['todo']) && $_POST['todo'] == 'save') {
 				delete_guild($guild->getId());
 				$saved = true;
 			}
 
-			if($saved) {
+			if ($saved) {
 				$twig->display('success.html.twig', array(
 					'title' => 'Guild Deleted',
-					'description' => 'Guild with name <b>'.$guild_name.'</b> has been deleted.',
+					'description' => 'Guild with name <b>' . $guild_name . '</b> has been deleted.',
 					'custom_buttons' => $twig->render('guilds.back_button.html.twig')
 				));
-			}
-			else {
+			} else {
 				$twig->display('guilds.delete_guild.html.twig', array(
 					'guild' => $guild
 				));
 			}
-		}
-		else {
+		} else {
 			$errors[] = 'You are not a leader of guild!';
 		}
-	}
-	else {
+	} else {
 		$errors[] = 'You are not logged. You can\'t manage guild.';
 	}
 }
 
-if(!empty($errors)) {
+if (!empty($errors)) {
 	$twig->display('error_box.html.twig', array('errors' => $errors));
 
 	$twig->display('guilds.back_button.html.twig', array(
 		'new_line' => true
 	));
 }
-
-?>

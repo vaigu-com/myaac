@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var OTS_DB_MySQL $db
  */
@@ -14,8 +15,7 @@ $up = function () use ($db) {
 
 	if (!$db->hasColumn('accounts', 'vote')) {
 		$db->addColumn('accounts', 'vote', 'int(11) NOT NULL DEFAULT 0');
-	}
-	else {
+	} else {
 		$db->modifyColumn('accounts', 'vote', 'int(11) NOT NULL DEFAULT 0');
 	}
 };

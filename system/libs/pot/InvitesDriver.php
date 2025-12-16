@@ -27,10 +27,10 @@ class InvitesDriver implements IOTS_GuildAction
 {
     // assigned guild
     private $guild;
-	
+
     // database
     private $db;
-	
+
     // initializes driver
     public function __construct(OTS_Guild $guild)
     {
@@ -43,8 +43,7 @@ class InvitesDriver implements IOTS_GuildAction
     public function listRequests()
     {
         $invites = array();
-        foreach( $this->db->query('SELECT ' . $this->db->fieldName('player_id') . ' FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('guild_id') . ' = '.$this->db->quote($this->guild->id)) as $invite)
-        {
+        foreach ($this->db->query('SELECT ' . $this->db->fieldName('player_id') . ' FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('guild_id') . ' = ' . $this->db->quote($this->guild->id)) as $invite) {
             $player = new OTS_Player();
             $player->load($invite['player_id']);
             $invites[] = $player;
@@ -56,17 +55,17 @@ class InvitesDriver implements IOTS_GuildAction
     public function addRequest(OTS_Player $player)
     {
         $extra_keys = $extra_values = '';
-        if($this->db->hasColumn('guild_invites', 'date')) {
+        if ($this->db->hasColumn('guild_invites', 'date')) {
             $extra_keys = ', `date`';
-            $extra_values = ', '.$this->db->quote(time());
+            $extra_values = ', ' . $this->db->quote(time());
         }
-        $this->db->query('INSERT INTO `guild_invites` (`player_id`, `guild_id`' . $extra_keys . ') VALUES ('.$this->db->quote($player->getId()).', '.$this->db->quote($this->guild->id). $extra_values . ')');
+        $this->db->query('INSERT INTO `guild_invites` (`player_id`, `guild_id`' . $extra_keys . ') VALUES (' . $this->db->quote($player->getId()) . ', ' . $this->db->quote($this->guild->id) . $extra_values . ')');
     }
 
     // un-invites player
     public function deleteRequest(OTS_Player $player)
     {
-        $this->db->query('DELETE FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('player_id') . ' = '.$this->db->quote($player->getId()).' AND ' . $this->db->fieldName('guild_id') . ' = '.$this->db->quote($this->guild->id));
+        $this->db->query('DELETE FROM ' . $this->db->tableName('guild_invites') . ' WHERE ' . $this->db->fieldName('player_id') . ' = ' . $this->db->quote($player->getId()) . ' AND ' . $this->db->fieldName('guild_id') . ' = ' . $this->db->quote($this->guild->id));
     }
 
     // commits invitation
@@ -75,21 +74,19 @@ class InvitesDriver implements IOTS_GuildAction
         $rank = null;
 
         // finds normal member rank
-        foreach($this->guild as $guildRank)
-        {
-            if($guildRank->level == 1)
-            {
+        foreach ($this->guild as $guildRank) {
+            if ($guildRank->level == 1) {
                 $rank = $guildRank;
                 break;
             }
         }
-		if(empty($rank)) {
-		$rank = new OTS_GuildRank();
-		$rank->setGuild($this->guild);
-		$rank->setName('New Members');
-		$rank->setLevel(1);
-		$rank->save();
-		}
+        if (empty($rank)) {
+            $rank = new OTS_GuildRank();
+            $rank->setGuild($this->guild);
+            $rank->setName('New Members');
+            $rank->setLevel(1);
+            $rank->save();
+        }
         $player->setRank($rank);
         $player->save();
 
@@ -97,5 +94,3 @@ class InvitesDriver implements IOTS_GuildAction
         $this->deleteRequest($player);
     }
 }
-
-?>

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Compat pages (backward support for Gesior AAC)
  *
@@ -8,8 +9,7 @@
  * @link      https://my-aac.org
  */
 defined('MYAAC') or die('Direct access not allowed!');
-switch($page)
-{
+switch ($page) {
 	case 'adminpanel':
 		header('Location: ' . ADMIN_URL);
 		die;

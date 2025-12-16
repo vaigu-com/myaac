@@ -30,7 +30,7 @@ class PluginUninstallCommand extends Command
 			return 2;
 		}
 
-		foreach(Plugins::getWarnings() as $warning) {
+		foreach (Plugins::getWarnings() as $warning) {
 			$io->warning($warning);
 		}
 

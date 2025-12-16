@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Change comment
  *
@@ -16,7 +17,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Change Comment';
 require PAGES . 'account/base.php';
 
-if(!$logged) {
+if (!$logged) {
 	return;
 }
 
@@ -24,10 +25,10 @@ csrfProtect();
 
 $player = null;
 $player_name = isset($_REQUEST['name']) ? stripslashes(urldecode($_REQUEST['name'])) : null;
-$new_comment = isset($_POST['comment']) ? htmlspecialchars(stripslashes(substr($_POST['comment'],0,2000))) : NULL;
+$new_comment = isset($_POST['comment']) ? htmlspecialchars(stripslashes(substr($_POST['comment'], 0, 2000))) : NULL;
 $new_hideacc = isset($_POST['accountvisible']) ? (int)$_POST['accountvisible'] : NULL;
 
-if($player_name != null) {
+if ($player_name != null) {
 	if (Validator::characterName($player_name)) {
 		$player = Player::query()
 			->where('name', $player_name)
@@ -41,7 +42,7 @@ if($player_name != null) {
 			}
 
 			if (isset($_POST['changecommentsave']) && $_POST['changecommentsave'] == 1) {
-				if(empty($errors)) {
+				if (empty($errors)) {
 					$player->hide = $new_hideacc;
 					$player->comment = $new_comment;
 					$player->save();
@@ -59,20 +60,18 @@ if($player_name != null) {
 	} else {
 		$errors[] = 'Error. Name contain illegal characters.';
 	}
-}
-else {
+} else {
 	$errors[] = 'Please enter character name.';
 }
 
-if($show_form) {
-	if(!empty($errors)) {
+if ($show_form) {
+	if (!empty($errors)) {
 		$twig->display('error_box.html.twig', array('errors' => $errors));
 	}
 
-	if(isset($player) && $player) {
+	if (isset($player) && $player) {
 		$twig->display('account.characters.change-comment.html.twig', array(
 			'player' => $player->toArray()
 		));
 	}
 }
-?>

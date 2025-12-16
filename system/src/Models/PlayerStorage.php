@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class PlayerStorage extends Model {
+class PlayerStorage extends Model
+{
 
 	protected $table = 'player_storage';
 

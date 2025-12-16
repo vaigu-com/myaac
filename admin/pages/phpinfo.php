@@ -1,4 +1,5 @@
 <?php
+
 /**
  * PHP Info
  *
@@ -11,9 +12,9 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'PHP Info';
 
 if (!function_exists('phpinfo')) { ?>
-	<b>phpinfo()</b> function is disabled in your webserver config.<br/>
+	<b>phpinfo()</b> function is disabled in your webserver config.<br />
 	You can enable it by editing <b>php.ini</b> file.
-	<?php return;
+<?php return;
 }
 ?>
 <iframe src="<?php echo ADMIN_URL; ?>tools/phpinfo.php" width="1024" height="550"></iframe>

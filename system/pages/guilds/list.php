@@ -1,4 +1,5 @@
 <?php
+
 /**
  * List of guilds
  *
@@ -17,7 +18,7 @@ $guilds_list = new OTS_Guilds_List();
 $guilds_list->orderBy('name');
 
 $guilds = array();
-if(count($guilds_list) > 0) {
+if (count($guilds_list) > 0) {
 	/**
 	 * @var OTS_Guild $guild
 	 */

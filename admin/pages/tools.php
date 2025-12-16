@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Tools
  *
@@ -29,5 +30,3 @@ if (@file_exists($file)) {
 }
 
 echo 'Tool <strong>' . $tool . '</strong> not found.';
-
-?>

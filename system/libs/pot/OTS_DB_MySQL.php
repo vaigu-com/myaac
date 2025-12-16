@@ -30,29 +30,29 @@ class OTS_DB_MySQL extends OTS_Base_DB
 	private $has_column_cache = array();
 
 	private $clearCacheAfter = false;
-/**
- * Creates database connection.
- *
- * <p>
- * Connects to MySQL database on given arguments.
- * </p>
- *
- * <p>
- * List of parameters for this drivers:
- * </p>
- *
- * <ul>
- * <li><var>host</var> - database server.</li>
- * <li><var>port</var> - port (optional, also it is possible to use host:port in <var>host</var> parameter).</li>
- * <li><var>database</var> - database name.</li>
- * <li><var>user</var> - user login.</li>
- * <li><var>password</var> - user password.</li>
- * </ul>
- *
- * @version 0.0.6
- * @param array $params Connection parameters.
- * @throws PDOException On PDO operation error.
- */
+	/**
+	 * Creates database connection.
+	 *
+	 * <p>
+	 * Connects to MySQL database on given arguments.
+	 * </p>
+	 *
+	 * <p>
+	 * List of parameters for this drivers:
+	 * </p>
+	 *
+	 * <ul>
+	 * <li><var>host</var> - database server.</li>
+	 * <li><var>port</var> - port (optional, also it is possible to use host:port in <var>host</var> parameter).</li>
+	 * <li><var>database</var> - database name.</li>
+	 * <li><var>user</var> - user login.</li>
+	 * <li><var>password</var> - user password.</li>
+	 * </ul>
+	 *
+	 * @version 0.0.6
+	 * @param array $params Connection parameters.
+	 * @throws PDOException On PDO operation error.
+	 */
 	public function __construct($params)
 	{
 		$user = null;
@@ -60,63 +60,57 @@ class OTS_DB_MySQL extends OTS_Base_DB
 		$dns = array();
 
 		// host:port support
-		if( strpos(':', $params['host']) !== false)
-		{
+		if (strpos(':', $params['host']) !== false) {
 			$host = explode(':', $params['host'], 2);
 
 			$params['host'] = $host[0];
 			$params['port'] = $host[1];
 		}
 
-		if( isset($params['database']) )
-		{
+		if (isset($params['database'])) {
 			$dns[] = 'dbname=' . $params['database'];
 		}
 
-		if( isset($params['user']) )
-		{
+		if (isset($params['user'])) {
 			$user = $params['user'];
 		}
 
-		if( isset($params['password']) )
-		{
+		if (isset($params['password'])) {
 			$password = $params['password'];
 		}
 
-		if( isset($params['prefix']) )
-		{
+		if (isset($params['prefix'])) {
 			$this->prefix = $params['prefix'];
 		}
 
-		if( isset($params['log']) && $params['log'] )
-		{
+		if (isset($params['log']) && $params['log']) {
 			$this->logged = true;
 		}
 
-		if( !isset($params['persistent']) ) {
+		if (!isset($params['persistent'])) {
 			$params['persistent'] = false;
 		}
 
 		global $config;
 		$cache = Cache::getInstance();
-		if($cache->enabled()) {
+		if ($cache->enabled()) {
 			$tmp = null;
 			$need_revalidation = true;
-			if($cache->fetch('database_checksum', $tmp) && $tmp) {
+			if ($cache->fetch('database_checksum', $tmp) && $tmp) {
 				$tmp = unserialize($tmp);
-				if(sha1($config['database_host'] . '.' . $config['database_name']) === $tmp) {
+				if (sha1($config['database_host'] . '.' . $config['database_name']) === $tmp) {
 					$need_revalidation = false;
 				}
 			}
 
-			if(!$need_revalidation) {
+			if (!$need_revalidation) {
 				$tmp = null;
-				if($cache->fetch('database_tables', $tmp) && $tmp) {
+				if ($cache->fetch('database_tables', $tmp) && $tmp) {
 					$this->has_table_cache = unserialize($tmp);
 				}
 
 				$tmp = null;
-				if($cache->fetch('database_columns', $tmp) && $tmp) {
+				if ($cache->fetch('database_columns', $tmp) && $tmp) {
 					$this->has_column_cache = unserialize($tmp);
 				}
 			}
@@ -127,7 +121,7 @@ class OTS_DB_MySQL extends OTS_Base_DB
 			$driverAttributes[PDO::ATTR_PERSISTENT] = $params['persistent'];
 		}
 
-		if(isset($params['socket'][0])) {
+		if (isset($params['socket'][0])) {
 			$dns[] = 'unix_socket=' . $params['socket'];
 
 			parent::__construct('mysql:' . implode(';', $dns), $user, $password, $driverAttributes);
@@ -135,11 +129,11 @@ class OTS_DB_MySQL extends OTS_Base_DB
 			return;
 		}
 
-		if( isset($params['host']) ) {
+		if (isset($params['host'])) {
 			$dns[] = 'host=' . $params['host'];
 		}
 
-		if( isset($params['port']) ) {
+		if (isset($params['port'])) {
 			$dns[] = 'port=' . $params['port'];
 		}
 
@@ -151,55 +145,52 @@ class OTS_DB_MySQL extends OTS_Base_DB
 		global $config;
 
 		$cache = Cache::getInstance();
-		if($cache->enabled()) {
+		if ($cache->enabled()) {
 			if ($this->clearCacheAfter) {
 				$cache->delete('database_tables');
 				$cache->delete('database_columns');
 				$cache->delete('database_checksum');
-			}
-			else {
+			} else {
 				$cache->set('database_tables', serialize($this->has_table_cache), 3600);
 				$cache->set('database_columns', serialize($this->has_column_cache), 3600);
 				$cache->set('database_checksum', serialize(sha1($config['database_host'] . '.' . $config['database_name'])), 3600);
 			}
 		}
 
-		if($this->logged) {
+		if ($this->logged) {
 			$currentScript = $_SERVER['REQUEST_URI'] ?? $_SERVER['SCRIPT_FILENAME'];
 			log_append('database.log', $currentScript . PHP_EOL . $this->getLog());
 		}
 	}
 
-/**
- * Query-quoted field name.
- *
- * @param string $name Field name.
- * @return string Quoted name.
- */
+	/**
+	 * Query-quoted field name.
+	 *
+	 * @param string $name Field name.
+	 * @return string Quoted name.
+	 */
 	public function fieldName($name)
 	{
 		return '`' . $name . '`';
 	}
 
-/**
- * LIMIT/OFFSET clause for queries.
- *
- * @param int|bool $limit Limit of rows to be affected by query (false if no limit).
- * @param int|bool $offset Number of rows to be skipped before applying query effects (false if no offset).
- * @return string LIMIT/OFFSET SQL clause for query.
- */
+	/**
+	 * LIMIT/OFFSET clause for queries.
+	 *
+	 * @param int|bool $limit Limit of rows to be affected by query (false if no limit).
+	 * @param int|bool $offset Number of rows to be skipped before applying query effects (false if no offset).
+	 * @return string LIMIT/OFFSET SQL clause for query.
+	 */
 	public function limit($limit = false, $offset = false)
 	{
 		// by default this is empty part
 		$sql = '';
 
-		if($limit !== false)
-		{
+		if ($limit !== false) {
 			$sql = ' LIMIT ';
 
 			// OFFSET has no effect if there is no LIMIT
-			if($offset !== false)
-			{
+			if ($offset !== false) {
 				$sql .= $offset . ', ';
 			}
 
@@ -209,28 +200,32 @@ class OTS_DB_MySQL extends OTS_Base_DB
 		return $sql;
 	}
 
-	public function hasTable($name) {
-		if(isset($this->has_table_cache[$name])) {
+	public function hasTable($name)
+	{
+		if (isset($this->has_table_cache[$name])) {
 			return $this->has_table_cache[$name];
 		}
 
 		return $this->hasTableInternal($name);
 	}
 
-	private function hasTableInternal($name) {
+	private function hasTableInternal($name)
+	{
 		global $config;
 		return ($this->has_table_cache[$name] = $this->query('SELECT `TABLE_NAME` FROM `information_schema`.`tables` WHERE `TABLE_SCHEMA` = ' . $this->quote($config['database_name']) . ' AND `TABLE_NAME` = ' . $this->quote($name) . ' LIMIT 1;')->rowCount() > 0);
 	}
 
-	public function hasColumn($table, $column) {
-		if(isset($this->has_column_cache[$table . '.' . $column])) {
+	public function hasColumn($table, $column)
+	{
+		if (isset($this->has_column_cache[$table . '.' . $column])) {
 			return $this->has_column_cache[$table . '.' . $column];
 		}
 
 		return $this->hasColumnInternal($table, $column);
 	}
 
-	private function hasColumnInternal($table, $column) {
+	private function hasColumnInternal($table, $column)
+	{
 		return $this->hasTable($table) && ($this->has_column_cache[$table . '.' . $column] = count($this->query('SHOW COLUMNS FROM `' . $table . "` LIKE '" . $column . "'")->fetchAll()) > 0);
 	}
 
@@ -247,18 +242,19 @@ class OTS_DB_MySQL extends OTS_Base_DB
 		return true;
 	}
 
-	public function revalidateCache() {
-		foreach($this->has_table_cache as $key => $value) {
+	public function revalidateCache()
+	{
+		foreach ($this->has_table_cache as $key => $value) {
 			$this->hasTableInternal($key);
 		}
 
-		foreach($this->has_column_cache as $key => $value) {
+		foreach ($this->has_column_cache as $key => $value) {
 			$explode = explode('.', $key);
-			if(!isset($this->has_table_cache[$explode[0]])) { // first check if table exist
+			if (!isset($this->has_table_cache[$explode[0]])) { // first check if table exist
 				$this->hasTableInternal($explode[0]);
 			}
 
-			if($this->has_table_cache[$explode[0]]) {
+			if ($this->has_table_cache[$explode[0]]) {
 				$this->hasColumnInternal($explode[0], $explode[1]);
 			}
 		}
@@ -271,5 +267,3 @@ class OTS_DB_MySQL extends OTS_Base_DB
 }
 
 /**#@-*/
-
-?>

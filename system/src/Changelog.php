@@ -7,14 +7,14 @@ use MyAAC\Models\Changelog as ModelsChangelog;
 
 class Changelog
 {
-	static public function verify($body,$date, &$errors)
+	static public function verify($body, $date, &$errors)
 	{
-		if(!isset($date) || !isset($body[0])) {
+		if (!isset($date) || !isset($body[0])) {
 			$errors[] = 'Please fill all inputs.';
 			return false;
 		}
 
-		if(strlen($body) > CL_LIMIT) {
+		if (strlen($body) > CL_LIMIT) {
 			$errors[] = 'Changelog content cannot be longer than ' . CL_LIMIT . ' characters.';
 			return false;
 		}
@@ -24,7 +24,7 @@ class Changelog
 
 	static public function add($body, $type, $where, $player_id, $cdate, &$errors)
 	{
-		if(!self::verify($body,$cdate, $errors))
+		if (!self::verify($body, $cdate, $errors))
 			return false;
 
 		$row = new ModelsChangelog;
@@ -41,13 +41,14 @@ class Changelog
 		return false;
 	}
 
-	static public function get($id) {
+	static public function get($id)
+	{
 		return ModelsChangelog::find($id);
 	}
 
 	static public function update($id, $body, $type, $where, $player_id, $date,  &$errors)
 	{
-		if(!self::verify($body,$date, $errors))
+		if (!self::verify($body, $date, $errors))
 			return false;
 
 		if (ModelsChangelog::where('id', '=', $id)->update([
@@ -66,8 +67,7 @@ class Changelog
 
 	static public function delete($id, &$errors)
 	{
-		if(isset($id))
-		{
+		if (isset($id)) {
 			$row = ModelsChangelog::find($id);
 			if ($row) {
 				if (!$row->delete()) {
@@ -80,7 +80,7 @@ class Changelog
 			$errors[] = 'Changelog id not set.';
 		}
 
-		if(count($errors)) {
+		if (count($errors)) {
 			return false;
 		}
 
@@ -90,8 +90,7 @@ class Changelog
 
 	static public function toggleHide($id, &$errors, &$status)
 	{
-		if(isset($id))
-		{
+		if (isset($id)) {
 			$row = ModelsChangelog::find($id);
 			if ($row) {
 				$row->hide = $row->hide == 1 ? 0 : 1;
@@ -102,12 +101,10 @@ class Changelog
 			} else {
 				$errors[] = 'Changelog with id ' . $id . ' does not exists.';
 			}
-
-		}
-		else
+		} else
 			$errors[] = 'Changelog id not set.';
 
-		if(count($errors)) {
+		if (count($errors)) {
 			return false;
 		}
 
@@ -120,8 +117,7 @@ class Changelog
 		global $template_name;
 
 		$cache = Cache::getInstance();
-		if ($cache->enabled())
-		{
+		if ($cache->enabled()) {
 			$tmp = '';
 			if ($cache->fetch('changelog_' . $template_name, $tmp) && isset($tmp[0])) {
 				return $tmp;
@@ -144,7 +140,6 @@ class Changelog
 			if ($cache->fetch('changelog_' . $template_name, $tmp)) {
 				$cache->delete('changelog_' . $template_name);
 			}
-
 		}
 	}
 }

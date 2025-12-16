@@ -1,6 +1,7 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
@@ -17,7 +18,8 @@ use Illuminate\Database\Eloquent\Relations\HasOne;
  * @property string $outfit_url
  * @property hasOne $onlineTable
  */
-class Player extends Model {
+class Player extends Model
+{
 
 	protected $table = 'players';
 
@@ -41,9 +43,7 @@ class Player extends Model {
 	public function scopeOrderBySkill($query, $value)
 	{
 		global $db;
-		$query->when($db->hasColumn('players', 'skill_fist'), function ($query) {
-
-		});
+		$query->when($db->hasColumn('players', 'skill_fist'), function ($query) {});
 	}
 
 	public function getVocationNameAttribute()
@@ -69,11 +69,12 @@ class Player extends Model {
 		return false;
 	}
 
-	public function scopeNotDeleted($query) {
+	public function scopeNotDeleted($query)
+	{
 		global $db;
 
 		$column =  'deleted';
-		if($db->hasColumn('players', 'deletion')) {
+		if ($db->hasColumn('players', 'deletion')) {
 			$column = 'deletion';
 		}
 
@@ -85,15 +86,15 @@ class Player extends Model {
 		global $db;
 		if ($db->hasColumn('players', 'online')) {
 			$query->addSelect('online');
-		}
-		else {
+		} else {
 			$query->when($db->hasTable('players_online'), function ($query) {
 				$query->with('onlineTable');
 			});
 		}
 	}
 
-	public function getOutfitUrlAttribute() {
+	public function getOutfitUrlAttribute()
+	{
 		return setting('core.outfit_images_url') . '?id=' . $this->looktype . (!empty($this->lookaddons) ? '&addons=' . $this->lookaddons : '') . '&head=' . $this->lookhead . '&body=' . $this->lookbody . '&legs=' . $this->looklegs . '&feet=' . $this->lookfeet;
 	}
 
@@ -156,7 +157,8 @@ class Player extends Model {
 		return $this->hasMany(PlayerVipList::class);
 	}
 
-	public function scopeOnline($query) {
+	public function scopeOnline($query)
+	{
 		$query->where('online', '>', 0);
 	}
 }

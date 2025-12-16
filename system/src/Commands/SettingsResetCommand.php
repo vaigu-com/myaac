@@ -16,7 +16,8 @@ class SettingsResetCommand extends Command
 	{
 		$this->setName('settings:reset')
 			->setDescription('Removes settings in database')
-			->addArgument('name',
+			->addArgument(
+				'name',
 				InputArgument::OPTIONAL,
 				'Name of the plugin'
 			);
@@ -44,8 +45,7 @@ class SettingsResetCommand extends Command
 
 		if (empty($name)) {
 			SettingsModel::truncate();
-		}
-		else {
+		} else {
 			$settingsModel = SettingsModel::where('name', $name)->first();
 			if (!$settingsModel) {
 				$io->warning('No settings for this plugin saved in database');

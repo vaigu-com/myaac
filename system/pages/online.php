@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Online
  *
@@ -74,7 +75,7 @@ $cached = Cache::remember("online_$order", setting('core.online_cache_ttl'), fun
 			} elseif ($player['skull'] == 4) {
 				$skull = ' <img style="border: 0;" src="images/red_skull.gif"/>';
 			} elseif ($player['skull'] == 5) {
-				$skull = ' <img style="border: 0;" src="images/black_skull.gif"/>';	
+				$skull = ' <img style="border: 0;" src="images/black_skull.gif"/>';
 			}
 		}
 

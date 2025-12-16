@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var OTS_DB_MySQL $db
  */
@@ -22,4 +23,3 @@ $up = function () use ($db) {
 $down = function () use ($db) {
 	$db->dropTable(TABLE_PREFIX . 'menu');
 };
-

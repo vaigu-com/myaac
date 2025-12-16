@@ -19,12 +19,12 @@
  */
 class E_OTS_ErrorCode extends Exception
 {
-/**
- * Sets error code.
- * 
- * @param int $code Error code.
- * @param string $message Optional error message.
- */
+    /**
+     * Sets error code.
+     * 
+     * @param int $code Error code.
+     * @param string $message Optional error message.
+     */
     public function __construct($code, $message = '')
     {
         parent::__construct($message, $code);

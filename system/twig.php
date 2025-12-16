@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Twig Loader
  *
@@ -27,7 +28,7 @@ $twig = new MyAAC_Twig_EnvironmentBridge($twig_loader, array(
 
 $twig_loader->addPath(PLUGINS);
 
-if($dev_mode) {
+if ($dev_mode) {
 	$twig->addExtension(new Twig_DebugExtension());
 }
 unset($dev_mode);
@@ -42,7 +43,7 @@ $filter = new TwigFilter('timeago', function ($datetime) {
 
 	$time = time() - $datetime;
 
-	$units = array (
+	$units = array(
 		31536000 => 'year',
 		2592000 => 'month',
 		604800 => 'week',
@@ -55,11 +56,9 @@ $filter = new TwigFilter('timeago', function ($datetime) {
 	foreach ($units as $unit => $val) {
 		if ($time < $unit) continue;
 		$numberOfUnits = floor($time / $unit);
-		return ($val == 'second')? 'a few seconds ago' :
-			(($numberOfUnits>1) ? $numberOfUnits : 'a')
-			.' '.$val.(($numberOfUnits>1) ? 's' : '').' ago';
+		return ($val == 'second') ? 'a few seconds ago' : (($numberOfUnits > 1) ? $numberOfUnits : 'a')
+			. ' ' . $val . (($numberOfUnits > 1) ? 's' : '') . ' ago';
 	}
-
 });
 $twig->addFilter($filter);
 
@@ -89,7 +88,7 @@ $function = new TwigFunction('getMonsterLink', function ($s, $p = true) {
 $twig->addFunction($function);
 
 $function = new TwigFunction('getGuildLink', function ($s, $p = true) {
-    return getGuildLink($s, $p);
+	return getGuildLink($s, $p);
 });
 $twig->addFunction($function);
 
@@ -101,11 +100,10 @@ $twig->addFunction($function);
 $function = new TwigFunction('hook', function ($context, $hook, array $params = []) {
 	global $hooks;
 
-	if(is_string($hook)) {
+	if (is_string($hook)) {
 		if (defined($hook)) {
 			$hook = constant($hook);
-		}
-		else {
+		} else {
 			// plugin/template has a hook that this version of myaac does not support
 			// just silently return
 			return;

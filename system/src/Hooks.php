@@ -8,7 +8,7 @@ class Hooks
 
 	public function register($hook, $type = '', $file = null): void
 	{
-		if(!($hook instanceof Hook))
+		if (!($hook instanceof Hook))
 			$hook = new Hook($hook, $type, $file);
 
 		self::$_hooks[$hook->type()][] = $hook;
@@ -18,8 +18,8 @@ class Hooks
 	{
 		$ret = true;
 
-		if(isset(self::$_hooks[$type])) {
-			foreach(self::$_hooks[$type] as $name => $hook) {
+		if (isset(self::$_hooks[$type])) {
+			foreach (self::$_hooks[$type] as $name => $hook) {
 				/** @var Hook $hook */
 				if (!$hook->execute($params)) {
 					$ret = false;
@@ -32,21 +32,22 @@ class Hooks
 
 	public function triggerFilter($type, &$args): void
 	{
-		if(isset(self::$_hooks[$type])) {
-			foreach(self::$_hooks[$type] as $hook) {
+		if (isset(self::$_hooks[$type])) {
+			foreach (self::$_hooks[$type] as $hook) {
 				/** @var Hook $hook */
 				$hook->executeFilter($args);
 			}
 		}
 	}
 
-	public function exist($type): bool {
+	public function exist($type): bool
+	{
 		return isset(self::$_hooks[$type]);
 	}
 
 	public function load(): void
 	{
-		foreach(Plugins::getHooks() as $hook) {
+		foreach (Plugins::getHooks() as $hook) {
 			$this->register($hook['name'], $hook['type'], $hook['file']);
 		}
 

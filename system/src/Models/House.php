@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class House extends Model {
+class House extends Model
+{
 
 	protected $table = 'houses';
 

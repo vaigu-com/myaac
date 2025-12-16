@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Spells class
  *
@@ -13,12 +14,14 @@ namespace MyAAC;
 
 use MyAAC\Models\Spell;
 
-class Spells {
+class Spells
+{
 	private static $spellsList = null;
 	private static $lastError = '';
 
 	// 1 - attack, 2 - healing, 3 - summon, 4 - supply, 5 - support
-	public static function loadGroup($tGroup) {
+	public static function loadGroup($tGroup)
+	{
 		switch ($tGroup) {
 			case "attack":
 				return 1;
@@ -33,38 +36,39 @@ class Spells {
 		}
 	}
 
-		public static function loadFromXML($show = false) {
+	public static function loadFromXML($show = false)
+	{
 		global $config;
 
 		try {
 			Spell::query()->delete();
-		} catch(\Exception $error) {}
+		} catch (\Exception $error) {
+		}
 
-		if($show) {
+		if ($show) {
 			echo '<h2>Reload spells.</h2>';
 			echo '<h2>All records deleted from table <b>' . TABLE_PREFIX . 'spells</b> in database.</h2>';
 		}
 
 		try {
-			self::$spellsList = new \OTS_SpellsList($config['data_path'].'spells/spells.xml');
-		}
-		catch(\Exception $e) {
+			self::$spellsList = new \OTS_SpellsList($config['data_path'] . 'spells/spells.xml');
+		} catch (\Exception $e) {
 			self::$lastError = $e->getMessage();
 			return false;
 		}
 
 		//add conjure spells
 		$conjurelist = self::$spellsList->getConjuresList();
-		if($show) {
+		if ($show) {
 			echo "<h3>Conjure:</h3>";
 		}
 
-		foreach($conjurelist as $spellname) {
+		foreach ($conjurelist as $spellname) {
 			$spell = self::$spellsList->getConjure($spellname);
 			$name = $spell->getName();
 
 			$words = $spell->getWords();
-			if(strpos($words, '#') !== false)
+			if (strpos($words, '#') !== false)
 				continue;
 
 			try {
@@ -84,12 +88,11 @@ class Spells {
 					'hide' => $spell->isEnabled() ? 0 : 1
 				));
 
-				if($show) {
+				if ($show) {
 					success('Added: ' . $name . '<br/>');
 				}
-			}
-			catch(\PDOException $error) {
-				if($show) {
+			} catch (\PDOException $error) {
+				if ($show) {
 					warning('Error while adding spell (' . $name . '): ' . $error->getMessage());
 				}
 			}
@@ -97,16 +100,16 @@ class Spells {
 
 		// add instant spells
 		$instantlist = self::$spellsList->getInstantsList();
-		if($show) {
+		if ($show) {
 			echo "<h3>Instant:</h3>";
 		}
 
-		foreach($instantlist as $spellname) {
+		foreach ($instantlist as $spellname) {
 			$spell = self::$spellsList->getInstant($spellname);
 			$name = $spell->getName();
 
 			$words = $spell->getWords();
-			if(strpos($words, '#') !== false)
+			if (strpos($words, '#') !== false)
 				continue;
 
 			try {
@@ -124,12 +127,11 @@ class Spells {
 					'hide' => $spell->isEnabled() ? 0 : 1
 				));
 
-				if($show) {
+				if ($show) {
 					success('Added: ' . $name . '<br/>');
 				}
-			}
-			catch(\PDOException $error) {
-				if($show) {
+			} catch (\PDOException $error) {
+				if ($show) {
 					warning('Error while adding spell (' . $name . '): ' . $error->getMessage());
 				}
 			}
@@ -137,11 +139,11 @@ class Spells {
 
 		// add runes
 		$runeslist = self::$spellsList->getRunesList();
-		if($show) {
+		if ($show) {
 			echo "<h3>Runes:</h3>";
 		}
 
-		foreach($runeslist as $spellname) {
+		foreach ($runeslist as $spellname) {
 			$spell = self::$spellsList->getRune($spellname);
 
 			$name = $spell->getName() . ' Rune';
@@ -162,12 +164,11 @@ class Spells {
 					'hide' => $spell->isEnabled() ? 0 : 1
 				));
 
-				if($show) {
+				if ($show) {
 					success('Added: ' . $name . '<br/>');
 				}
-			}
-			catch(\PDOException $error) {
-				if($show) {
+			} catch (\PDOException $error) {
+				if ($show) {
 					warning('Error while adding spell (' . $name . '): ' . $error->getMessage());
 				}
 			}
@@ -176,11 +177,13 @@ class Spells {
 		return true;
 	}
 
-	public static function getSpellsList() {
+	public static function getSpellsList()
+	{
 		return self::$spellsList;
 	}
 
-	public static function getLastError() {
+	public static function getLastError()
+	{
 		return self::$lastError;
 	}
 }

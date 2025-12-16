@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pages
  *
@@ -53,8 +54,7 @@ if (!empty($action) && isRequestMethod('post')) {
 	$enable_tinymce = (isset($_POST['enable_tinymce']) && $_POST['enable_tinymce'] == 1) ?: $enable_tinymce;
 	if ($php) {
 		$body = $_POST['body'];
-	}
-	else if (isset($_POST['body'])) {
+	} else if (isset($_POST['body'])) {
 		//$body = $_POST['body'];
 		$body = html_entity_decode(stripslashes($_POST['body']));
 	}
@@ -87,7 +87,7 @@ if (!empty($action) && isRequestMethod('post')) {
 			$enable_tinymce = $_page['enable_tinymce'] == '1';
 			$access = $_page['access'];
 		} else {
-			if(Pages::update($id, $name, $p_title, $body, $player_id, $php, $enable_tinymce, $access, $errors)) {
+			if (Pages::update($id, $name, $p_title, $body, $player_id, $php, $enable_tinymce, $access, $errors)) {
 				$action = $name = $p_title = $body = '';
 				$player_id = 1;
 				$access = 0;

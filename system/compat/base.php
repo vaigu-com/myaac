@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Deprecated functions (compat)
  *
@@ -11,55 +12,62 @@ defined('MYAAC') or die('Direct access not allowed!');
 
 class Validator extends \MyAAC\Validator {}
 
-function check_name($name, &$errors = '') {
-	if(Validator::characterName($name))
+function check_name($name, &$errors = '')
+{
+	if (Validator::characterName($name))
 		return true;
 
 	$errors = Validator::getLastError();
 	return false;
 }
 
-function check_account_id($id, &$errors = '') {
-	if(Validator::accountId($id))
+function check_account_id($id, &$errors = '')
+{
+	if (Validator::accountId($id))
 		return true;
 
 	$errors = Validator::getLastError();
 	return false;
 }
 
-function check_account_name($name, &$errors = '') {
-	if(Validator::accountName($name))
+function check_account_name($name, &$errors = '')
+{
+	if (Validator::accountName($name))
 		return true;
 
 	$errors = Validator::getLastError();
 	return false;
 }
 
-function check_name_new_char($name, &$errors = '') {
-	if(Validator::newCharacterName($name))
+function check_name_new_char($name, &$errors = '')
+{
+	if (Validator::newCharacterName($name))
 		return true;
 
 	$errors = Validator::getLastError();
 	return false;
 }
 
-function check_rank_name($name, &$errors = '') {
-	if(Validator::rankName($name))
+function check_rank_name($name, &$errors = '')
+{
+	if (Validator::rankName($name))
 		return true;
 
 	$errors = Validator::getLastError();
 	return false;
 }
 
-function check_guild_name($name, &$errors = '') {
-	if(Validator::guildName($name))
+function check_guild_name($name, &$errors = '')
+{
+	if (Validator::guildName($name))
 		return true;
 
 	$errors = Validator::getLastError();
 	return false;
 }
 
-function news_place() {
+function news_place()
+{
 	return tickers();
 }
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Mailer
  *
@@ -40,15 +41,13 @@ if (isset($_POST['submit'])) {
 	}
 }
 if (!empty($mail_to)) {
-	if(!Validator::email($mail_to)) {
+	if (!Validator::email($mail_to)) {
 		warning('E-Mail is invalid.');
-	}
-	else {
+	} else {
 		if (!empty($mail_content) && !empty($mail_subject)) {
 			if (_mail($mail_to, $mail_subject, $mail_content)) {
 				success("Successfully mailed <strong>$mail_to</strong>");
-			}
-			else {
+			} else {
 				error("Error while sending mail to <strong>$mail_to</strong>. More info can be found in system/logs/mailer-error.log");
 			}
 		}
@@ -69,8 +68,7 @@ if (!empty($mail_content) && !empty($mail_subject) && empty($mail_to)) {
 	foreach ($query->get(['email']) as $email) {
 		if (_mail($email->email, $mail_subject, $mail_content)) {
 			$success++;
-		}
-		else {
+		} else {
 			$failed++;
 			echo '<br />';
 			error('An error occorred while sending email to <b>' . $email->email . '</b>. For Admin: More info can be found in system/logs/mailer-error.log');

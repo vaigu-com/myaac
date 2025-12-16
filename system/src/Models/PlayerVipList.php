@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class PlayerVipList extends Model {
+class PlayerVipList extends Model
+{
 
 	protected $table = 'player_viplist';
 

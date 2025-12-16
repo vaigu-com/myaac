@@ -4,7 +4,8 @@ namespace MyAAC\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class AccountVipList extends Model {
+class AccountVipList extends Model
+{
 
 	protected $table = 'account_viplist';
 

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Server info
  *
@@ -12,70 +13,68 @@
 defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Server info';
 
-if(isset($config['lua']['experience_stages']))
+if (isset($config['lua']['experience_stages']))
     $config['lua']['experienceStages'] = $config['lua']['experience_stages'];
 
-if(isset($config['lua']['min_pvp_level']))
+if (isset($config['lua']['min_pvp_level']))
     $config['lua']['protectionLevel'] = $config['lua']['min_pvp_level'];
 
 $rent = trim(strtolower($config['lua']['houseRentPeriod']));
-if($rent != 'yearly' && $rent != 'monthly' && $rent != 'weekly' && $rent != 'daily')
+if ($rent != 'yearly' && $rent != 'monthly' && $rent != 'weekly' && $rent != 'daily')
     $rent = 'never';
 
-if(isset($config['lua']['houseCleanOld']))
+if (isset($config['lua']['houseCleanOld']))
     $cleanOld = (int)(eval('return ' . $config['lua']['houseCleanOld'] . ';') / (24 * 60 * 60));
 
-if(isset($config['lua']['rate_exp']))
+if (isset($config['lua']['rate_exp']))
     $config['lua']['rateExp'] = $config['lua']['rate_exp'];
-if(isset($config['lua']['rateExperience']))
+if (isset($config['lua']['rateExperience']))
     $config['lua']['rateExp'] = $config['lua']['rateExperience'];
-if(isset($config['lua']['rate_mag']))
+if (isset($config['lua']['rate_mag']))
     $config['lua']['rateMagic'] = $config['lua']['rate_mag'];
-if(isset($config['lua']['rate_skill']))
+if (isset($config['lua']['rate_skill']))
     $config['lua']['rateSkill'] = $config['lua']['rate_skill'];
-if(isset($config['lua']['rate_loot']))
+if (isset($config['lua']['rate_loot']))
     $config['lua']['rateLoot'] = $config['lua']['rate_loot'];
-if(isset($config['lua']['rate_spawn']))
+if (isset($config['lua']['rate_spawn']))
     $config['lua']['rateSpawn'] = $config['lua']['rate_spawn'];
 
 $house_level = NULL;
-if(isset($config['lua']['levelToBuyHouse']))
+if (isset($config['lua']['levelToBuyHouse']))
     $house_level = $config['lua']['levelToBuyHouse'];
-else if(isset($config['lua']['house_level']))
+else if (isset($config['lua']['house_level']))
     $house_level = $config['lua']['house_level'];
 
-if(isset($config['lua']['in_fight_duration']))
+if (isset($config['lua']['in_fight_duration']))
     $config['lua']['pzLocked'] = $config['lua']['in_fight_duration'];
 
 $pzLocked = eval('return ' . $config['lua']['pzLocked'] . ';');
 $whiteSkullTime = isset($config['lua']['whiteSkullTime']) ? $config['lua']['whiteSkullTime'] : NULL;
-if(!isset($whiteSkullTime) && isset($config['lua']['unjust_skull_duration']))
+if (!isset($whiteSkullTime) && isset($config['lua']['unjust_skull_duration']))
     $whiteSkullTime = $config['lua']['unjust_skull_duration'];
 
-if(isset($whiteSkullTime))
+if (isset($whiteSkullTime))
     $whiteSkullTime = eval('return ' . $whiteSkullTime . ';');
 
 $redSkullLength = isset($config['lua']['redSkullLength']) ? $config['lua']['redSkullLength'] : NULL;
-if(!isset($redSkullLength) && isset($config['lua']['red_skull_duration']))
+if (!isset($redSkullLength) && isset($config['lua']['red_skull_duration']))
     $redSkullLength = $config['lua']['red_skull_duration'];
 
-if(isset($redSkullLength))
+if (isset($redSkullLength))
     $redSkullLength = eval('return ' . $redSkullLength . ';');
 
 $blackSkull = false;
 $blackSkullLength = NULL;
-if(isset($config['lua']['useBlackSkull']) && getBoolean($config['lua']['useBlackSkull']))
-{
+if (isset($config['lua']['useBlackSkull']) && getBoolean($config['lua']['useBlackSkull'])) {
     $blackSkullLength = $config['lua']['blackSkullLength'];
     $blackSkull = true;
-}
-else if(isset($config['lua']['black_skull_duration'])) {
+} else if (isset($config['lua']['black_skull_duration'])) {
     $blackSkullLength = eval('return ' . $config['lua']['blackSkullLength'] . ';');
     $blackSkull = true;
 }
 
 $clientVersion = NULL;
-if(isset($status['online']))
+if (isset($status['online']))
     $clientVersion = isset($status['clientVersion']) ? $status['clientVersion'] : null;
 
 $twig->display('serverinfo.html.twig', array(

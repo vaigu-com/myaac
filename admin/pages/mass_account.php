@@ -161,8 +161,7 @@ if (!empty(ACTION) && isRequestMethod('post')) {
 			}
 		}
 	}
-}
-else {
+} else {
 	$twig->display('admin.tools.account.html.twig', array(
 		'hasCoinsColumn' => HAS_ACCOUNT_COINS,
 		'hasPointsColumn' => $hasPointsColumn,
@@ -170,10 +169,11 @@ else {
 	));
 }
 
-function displayMessage($message, $success = false) {
+function displayMessage($message, $success = false)
+{
 	global $twig, $hasPointsColumn, $freePremium;
 
-	$success ? success($message): error($message);
+	$success ? success($message) : error($message);
 
 	$twig->display('admin.tools.account.html.twig', array(
 		'hasCoinsColumn' => HAS_ACCOUNT_COINS,

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Teleport Admin Tool
  *
@@ -18,9 +19,12 @@ $title = 'Mass Teleport Actions';
 
 csrfProtect();
 
-function admin_teleport_position($x, $y, $z) {
+function admin_teleport_position($x, $y, $z)
+{
 	if (!Player::query()->update([
-		'posx' => $x, 'posy' => $y, 'posz' => $z
+		'posx' => $x,
+		'posy' => $y,
+		'posz' => $z
 	])) {
 		displayMessage('Failed to execute query. Probably already updated.');
 		return;
@@ -29,7 +33,8 @@ function admin_teleport_position($x, $y, $z) {
 	displayMessage('Player\'s position updated.', true);
 }
 
-function admin_teleport_town($town_id) {
+function admin_teleport_town($town_id)
+{
 	if (!Player::query()->update([
 		'town_id' => $town_id,
 	])) {
@@ -40,7 +45,7 @@ function admin_teleport_town($town_id) {
 	displayMessage('Player\'s town updated.', true);
 }
 
-if (!empty(ACTION) && isRequestMethod('post'))    {
+if (!empty(ACTION) && isRequestMethod('post')) {
 
 	$action = ACTION;
 
@@ -49,7 +54,7 @@ if (!empty(ACTION) && isRequestMethod('post'))    {
 	} else {
 
 		$playersOnline = 0;
-		if($db->hasTable('players_online')) {// tfs 1.0
+		if ($db->hasTable('players_online')) { // tfs 1.0
 			$playersOnline = PlayerOnline::count();
 		} else {
 			$playersOnline = Player::online()->count();
@@ -81,7 +86,7 @@ if (!empty(ACTION) && isRequestMethod('post'))    {
 				admin_teleport_town($town_id);
 				break;
 			case 'set-position':
-				if (!$to_temple &&  ($posx < 0 || $posx > 65535 || $posy < 0 || $posy > 65535|| $posz < 0 || $posz > 16)) {
+				if (!$to_temple &&  ($posx < 0 || $posx > 65535 || $posy < 0 || $posy > 65535 || $posz < 0 || $posz > 16)) {
 					displayMessage('Invalid Position');
 					return;
 				}
@@ -92,16 +97,15 @@ if (!empty(ACTION) && isRequestMethod('post'))    {
 				displayMessage('Action ' . $action . 'not found.');
 		}
 	}
-
-}
-else {
+} else {
 	$twig->display('admin.tools.teleport.html.twig', array());
 }
 
 
-function displayMessage($message, $success = false) {
+function displayMessage($message, $success = false)
+{
 	global $twig;
 
-	$success ? success($message): error($message);
+	$success ? success($message) : error($message);
 	$twig->display('admin.tools.teleport.html.twig', array());
 }

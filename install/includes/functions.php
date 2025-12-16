@@ -6,8 +6,7 @@ function query($query)
 
 	try {
 		$db->query($query);
-	}
-	catch(PDOException $error_) {
+	} catch (PDOException $error_) {
 		error($error_);
 		$error = true;
 	}
@@ -16,7 +15,7 @@ function query($query)
 }
 
 // define php version id if its not already
-if(!defined('PHP_VERSION_ID')) {
+if (!defined('PHP_VERSION_ID')) {
 	$version = array_map('intval', explode('.', PHP_VERSION));
 
 	define('PHP_VERSION_ID', ($version[0] * 10000 + $version[1] * 100 + $version[2]));
@@ -26,8 +25,7 @@ function ini_get_bool($a)
 {
 	$b = ini_get($a);
 
-	switch (strtolower($b))
-	{
+	switch (strtolower($b)) {
 		case 'on':
 		case 'yes':
 		case 'true':
@@ -47,23 +45,22 @@ function next_buttons($previous = true, $next = true)
 	global $locale, $step, $steps;
 
 	$i = 1;
-	foreach($steps as $id => $value)
-	{
-		if($step == $value)
+	foreach ($steps as $id => $value) {
+		if ($step == $value)
 			break;
 
 		$i++;
 	}
 
 	$ret = '<div class="input">';
-/*	if($previous)
+	/*	if($previous)
 		$ret .= '<input class="button" type="submit" onclick="document.getElementById(\'step\').value=\'' . $steps[$i - 1] . '\';" value="' . $locale['previous'] . '" />';
 	if($next)
 		$ret .= '<input class="button" type="submit" onclick="document.getElementById(\'step\').value=\'' . $steps[$i + 1] . '\';" value="' . $locale['next'] . '" />';
 */
-	if($previous)
+	if ($previous)
 		$ret .= '<input type="button" class="button btn btn-primary m-2" onclick="document.getElementById(\'step\').value=\'' . $steps[$i - 1] . '\'; this.form.submit();" value="&laquo; ' . $locale['previous'] . '" />';
-	if($next)
+	if ($next)
 		$ret .= '<input type="button" class="button btn btn-primary m-2" onclick="document.getElementById(\'step\').value=\'' . $steps[$i + 1] . '\'; this.form.submit(); " value="' . $locale['next'] . ' &raquo;" />';
 
 	$ret .= '</div>';
@@ -79,21 +76,22 @@ function next_form($previous = true, $next = true)
 </form>';
 }
 
-function win_is_writable($path) {
-	if($path[strlen( $path ) - 1] == '/') { // if it looks like a directory, check a random file within the directory
-		return win_is_writable( $path . uniqid( mt_rand() ) . '.tmp');
-	} elseif(is_dir( $path )) { // If it's a directory (and not a file) check a random file within the directory
-		return win_is_writable( $path . '/' . uniqid( mt_rand() ) . '.tmp' );
+function win_is_writable($path)
+{
+	if ($path[strlen($path) - 1] == '/') { // if it looks like a directory, check a random file within the directory
+		return win_is_writable($path . uniqid(mt_rand()) . '.tmp');
+	} elseif (is_dir($path)) { // If it's a directory (and not a file) check a random file within the directory
+		return win_is_writable($path . '/' . uniqid(mt_rand()) . '.tmp');
 	}
 
 	// check tmp file for read/write capabilities
-	$should_delete_tmp_file = !file_exists( $path );
-	$f = @fopen( $path, 'a' );
-	if ( $f === false )
+	$should_delete_tmp_file = !file_exists($path);
+	$f = @fopen($path, 'a');
+	if ($f === false)
 		return false;
 
-	fclose( $f );
-	if($should_delete_tmp_file)
+	fclose($f);
+	if ($should_delete_tmp_file)
 		unlink($path);
 
 	return true;

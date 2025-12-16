@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Project: MyAAC
  *     Automatic Account Creator for Open Tibia Servers

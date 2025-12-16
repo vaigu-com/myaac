@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Project: MyAAC
  *     Automatic Account Creator for Open Tibia Servers
@@ -54,9 +55,9 @@ const FLAG_CONTENT_PLAYERS = 8192;
 // account access types
 const ACCOUNT_WEB_FLAGS = [
 	FLAG_NONE => 'None',
-	FLAG_ADMIN =>'Admin',
+	FLAG_ADMIN => 'Admin',
 	FLAG_SUPER_ADMIN => 'Super Admin',
-	FLAG_SUPER_BOTH =>'(Admin + Super Admin)',
+	FLAG_SUPER_BOTH => '(Admin + Super Admin)',
 ];
 
 // news
@@ -129,15 +130,14 @@ if (file_exists(BASE . 'config.local.php')) {
 require SYSTEM . 'base.php';
 define('BASE_DIR', $baseDir);
 
-if(!IS_CLI) {
+if (!IS_CLI) {
 	if (isset($config['site_url'])) {
 		$hasSlashAtEnd = ($config['site_url'][strlen($config['site_url']) - 1] == '/');
 
 		define('SERVER_URL', $config['site_url']);
 		define('BASE_URL', SERVER_URL . ($hasSlashAtEnd ? '' : '/'));
 		define('ADMIN_URL', SERVER_URL . ($hasSlashAtEnd ? '' : '/') . ADMIN_PANEL_FOLDER . '/');
-	}
-	else {
+	} else {
 		define('SERVER_URL', 'http' . (isHttps() ? 's' : '') . '://' . $baseHost);
 		define('BASE_URL', SERVER_URL . BASE_DIR . '/');
 		define('ADMIN_URL', SERVER_URL . BASE_DIR . '/' . ADMIN_PANEL_FOLDER . '/');
@@ -148,12 +148,11 @@ if(!IS_CLI) {
 
 /** @var array $config */
 ini_set('log_errors', 1);
-if(@$config['env'] === 'dev' || defined('MYAAC_INSTALL')) {
+if (@$config['env'] === 'dev' || defined('MYAAC_INSTALL')) {
 	ini_set('display_errors', 1);
 	ini_set('display_startup_errors', 1);
 	error_reporting(E_ALL);
-}
-else {
+} else {
 	ini_set('display_errors', 0);
 	ini_set('display_startup_errors', 0);
 	error_reporting(E_ALL & ~E_DEPRECATED & ~E_STRICT);
@@ -168,8 +167,7 @@ require $autoloadFile;
 
 function isHttps(): bool
 {
-	return
-		(!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
+	return (!empty($_SERVER['HTTP_X_FORWARDED_PROTO']) && strtolower($_SERVER['HTTP_X_FORWARDED_PROTO']) === 'https')
 		|| (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off')
 		|| (isset($_SERVER['SERVER_PORT']) && (int) $_SERVER['SERVER_PORT'] === 443);
 }

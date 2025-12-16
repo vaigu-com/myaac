@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var OTS_DB_MySQL $db
  */

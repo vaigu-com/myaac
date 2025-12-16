@@ -9,23 +9,23 @@ class News
 {
 	static public function verify($title, $body, $article_text, $article_image, &$errors)
 	{
-		if(!isset($title[0]) || !isset($body[0])) {
+		if (!isset($title[0]) || !isset($body[0])) {
 			$errors[] = 'Please fill all inputs.';
 			return false;
 		}
-		if(strlen($title) > NEWS_TITLE_LIMIT) {
+		if (strlen($title) > NEWS_TITLE_LIMIT) {
 			$errors[] = 'News title cannot be longer than ' . NEWS_TITLE_LIMIT . ' characters.';
 			return false;
 		}
-		if(strlen($body) > NEWS_BODY_LIMIT) {
+		if (strlen($body) > NEWS_BODY_LIMIT) {
 			$errors[] = 'News content cannot be longer than ' . NEWS_BODY_LIMIT . ' characters.';
 			return false;
 		}
-		if(strlen($article_text) > ARTICLE_TEXT_LIMIT) {
+		if (strlen($article_text) > ARTICLE_TEXT_LIMIT) {
 			$errors[] = 'Article text cannot be longer than ' . ARTICLE_TEXT_LIMIT . ' characters.';
 			return false;
 		}
-		if(strlen($article_image) > ARTICLE_IMAGE_LIMIT) {
+		if (strlen($article_image) > ARTICLE_IMAGE_LIMIT) {
 			$errors[] = 'Article image cannot be longer than ' . ARTICLE_IMAGE_LIMIT . ' characters.';
 			return false;
 		}
@@ -34,14 +34,16 @@ class News
 
 	static public function add($title, $body, $type, $category, $player_id, $comments, $article_text, $article_image, &$errors)
 	{
-		if(!self::verify($title, $body, $article_text, $article_image, $errors))
+		if (!self::verify($title, $body, $article_text, $article_image, $errors))
 			return false;
 
 		$currentTime = time();
 
 		$params = [
-			'title' => $title, 'body' => $body,
-			'type' => $type, 'category' => $category,
+			'title' => $title,
+			'body' => $body,
+			'type' => $type,
+			'category' => $category,
 			'date' => $currentTime,
 			'player_id' => $player_id ?? 0,
 			'comments' => $comments,
@@ -56,7 +58,8 @@ class News
 
 		$newsModel = ModelsNews::create($params);
 
-		$hooks->trigger(HOOK_ADMIN_NEWS_ADD,
+		$hooks->trigger(
+			HOOK_ADMIN_NEWS_ADD,
 			$params + ['id' => $newsModel->id],
 		);
 
@@ -64,13 +67,14 @@ class News
 		return true;
 	}
 
-	static public function get($id) {
+	static public function get($id)
+	{
 		return ModelsNews::find($id)->toArray();
 	}
 
 	static public function update($id, $title, $body, $type, $category, $player_id, $comments, $article_text, $article_image, &$errors)
 	{
-		if(!self::verify($title, $body, $article_text, $article_image, $errors)) {
+		if (!self::verify($title, $body, $article_text, $article_image, $errors)) {
 			return false;
 		}
 
@@ -78,9 +82,12 @@ class News
 
 		$params = [
 			'id' => $id,
-			'title' => $title, 'body' => $body,
-			'type' => $type, 'category' => $category,
-			'last_modified_by' => $player_id ?? 0, 'last_modified_date' => $currentTime,
+			'title' => $title,
+			'body' => $body,
+			'type' => $type,
+			'category' => $category,
+			'last_modified_by' => $player_id ?? 0,
+			'last_modified_date' => $currentTime,
 			'comments' => $comments,
 			'article_text' => ($type == 3 ? $article_text : ''),
 			'article_image' => ($type == 3 ? $article_image : ''),
@@ -95,7 +102,8 @@ class News
 
 		ModelsNews::where('id', $id)->update($params);
 
-		$hooks->trigger(HOOK_ADMIN_NEWS_UPDATE,
+		$hooks->trigger(
+			HOOK_ADMIN_NEWS_UPDATE,
 			$params + ['id' => $id]
 		);
 
@@ -107,9 +115,9 @@ class News
 	{
 		global $hooks;
 
-		if(isset($id)) {
+		if (isset($id)) {
 			$row = ModelsNews::find($id);
-			if($row) {
+			if ($row) {
 				$params = ['id' => $id];
 
 				if (!$hooks->trigger(HOOK_ADMIN_NEWS_DELETE_PRE, $params)) {
@@ -121,16 +129,14 @@ class News
 				} else {
 					$errors[] = 'Fail during delete News.';
 				}
-			}
-			else {
+			} else {
 				$errors[] = 'News with id ' . $id . ' does not exists.';
 			}
-		}
-		else {
+		} else {
 			$errors[] = 'News id not set.';
 		}
 
-		if(count($errors)) {
+		if (count($errors)) {
 			return false;
 		}
 
@@ -142,9 +148,9 @@ class News
 	{
 		global $hooks;
 
-		if(isset($id)) {
+		if (isset($id)) {
 			$row = ModelsNews::find($id);
-			if($row) {
+			if ($row) {
 				$row->hide = ($row->hide == 1 ? 0 : 1);
 
 				$params = ['hide' => $row->hide];
@@ -155,22 +161,19 @@ class News
 
 				if ($row->save()) {
 					$hooks->trigger(HOOK_ADMIN_NEWS_TOGGLE_HIDE, $params);
-				}
-				else {
+				} else {
 					$errors[] = 'Fail during toggle hide News.';
 				}
 
 				$status = $row->hide;
-			}
-			else {
+			} else {
 				$errors[] = 'News with id ' . $id . ' does not exists.';
 			}
-		}
-		else {
+		} else {
 			$errors[] = 'News id not set.';
 		}
 
-		if(count($errors)) {
+		if (count($errors)) {
 			return false;
 		}
 
@@ -183,8 +186,7 @@ class News
 		global $template_name;
 
 		$cache = Cache::getInstance();
-		if ($cache->enabled())
-		{
+		if ($cache->enabled()) {
 			$tmp = '';
 			if ($cache->fetch('news_' . $template_name . '_' . $type, $tmp) && isset($tmp[0])) {
 				return $tmp;

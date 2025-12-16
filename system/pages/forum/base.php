@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Forum base
  *
@@ -17,8 +18,8 @@ $title = 'Forum';
 class_exists('MyAAC\Forum');
 
 $forumSetting = setting('core.forum');
-if(strtolower($forumSetting) != 'site') {
-	if($forumSetting != '') {
+if (strtolower($forumSetting) != 'site') {
+	if ($forumSetting != '') {
 		header('Location: ' . $forumSetting);
 		exit;
 	}
@@ -30,7 +31,7 @@ if(strtolower($forumSetting) != 'site') {
 $canEdit = Forum::isModerator();
 
 $sections = array();
-foreach(getForumBoards() as $section) {
+foreach (getForumBoards() as $section) {
 	$sections[$section['id']] = array(
 		'id' => $section['id'],
 		'name' => $section['name'],
@@ -40,10 +41,9 @@ foreach(getForumBoards() as $section) {
 		'access' => $section['access']
 	);
 
-	if($canEdit) {
+	if ($canEdit) {
 		$sections[$section['id']]['hide'] = $section['hide'];
-	}
-	else {
+	} else {
 		$sections[$section['id']]['hide'] = 0;
 	}
 }

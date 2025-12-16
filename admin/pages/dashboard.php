@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Dashboard
  *
@@ -59,5 +60,5 @@ if (count($settingAdminPanelModules) > 0) {
 			include($file);
 		}
 	}
-echo '</div>';
+	echo '</div>';
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Menus
  *
@@ -22,7 +23,7 @@ if (empty($_GET['plugin'])) {
 
 $plugin = $_GET['plugin'];
 
-if($plugin != 'core') {
+if ($plugin != 'core') {
 	$pluginSettings = Plugins::getPluginSettings($plugin);
 	if (!$pluginSettings) {
 		error('This plugin does not exist or does not have settings defined.');
@@ -30,8 +31,7 @@ if($plugin != 'core') {
 	}
 
 	$settingsFilePath = BASE . $pluginSettings;
-}
-else {
+} else {
 	$settingsFilePath = SYSTEM . 'settings.php';
 }
 

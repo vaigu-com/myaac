@@ -39,7 +39,7 @@ class CronjobInstallCommand extends Command
 		$content .= PHP_EOL . $job;
 
 		file_put_contents(CACHE . 'cronjob', $content . PHP_EOL);
-		exec('crontab ' . CACHE. 'cronjob');
+		exec('crontab ' . CACHE . 'cronjob');
 
 		$io->success('Installed crontab successfully.');
 		return Command::SUCCESS;
@@ -49,10 +49,10 @@ class CronjobInstallCommand extends Command
 	{
 		exec('crontab -l', $crontab);
 
-		if(is_array($crontab)) {
+		if (is_array($crontab)) {
 			$crontab = array_flip($crontab);
 
-			if(isset($crontab[$command])){
+			if (isset($crontab[$command])) {
 				return true;
 			}
 		}

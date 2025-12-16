@@ -6,7 +6,8 @@ class Hook
 {
 	private $_name, $_type, $_file;
 
-	public function __construct($name, $type, $file) {
+	public function __construct($name, $type, $file)
+	{
 		$this->_name = $name;
 		$this->_type = $type;
 		$this->_file = $file;
@@ -16,8 +17,7 @@ class Hook
 	{
 		global $db, $config, $template_path, $ots, $content, $twig;
 
-		if(is_callable($this->_file))
-		{
+		if (is_callable($this->_file)) {
 			$params['db'] = $db;
 			$params['config'] = $config;
 			$params['template_path'] = $template_path;
@@ -27,8 +27,7 @@ class Hook
 
 			$tmp = $this->_file;
 			$ret = $tmp($params);
-		}
-		else {
+		} else {
 			extract($params);
 
 			$ret = include BASE . $this->_file;
@@ -37,13 +36,23 @@ class Hook
 		return !isset($ret) || $ret == 1 || $ret;
 	}
 
-	public function executeFilter(&$args) {
+	public function executeFilter(&$args)
+	{
 		global $db, $config, $template_path, $ots, $content, $twig;
 
 		return include BASE . $this->_file;
 	}
 
-	public function name() {return $this->_name;}
-	public function type() {return $this->_type;}
-	public function file() {return $this->_file;}
+	public function name()
+	{
+		return $this->_name;
+	}
+	public function type()
+	{
+		return $this->_type;
+	}
+	public function file()
+	{
+		return $this->_file;
+	}
 }

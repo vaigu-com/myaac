@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Weapons class
  *
@@ -15,7 +16,8 @@ use MyAAC\Models\Weapon;
 
 defined('MYAAC') or die('Direct access not allowed!');
 
-class Weapons {
+class Weapons
+{
 	private static $error = '';
 
 	public static function loadFromXML($show = false)
@@ -49,7 +51,8 @@ class Weapons {
 		return true;
 	}
 
-	public static function parseNode($node, $show = false) {
+	public static function parseNode($node, $show = false)
+	{
 		global $config;
 
 		$id = (int)$node->getAttribute('id');
@@ -58,9 +61,9 @@ class Weapons {
 		$maglevel = (int)$node->getAttribute('maglevel');
 
 		$vocations = array();
-		foreach($node->getElementsByTagName('vocation') as $vocation) {
+		foreach ($node->getElementsByTagName('vocation') as $vocation) {
 			$show = $vocation->getAttribute('showInDescription');
-			if(!empty($vocation->getAttribute('id')))
+			if (!empty($vocation->getAttribute('id')))
 				$voc_id = $vocation->getAttribute('id');
 			else {
 				$voc_id = $vocations_ids[$vocation->getAttribute('name')];
@@ -69,19 +72,22 @@ class Weapons {
 			$vocations[$voc_id] = strlen($show) == 0 || $show != '0';
 		}
 
-		if(Weapon::find($id)) {
-			if($show) {
+		if (Weapon::find($id)) {
+			if ($show) {
 				warning('Duplicated weapon with id: ' . $id);
 			}
-		}
-		else {
+		} else {
 			Weapon::create([
-				'id' => $id, 'level' => $level, 'maglevel' => $maglevel, 'vocations' => json_encode($vocations)
+				'id' => $id,
+				'level' => $level,
+				'maglevel' => $maglevel,
+				'vocations' => json_encode($vocations)
 			]);
 		}
 	}
 
-	public static function getError() {
+	public static function getError()
+	{
 		return self::$error;
 	}
 }

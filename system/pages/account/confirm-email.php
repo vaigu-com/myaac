@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Account confirm mail
  *
@@ -15,16 +16,14 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Confirm Email';
 
 $hash = $_GET['hash'] ?? '';
-if(empty($hash)) {
+if (empty($hash)) {
 	warning('Please enter email hash code.<br/>If you copied the link, please try again with full link.');
 	return;
 }
 
-if(!Account::where('email_hash', $hash)->exists()) {
+if (!Account::where('email_hash', $hash)->exists()) {
 	note("Your email couldn't be verified. Please contact staff to do it manually.");
-}
-else
-{
+} else {
 	$accountModel = Account::where('email_hash', $hash)->where('email_verified', 0)->first();
 	if ($accountModel) {
 		$accountModel->email_verified = 1;
@@ -37,8 +36,7 @@ else
 		if ($account->isLoaded()) {
 			$hooks->trigger(HOOK_EMAIL_CONFIRMED, ['account' => $account]);
 		}
-	}
-	else {
+	} else {
 		error('Link has expired.');
 	}
 }

@@ -1,9 +1,11 @@
 <?php
 
 namespace MyAAC\Models;
+
 use Illuminate\Database\Eloquent\Model;
 
-class PlayerDeath extends Model {
+class PlayerDeath extends Model
+{
 
 	protected $table = 'player_deaths';
 
@@ -19,7 +21,8 @@ class PlayerDeath extends Model {
 		return $this->belongsTo(Player::class, 'killed_by');
 	}
 
-	public function scopeUnjustified($query) {
+	public function scopeUnjustified($query)
+	{
 		$query->where('unjustified', 1);
 	}
 }

@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Pages
  *
@@ -33,8 +34,7 @@ const ARTICLE_TEXT_LIMIT = 300;
 const ARTICLE_IMAGE_LIMIT = 100;
 
 $name = $p_title = '';
-if(!empty($action))
-{
+if (!empty($action)) {
 	$id = $_POST['id'] ?? null;
 	$p_title = $_POST['title'] ?? null;
 	$body = isset($_POST['body']) ? stripslashes($_POST['body']) : null;
@@ -94,21 +94,20 @@ if(!empty($action))
 		}
 	}
 
-	if(!empty($errors))
+	if (!empty($errors))
 		error(implode(", ", $errors));
 }
 
 $categories = array();
-foreach($db->query('SELECT `id`, `name`, `icon_id` FROM `' . TABLE_PREFIX . 'news_categories` WHERE `hide` != 1') as $cat)
-{
+foreach ($db->query('SELECT `id`, `name`, `icon_id` FROM `' . TABLE_PREFIX . 'news_categories` WHERE `hide` != 1') as $cat) {
 	$categories[$cat['id']] = array(
 		'name' => $cat['name'],
 		'icon_id' => $cat['icon_id']
 	);
 }
 
-if($action == 'edit' || $action == 'new') {
-	if($action == 'edit') {
+if ($action == 'edit' || $action == 'new') {
+	if ($action == 'edit') {
 		$player = new OTS_Player();
 		$player->load($player_id);
 	}
@@ -142,8 +141,7 @@ foreach ($query as $_news) {
 	$playerId = $_news['player_id'];
 	if (isset($cachePlayers[$playerId])) {
 		$_player = $cachePlayers[$playerId];
-	}
-	else {
+	} else {
 		$_player = new OTS_Player();
 		$_player->load($playerId);
 		$cachePlayers[$playerId] = $_player;

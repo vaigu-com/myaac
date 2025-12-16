@@ -7,4 +7,3 @@ $twig->display('web_status.twig', array(
 	'status' => $status,
 	'account_type' => USE_ACCOUNT_NAME ? 'name' : 'number'
 ));
-?>

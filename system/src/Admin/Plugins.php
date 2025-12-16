@@ -28,8 +28,7 @@ class Plugins
 			$response = $client->get('get-latest-versions', [
 				'json' => ['plugins' => $plugins],
 			]);
-		}
-		catch (\Exception $e) {
+		} catch (\Exception $e) {
 			error('API Error. Please try again later.');
 			return [];
 		}
@@ -43,7 +42,8 @@ class Plugins
 		return json_decode($data, true);
 	}
 
-	public function setApiBaseUri(string $uri): void {
+	public function setApiBaseUri(string $uri): void
+	{
 		$this->api_base_uri = $uri;
 	}
 }

@@ -17,8 +17,6 @@
  * 
  * @package POT
  */
-class E_OTS_NotAContainer extends Exception
-{
-}
+class E_OTS_NotAContainer extends Exception {}
 
 /**#@-*/

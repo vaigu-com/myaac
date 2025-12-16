@@ -9,7 +9,7 @@ require SYSTEM . 'functions.php';
 require SYSTEM . 'init.php';
 require SYSTEM . 'login.php';
 
-if(!admin()) {
+if (!admin()) {
 	http_response_code(500);
 	die('Access denied.');
 }

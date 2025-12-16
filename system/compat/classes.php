@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Compat classes (backward support for Gesior AAC)
  *
@@ -9,28 +10,37 @@
  */
 defined('MYAAC') or die('Direct access not allowed!');
 
-class Account extends OTS_Account {
-	public function loadById($id) {
+class Account extends OTS_Account
+{
+	public function loadById($id)
+	{
 		$this->load($id);
 	}
-	public function loadByName($name) {
+	public function loadByName($name)
+	{
 		$this->find($name);
 	}
 }
 
-class Player extends OTS_Player {
-	public function loadById($id) {
+class Player extends OTS_Player
+{
+	public function loadById($id)
+	{
 		$this->load($id);
 	}
-	public function loadByName($name) {
+	public function loadByName($name)
+	{
 		$this->find($name);
 	}
 }
-class Guild extends OTS_Guild {
-	public function loadById($id) {
+class Guild extends OTS_Guild
+{
+	public function loadById($id)
+	{
 		$this->load($id);
 	}
-	public function loadByName($name) {
+	public function loadByName($name)
+	{
 		$this->find($name);
 	}
 }

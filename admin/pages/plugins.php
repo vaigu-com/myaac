@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Plugins
  *
@@ -19,10 +20,9 @@ $use_datatable = true;
 
 if (!setting('core.admin_plugins_manage_enable')) {
 	warning('Plugin installation and management is disabled in Settings.<br/>If you wish to enable, go to Settings and enable <strong>Enable Plugins Manage</strong>.');
-}
-else {
+} else {
 	$pluginUploadEnabled = true;
-	if(!\class_exists('\ZipArchive')) {
+	if (!\class_exists('\ZipArchive')) {
 		error('Please install PHP zip extension. Plugins upload disabled until then.');
 		$pluginUploadEnabled = false;
 	}
@@ -51,8 +51,7 @@ else {
 		} else {
 			error('Error while disabling plugin ' . $disable . ': ' . Plugins::getError());
 		}
-	}
-	else if (isset($_GET['check-updates'])) {
+	} else if (isset($_GET['check-updates'])) {
 		$repoUri = $config['admin_plugins_api_uri'] ?? 'https://plugins.my-aac.org/api/';
 		success("Fetching latest info from $repoUri..");
 
@@ -62,8 +61,7 @@ else {
 
 		try {
 			$plugins = $adminPlugins->getLatestVersions();
-		}
-		catch (Exception $e) {
+		} catch (Exception $e) {
 			error($e->getMessage());
 		}
 
@@ -96,8 +94,7 @@ else {
 			if (count($outdated) > 0) {
 				info('Following updates have been found for your plugins:');
 				$twig->display('admin.plugins.outdated.html.twig', ['plugins' => $outdated]);
-			}
-			else {
+			} else {
 				success('All plugins up to date!');
 			}
 		}

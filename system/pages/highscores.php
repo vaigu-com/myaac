@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Highscores
  *
@@ -18,7 +19,7 @@ defined('MYAAC') or die('Direct access not allowed!');
 $title = 'Highscores';
 
 $settingHighscoresCountryBox = setting('core.highscores_country_box');
-if(config('account_country') && $settingHighscoresCountryBox) {
+if (config('account_country') && $settingHighscoresCountryBox) {
 	require SYSTEM . 'countries.conf.php';
 }
 
@@ -28,7 +29,7 @@ $list = urldecode($_GET['list'] ?? 'experience');
 $page = $_GET['page'] ?? 1;
 $vocation = urldecode($_GET['vocation'] ?? 'all');
 
-if(!is_numeric($page) || $page < 1 || $page > PHP_INT_MAX) {
+if (!is_numeric($page) || $page < 1 || $page > PHP_INT_MAX) {
 	$page = 1;
 }
 
@@ -38,9 +39,9 @@ $configVocations = config('vocations');
 $configVocationsAmount = config('vocations_amount');
 
 $vocationId = null;
-if($vocation !== 'all') {
-	foreach($configVocations as $id => $name) {
-		if(strtolower($name) == $vocation) {
+if ($vocation !== 'all') {
+	foreach ($configVocations as $id => $name) {
+		if (strtolower($name) == $vocation) {
 			$vocationId = $id;
 			$add_vocs = [$id];
 
@@ -59,16 +60,12 @@ if($vocation !== 'all') {
 }
 
 $skill = POT::SKILL__LEVEL;
-if(is_numeric($list))
-{
+if (is_numeric($list)) {
 	$list = (int) $list;
-	if($list >= POT::SKILL_FIRST && $list <= POT::SKILL__LAST)
+	if ($list >= POT::SKILL_FIRST && $list <= POT::SKILL__LAST)
 		$skill = $list;
-}
-else
-{
-	switch($list)
-	{
+} else {
+	switch ($list) {
 		case 'fist':
 			$skill = POT::SKILL_FIST;
 			break;
@@ -107,24 +104,24 @@ else
 			break;
 
 		case 'frags':
-			if(setting('core.highscores_frags'))
+			if (setting('core.highscores_frags'))
 				$skill = SKILL_FRAGS;
 			break;
 
 		case 'balance':
-			if(setting('core.highscores_balance'))
+			if (setting('core.highscores_balance'))
 				$skill = SKILL_BALANCE;
 			break;
 	}
 }
 
 $promotion = '';
-if($db->hasColumn('players', 'promotion'))
+if ($db->hasColumn('players', 'promotion'))
 	$promotion = ',players.promotion';
 
 $outfit_addons = false;
 $outfit = ', lookbody, lookfeet, lookhead, looklegs, looktype';
-if($db->hasColumn('players', 'lookaddons')) {
+if ($db->hasColumn('players', 'lookaddons')) {
 	$outfit .= ', lookaddons';
 	$outfit_addons = true;
 }
@@ -165,7 +162,7 @@ $query
 
 if (empty($highscores)) {
 	if ($skill >= POT::SKILL_FIRST && $skill <= POT::SKILL_LAST) { // skills
-		if ($db->hasColumn('players', 'skill_fist')) {// tfs 1.0
+		if ($db->hasColumn('players', 'skill_fist')) { // tfs 1.0
 			$skill_ids = array(
 				POT::SKILL_FIST => 'skill_fist',
 				POT::SKILL_CLUB => 'skill_club',
@@ -207,7 +204,7 @@ if (empty($highscores)) {
 		}
 	}
 
-	$highscores = $query->get()->map(function($row) {
+	$highscores = $query->get()->map(function ($row) {
 		$tmp = $row->toArray();
 		$tmp['online'] = $row->online_status;
 		$tmp['vocation'] = $row->vocation_name;
@@ -234,13 +231,11 @@ if ($highscoresTTL > 0 && $cache->enabled() && $needReCache) {
 $show_link_to_next_page = false;
 $i = 0;
 
-foreach($highscores as $id => &$player)
-{
-	if(++$i <= $configHighscoresPerPage)
-	{
-		if($skill == POT::SKILL__MAGIC)
+foreach ($highscores as $id => &$player) {
+	if (++$i <= $configHighscoresPerPage) {
+		if ($skill == POT::SKILL__MAGIC)
 			$player['value'] = $player['maglevel'];
-		else if($skill == POT::SKILL__LEVEL) {
+		else if ($skill == POT::SKILL__LEVEL) {
 			$player['value'] = $player['level'];
 			$player['experience'] = number_format($player['experience']);
 		}
@@ -252,19 +247,16 @@ foreach($highscores as $id => &$player)
 		if ($skill != POT::SKILL__LEVEL) {
 			if (isset($lastValue) && $lastValue == $player['value']) {
 				$player['rank'] = $lastRank;
-			}
-			else {
+			} else {
 				$player['rank'] = $offset + $i;
 			}
 
-			$lastRank = $player['rank'] ;
+			$lastRank = $player['rank'];
 			$lastValue = $player['value'];
-		}
-		else {
+		} else {
 			$player['rank'] = $offset + $i;
 		}
-	}
-	else {
+	} else {
 		unset($highscores[$id]);
 		$show_link_to_next_page = true;
 		break;
@@ -273,13 +265,13 @@ foreach($highscores as $id => &$player)
 
 //link to previous page if actual page is not first
 $linkPreviousPage = '';
-if($page > 1) {
+if ($page > 1) {
 	$linkPreviousPage = getLink('highscores') . '/' . $list . ($vocation !== 'all' ? '/' . $vocation : '') . '/' . ($page - 1);
 }
 
 //link to next page if any result will be on next page
 $linkNextPage = '';
-if($show_link_to_next_page) {
+if ($show_link_to_next_page) {
 	$linkNextPage = getLink('highscores') . '/' . $list . ($vocation !== 'all' ? '/' . $vocation : '') . '/' . ($page + 1);
 }
 
@@ -297,10 +289,10 @@ $types = array(
 	'fishing' => 'Fishing',
 );
 
-if(setting('core.highscores_frags')) {
+if (setting('core.highscores_frags')) {
 	$types['frags'] = 'Frags';
 }
-if(setting('core.highscores_balance'))
+if (setting('core.highscores_balance'))
 	$types['balance'] = 'Balance';
 
 if ($highscoresTTL > 0 && $cache->enabled()) {

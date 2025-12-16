@@ -1,4 +1,5 @@
 <?php
+
 /**
  * @var OTS_DB_MySQL $db
  */
@@ -13,4 +14,3 @@ $up = function () {
 $down = function () {
 	// there is no downgrade for this
 };
-

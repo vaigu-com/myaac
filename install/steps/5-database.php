@@ -8,30 +8,27 @@ defined('MYAAC') or die('Direct access not allowed!');
 ini_set('max_execution_time', 300);
 $error = false;
 
-if(!isset($_SESSION['var_server_path'])) {
+if (!isset($_SESSION['var_server_path'])) {
 	error($locale['step_database_error_path']);
 	$error = true;
 }
 
-if(!$error) {
+if (!$error) {
 	$configToSave = [
 		// by default, set env to prod
 		// user can disable when he wants
 		'env' => 'prod',
 	];
 
-	foreach($_SESSION as $key => $value)
-	{
-		if(strpos($key, 'var_') !== false)
-		{
-			if($key === 'var_server_path')
-			{
+	foreach ($_SESSION as $key => $value) {
+		if (strpos($key, 'var_') !== false) {
+			if ($key === 'var_server_path') {
 				$value = str_replace("\\", "/", $value);
-				if($value[strlen($value) - 1] !== '/')
+				if ($value[strlen($value) - 1] !== '/')
 					$value .= '/';
 			}
 
-			if(!in_array($key, ['var_usage', 'var_date_timezone', 'var_client', 'var_account', 'var_account_id', 'var_password', 'var_password_confirm', 'var_step', 'var_email', 'var_player_name'], true)) {
+			if (!in_array($key, ['var_usage', 'var_date_timezone', 'var_client', 'var_account', 'var_account_id', 'var_password', 'var_password_confirm', 'var_step', 'var_email', 'var_player_name'], true)) {
 				$configToSave[str_replace('var_', '', $key)] = $value;
 			}
 		}
@@ -56,8 +53,7 @@ if(!$error) {
 
 			if (isset($database_error)) { // we failed connect to the database
 				error($database_error);
-			}
-			else {
+			} else {
 				if (!$db->hasTable('accounts')) {
 					$tmp = str_replace('$TABLE$', 'accounts', $locale['step_database_error_table']);
 					error($tmp);

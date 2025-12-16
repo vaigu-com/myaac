@@ -43,6 +43,7 @@ $dayOrDays = $account_logged->getPremDays() == 1 ? 'day' : 'days';
 /**
  * @var OTS_Account $account_logged
  */
+$user_premium_points = $account_logged->getCustomField('coins_transferable');
 if(!$account_logged->isPremium())
 	$account_status = '<b><span style="color: red">Free Account</span></b>';
 else
@@ -112,5 +113,6 @@ $twig->display('account.management.html.twig', array(
 	'account_rlname' => $account_rlname,
 	'account_location' => $account_location,
 	'actions' => $actions,
-	'players' => $account_players
+	'players' => $account_players,
+	'user_premium_points' => $user_premium_points
 ));

@@ -189,12 +189,17 @@
 							<td colspan="2" class="white"><b>Quests</b></td>
 						</tr>
 						{% set i = 0 %}
-						{% for name, done in quests %}
-						{% set i = i + 1 %}
-						<tr bgcolor="{{ getStyle(i) }}">
-							<td valign="top">{{ name }}</TD>
-							<td><img src="images/{% if done %}true{% else %}false{% endif %}.png" border="0"/></td>
-						</tr>
+						{% for name, questStatus in quests %}
+							{% set i = i + 1 %}
+							<tr bgcolor="{{ getStyle(i) }}">
+								<td valign="top">{{ name }}</td>
+								<td>
+									<img
+										src="images/{% if questStatus != -1 %}true{% else %}false{% endif %}.png"
+										border="0"
+									/>
+								</td>
+							</tr>
 						{% endfor %}
 					</table>
 				</td>

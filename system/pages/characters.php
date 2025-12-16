@@ -194,7 +194,7 @@ if ($player->isLoaded() && !$player->isDeleted()) {
 
 		foreach ($quests as &$storage) {
 			$fullKeyName = "player.$player_id.$storage";
-			$storage = $kv_store[$fullKeyName];
+			$storage = $kv_store[$fullKeyName] ?? -1;
 		}
 		unset($storage);
 	}

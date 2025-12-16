@@ -1,9 +1,9 @@
 <div style="text-align:center">
     <h1>{{ config.lua.serverName }}</h1>
     <h3>
-        {%  if experienceStages %}
+        {#%  if experienceStages %}
         Experience stages: {{ experienceStages }}<br>
-        {%  endif %}
+        {%  endif %#}
         Commands: <a href="{{ getLink('commands') }}">Look here</a><br>
         Team: <a href="{{ getLink('team') }}">Look here</a><br>
     </h3>
@@ -19,7 +19,7 @@
     {%  if globalSaveHour %}
     <li>Global save: <b>{{ globalSaveHour }}:00</b></li>
     {%  endif %}
-    <li>World type: <b>{{ config.lua.worldType|upper }} <i>(Protection level: {{ protectionLevel }})</i></b></li>
+    <li>World type:<b>{% if retroPvp %} Retro {% endif %}{{ config.lua.worldType|upper }} <i>(Protection level: {{ protectionLevel }})</i></b></li>
     <li>House rent: {{ houseRent }}.</li><br>
     {%  if houseOld %}
     <li>Houses with inactive owners are cleaned after 30 days.</li>
@@ -27,7 +27,8 @@
 
     <h2>Rates</h2>
     {%  if rateExp is defined %}
-    <li>Exp Rate: <b>x{{ rateExp }}</b></li>
+    <li>Exp Rate: <a href="{{ getLink('exp-stages') }}">stages</a></li>
+  
     {%  endif %}
     {%  if rateExpFromPlayers %}
         <li>Exp Rate from Players: <b>x{{ rateExpFromPlayers }}</b></li>
@@ -53,7 +54,7 @@
     <h2>Frags & Skull system</h2>
     <li>PZ Lock: <b>{{ pzLocked / (60 * 1000) }} min</b></li>
     {%  if whiteSkullTime %}
-    <li>White Skull Time: <b>{{ whiteSkullTime }} min</b></li>
+    <li>White Skull Time: <b>{{ whiteSkullTime / (60 * 1000) }} min</b></li>
     {%  endif %}
     <li>Red skull length: <b>{{ redSkullLength / (24 * 60 * 60) }} days</b></li>
     {% if blackSkull %}

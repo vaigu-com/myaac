@@ -51,7 +51,7 @@
 	<div class="top_level" style="background:url({{ template_path }}/images/themeboxes/bg_top.png)" align="	">
 	<div style="margin-top: -2px"></div>
     {% for player in topPlayers %}
-	    <div style="text-align:left;margin-top:4px"><a href="{{ getPlayerLink(player['name'], false) }} " class="topfont {% if player['online'] %}online{% else %}offline{% endif %}">
+	    <div style="text-align:left;margin-top:4px"><a href="{{ getPlayerLink(player['name'], false) }} " class="topfont {% if player['online'] and online %}online{% else %}offline{% endif %}">
 			{% if setting('core.online_outfit') %}
 				<img style="position:absolute;margin-top:{% if player.looktype in setting('core.outfit_images_wrong_looktypes') %}-22px;margin-left:-0px;{% else %}-22px;margin-left:-12px;width: 49px;{%  endif %}" src="{{ player.outfit }}" alt="player outfit"/>
 			{% endif %}

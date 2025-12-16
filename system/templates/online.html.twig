@@ -1,5 +1,5 @@
 {% set onlineTTL = setting('core.online_cache_ttl') %}
-{% if onlineTTL > 0 and cache.enabled() %}
+{#% if onlineTTL > 0 and cache.enabled() %}
 <small>*Note: Online List is updated every {{ onlineTTL > 1 ? ' ' ~ onlineTTL : '' }} minute{{ onlineTTL > 1 ? 's' : '' }}.</small>
 <br/>
 {% endif %}
@@ -46,8 +46,6 @@
 	{% endif %}
 {% endif %}
 
-<br/>
-
 {# show skulls #}
 {% if setting('core.online_skulls') %}
 <table width="100%" cellspacing="1">
@@ -76,7 +74,7 @@
 		<td class="LabelV150"><b>Players Online:</b></td>
 		<td>
 			{% if setting('core.online_afk') %}
-				{% set players_count = players|length %}
+				{% set players_count = players|length %} 
 				{% set afk = players_count - status.players %}
 				{% if afk < 0 %}
 					{% set players_count = players_count + afk|abs %}
@@ -85,7 +83,11 @@
 				Currently there are <b>{{ status.players }}</b> active and <b>{{ afk }}</b> AFK players.<br/>
 				Total number of players: <b>{{ players_count }}</b>.<br/>
 			{% else %}
-				{{ players|length }}
+					{% if status.online %}
+						{{ players|length }}
+					{% else %}
+						{{ 0 }}
+					{% endif %}
 			{% endif %}
 		</td>
 	</tr>
@@ -148,25 +150,27 @@
 	</tr>
 
 	{% set i = 0 %}
-	{% for player in players %}
-		{% set i = i + 1 %}
-
-		<tr style="background: {{ getStyle(i) }}; text-align: right; height: 40px;">
-			{% if setting('core.account_country') %}
-				<td>{{ player.country_image|raw }}</td>
-			{% endif %}
-
-			{% if setting('core.online_outfit') %}
-				<td width="5%"><img style="position:absolute;margin-top:-48px;margin-left:-70px;" src="{{ player.outfit }}" alt="player outfit"/></td>
-			{% endif %}
-
-			<td style="width:70%; text-align:left">
-				{{ player.name|raw }}{{ player.skull|raw }}
-			</td>
-			<td style="width:10%">{{ player.level }}</td>
-			<td style="width:20%">{{ player.vocation }}</td>
-		</tr>
-	{% endfor %}
+	{% if status.online %}
+		{% for player in players %}
+			{% set i = i + 1 %}
+	
+			<tr style="background: {{ getStyle(i) }}; text-align: right; height: 40px;">
+				{% if setting('core.account_country') %}
+					<td>{{ player.country_image|raw }}</td>
+				{% endif %}
+	
+				{% if setting('core.online_outfit') %}
+					<td width="5%"><img style="position:absolute;margin-top:-48px;margin-left:-70px;" src="{{ player.outfit }}" alt="player outfit"/></td>
+				{% endif %}
+	
+				<td style="width:70%; text-align:left">
+					{{ player.name|raw }}{{ player.skull|raw }}
+				</td>
+				<td style="width:10%">{{ player.level }}</td>
+				<td style="width:20%">{{ player.vocation }}</td>
+			</tr>
+		{% endfor %}
+	{% endif %}
 </table>
 {% endset %}
 {{ include('tables.headline.html.twig') }}

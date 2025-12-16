@@ -1393,7 +1393,7 @@ Sent by MyAAC,<br/>
 			'min' => 0,
 			'desc' => 'How often to update online list from database in minutes. Too low may slow down your website.' . PHP_EOL .
 				'0 to disable.',
-			'default' => 15,
+			'default' => 3,
 		],
 		'online_record' => [
 			'name' => 'Display Players Record',

@@ -1589,7 +1589,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Item Images URL',
 			'type' => 'text',
 			'desc' => 'Set to <strong>images/items</strong> if you host your own items in images folder',
-			'default' => 'https://item-images.ots.me/1285_otservbr/',
+			'default' => 'https://storage.vaigu.com/items',
 		],
 		'item_images_extension' => [
 			'name' => 'Item Images File Extension',
@@ -1605,7 +1605,7 @@ Sent by MyAAC,<br/>
 			'name' => 'Outfit Images URL',
 			'type' => 'text',
 			'desc' => 'Set to animoutfit.php for animated outfit',
-			'default' => 'https://outfit-images.ots.me/latest/outfit.php',
+			'default' => 'https://storage.vaigu.com/animated-outfits/animoutfit.php',
 		],
 		'outfit_images_wrong_looktypes' => [
 			'name' => 'Outfit Images Wrong Looktypes',

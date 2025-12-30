@@ -2303,3 +2303,9 @@ img {
   cursor: pointer;
   cursor: hand;
 }
+
+.article-body,
+.article-content {
+  margin-top:2em;
+  margin-bottom:3em
+}

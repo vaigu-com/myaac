@@ -40,21 +40,27 @@ if (empty($getpage_download)) {
                                             <div class="TableContentContainer">
                                                 <table class="TableContent" width="100%" style="border:1px solid #faf0d7;">
                                                     <tbody>
+                                                        <tr><td>Windows Clients:</td></tr>
                                                         <tr>
                                                             <td style="text-align: center; padding: 1.5rem;">
-                                                                <h1>Official <?= configLua('serverName') ?> Client</h1>
-                                                                <a href="<?= $config['client_link'] ?? '' ?>" target="_new">
-                                                                    <img alt="<?= configLua('serverName') ?> Client"
+                                                                <h1><?= configLua('serverName') ?> client</h1>
+                                                                <img alt="<?= configLua('serverName') ?> Client"
                                                                         style="width: 90px; height: 90px; border: 0;"
                                                                         src="<?= $template_path ?>/images/download_windows.gif">
-                                                                    <br>
-                                                                    <span style="font-size: 12pt;">
-                                                                        Download <?= configLua('serverName') ?> Client
-                                                                        <br>
-                                                                        <span style="font-size: 10pt;">Windows Client</span></span>
-                                                                    <br>
-                                                                    <small>Version <?= config('client') / 100 ?></small>
-                                                                </a>
+                                                                <br><a href="<?= $config['client_link_windows_without_cyclopedia_mega'] ?? '' ?>" target="_new">mega.nz mirror</a>
+                                                                <br><a href="<?= $config['client_link_windows_without_cyclopedia_dropbox'] ?? '' ?>" target="_new">dropbox mirror</a>
+                                                                <br><a href="<?= $config['client_link_windows_without_cyclopedia_google'] ?? '' ?>" target="_new">google mirror</a>
+                                                                <br><a href="<?= $config['client_link_windows_without_cyclopedia'] ?? '' ?>" target="_new">official download</a>
+                                                            </td>
+                                                            <td style="text-align: center; padding: 1.5rem;">
+                                                                <h1><?= configLua('serverName') ?> client (with cyclopedia map)</h1>
+                                                                <img alt="<?= configLua('serverName') ?> Client"
+                                                                        style="width: 90px; height: 90px; border: 0;"
+                                                                        src="<?= $template_path ?>/images/download_windows.gif">
+                                                                <br><a href="<?= $config['client_link_windows_with_cyclopedia_mega'] ?? '' ?>" target="_new">mega.nz mirror</a>
+                                                                <br><a href="<?= $config['client_link_windows_with_cyclopedia_dropbox'] ?? '' ?>" target="_new">dropbox mirror</a>
+                                                                <br><a href="<?= $config['client_link_windows_with_cyclopedia_google'] ?? '' ?>" target="_new">google mirror</a>
+                                                                <br><a href="<?= $config['client_link_windows_with_cyclopedia'] ?? '' ?>" target="_new">official download</a>
                                                             </td>
                                                         </tr>
                                                     </tbody>

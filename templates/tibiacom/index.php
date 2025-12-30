@@ -498,6 +498,14 @@ if (isset($config['boxes']))
 														class="InfoBarSmallElement">Bug Tracker</span></a>
 											</span>
 										<?php } ?>
+										<?php if (!empty($config['features_link'])) { ?>
+											<img class="InfoBarBigLogo" style="margin-left: 8px"
+												src="<?= $template_path; ?>/images/global/header/icon-features.png">
+											<span class="InfoBarNumbers">
+												<a class="InfoBarLinks" href="<?= $config['features_link']; ?>" target="new"><span
+														class="InfoBarSmallElement">Server Features</span></a>
+											</span>
+										<?php } ?>
 										<span style="float: right; margin-top: 1px; margin-right: 4px">
 											<img class="InfoBarBigLogo" src="<?= $template_path; ?>/images/global/header/icon-players-online.png">
 											<span class="InfoBarNumbers">

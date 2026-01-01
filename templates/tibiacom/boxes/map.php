@@ -60,7 +60,7 @@
     <div class="map_header">World Map</div>
     <div class="map_content">
         <div class="map_icon" style="background-image: url('<?php echo $template_path ?>/images/themeboxes/map/map.jpg')"></div>
-        <a href="https://vaigu.com/map-viewer" target="new">
+        <a href="https://map.vaigu.com" target="new">
             <button type="button" class="map_button">View Map</button>
         </a>
     </div>
